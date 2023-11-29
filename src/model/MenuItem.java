@@ -28,7 +28,7 @@ public class MenuItem
 	
 	// CRUD
 	
-	public void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
 		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (0,'"
 			+ menuItemName 			+ "', '"
@@ -46,7 +46,7 @@ public class MenuItem
 		}
 	}
 	
-	public MenuItem getMenuItemById(int MenuItemId)
+	public static MenuItem getMenuItemById(int menuItemId)
 	{
 		MenuItem menuItem = null;
 		String query = "SELECT * FROM menuitem WHERE menuItemId = " + menuItemId + ";";
@@ -71,7 +71,7 @@ public class MenuItem
 		return menuItem;
 	}
 	
-	public ArrayList<MenuItem> getAllMenuItems()
+	public static ArrayList<MenuItem> getAllMenuItems()
 	{
 		ArrayList<MenuItem> menuItems = new ArrayList<>();
 		String query = "SELECT * FROM menuitem";
@@ -96,15 +96,16 @@ public class MenuItem
 		return menuItems;
 	}
 	
-	public void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
 		String query = "UPDATE menuitem SET "
 				+ "menuItemName = '" + menuItemName + "', "
 				+ "menuItemDescription = '" + menuItemDescription + "', "
-				+ "menuItemPrice = '" + menuItemPrice + "', "
+				+ "menuItemPrice = " + menuItemPrice + " "
 				+ "WHERE "
-				+ "userId = " + menuItemId + ";";
+				+ "menuItemId = " + menuItemId + ";";
 				
+		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			Statement statement = connection.createStatement();
@@ -116,7 +117,7 @@ public class MenuItem
 		}
 	}
 	
-	public void deleteMenuItem(int menuItemId)
+	public static void deleteMenuItem(int menuItemId)
 	{
 		String query = "DELETE FROM menuitem WHERE menuItemId = " + menuItemId + ";";
 		  
