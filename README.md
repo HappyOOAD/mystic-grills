@@ -1,6 +1,6 @@
 # Mystic Grills
 
-Mystic Grills is an innovative restaurant management app designed to streamline operations. With features covering user management, menu customization, and a streamlined ordering system. Mystic Grills provides a seamless and intuitive platform for both restaurant staff and customers. Mystic Grills aims to revolutionize restaurant management by leveraging technology to enhance efficiency, improve customer satisfaction, and drive the success of restaurants. 
+Mystic Grills is an application designed for restaurant management, aiming to simplify operational processes. Equipped with functionalities such as user administration, customizable menus, and an efficient ordering system, Mystic Grills offers a user-friendly and cohesive experience for both restaurant personnel and patrons. The app aspires to transform the landscape of restaurant management by utilizing technology to boost operational efficiency, elevate customer contentment, and contribute to the overall success of dining establishments.
 
 ## SQL Schema
 ```sql
