@@ -26,7 +26,8 @@ public class User
 		this.userEmail = userEmail;
 		this.userPassword = userPassword;
 	}
-			
+		
+	
 	// CRUD & Authenticate
 	
 	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
@@ -164,6 +165,7 @@ public class User
 		return user;
 	}
 	
+	
 	// GETTERS & SETTERS
 
 	public int getUserId()
@@ -215,5 +217,4 @@ public class User
 	{
 		this.userPassword = userPassword;
 	}
-	
 }

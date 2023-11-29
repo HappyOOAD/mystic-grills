@@ -8,6 +8,7 @@ public class OrderItem
 	private MenuItem menuItem;
 	private int quantity;
 	
+	// CONSTRUCTOR
 	public OrderItem(int orderId, MenuItem menuItem, int quantity)
 	{
 		super();
@@ -16,9 +17,17 @@ public class OrderItem
 		this.quantity = quantity;
 	}
 	
+	
+	// CRUD
+	
 	public void createOrderitem(int orderId, MenuItem menuItem, int quantity)
 	{
 		
+	}
+	
+	public ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
+	{
+		return null;
 	}
 	
 	public void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
@@ -30,10 +39,37 @@ public class OrderItem
 	{
 		
 	}
+
+
+	// GETTERS & SETTERS
 	
-	public ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
+	public int getOrderId()
 	{
-		return null;
+		return orderId;
 	}
 
+	public void setOrderId(int orderId)
+	{
+		this.orderId = orderId;
+	}
+
+	public MenuItem getMenuItem()
+	{
+		return menuItem;
+	}
+
+	public void setMenuItem(MenuItem menuItem)
+	{
+		this.menuItem = menuItem;
+	}
+
+	public int getQuantity()
+	{
+		return quantity;
+	}
+
+	public void setQuantity(int quantity)
+	{
+		this.quantity = quantity;
+	}	
 }

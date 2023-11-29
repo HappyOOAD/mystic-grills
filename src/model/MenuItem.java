@@ -25,6 +25,7 @@ public class MenuItem
 		this.menuItemPrice = menuItemPrice;
 	}
 	
+	
 	// CRUD
 	
 	public void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
@@ -129,5 +130,47 @@ public class MenuItem
 			e.printStackTrace();
 		}
 	}
-		
+	
+	
+	// GETTERS & SETTERS
+
+	public int getMenuItemId()
+	{
+		return menuItemId;
+	}
+
+	public void setMenuItemId(int menuItemId)
+	{
+		this.menuItemId = menuItemId;
+	}
+
+	public String getMenuItemName()
+	{
+		return menuItemName;
+	}
+
+	public void setMenuItemName(String menuItemName)
+	{
+		this.menuItemName = menuItemName;
+	}
+
+	public String getMenuItemDescription()
+	{
+		return menuItemDescription;
+	}
+
+	public void setMenuItemDescription(String menuItemDescription)
+	{
+		this.menuItemDescription = menuItemDescription;
+	}
+
+	public int getMenuItemPrice()
+	{
+		return menuItemPrice;
+	}
+
+	public void setMenuItemPrice(int menuItemPrice)
+	{
+		this.menuItemPrice = menuItemPrice;
+	}
 }

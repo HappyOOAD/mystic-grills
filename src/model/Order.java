@@ -12,6 +12,7 @@ public class Order
 	private Date orderDate;
 	private int orderTotal;
 	
+	// CONSTRUCTOR
 	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
 			int orderTotal)
 	{
@@ -24,17 +25,10 @@ public class Order
 		this.orderTotal = orderTotal;
 	}
 	
+	
+	// CRUD
+	
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
-	{
-		
-	}
-	
-	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
-	{
-		
-	}
-	
-	public static void deleteOrder(int orderId)
 	{
 		
 	}
@@ -54,4 +48,87 @@ public class Order
 		return null;
 	}
 	
+	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	{
+		
+	}
+	
+	public static void deleteOrder(int orderId)
+	{
+		
+	}
+
+	
+	// GETTERS & SETTERS
+	
+	public int getOrderId()
+	{
+		return orderId;
+	}
+
+
+	public void setOrderId(int orderId)
+	{
+		this.orderId = orderId;
+	}
+
+
+	public User getOrderUser() 
+	{
+		return orderUser;
+	}
+
+
+	public void setOrderUser(User orderUser)
+	{
+		this.orderUser = orderUser;
+	}
+
+
+	public ArrayList<OrderItem> getOrderItems()
+	{
+		return orderItems;
+	}
+
+
+	public void setOrderItems(ArrayList<OrderItem> orderItems)
+	{
+		this.orderItems = orderItems;
+	}
+
+
+	public String getOrderStatus()
+	{
+		return orderStatus;
+	}
+
+
+	public void setOrderStatus(String orderStatus)
+	{
+		this.orderStatus = orderStatus;
+	}
+
+
+	public Date getOrderDate()
+	{
+		return orderDate;
+	}
+
+
+	public void setOrderDate(Date orderDate)
+	{
+		this.orderDate = orderDate;
+	}
+
+
+	public int getOrderTotal()
+	{
+		return orderTotal;
+	}
+
+
+	public void setOrderTotal(int orderTotal)
+	{
+		this.orderTotal = orderTotal;
+	}		
 }
