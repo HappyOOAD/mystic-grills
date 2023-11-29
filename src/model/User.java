@@ -15,7 +15,8 @@ public class User
 	private String userName;
 	private String userEmail;
 	private String userPassword;
-
+	
+	// CONSTRUCTOR
 	public User(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
 		super();
@@ -25,11 +26,16 @@ public class User
 		this.userEmail = userEmail;
 		this.userPassword = userPassword;
 	}
+			
+	// CRUD & Authenticate
 	
-	public static void deleteUser(int userId)
+	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
-		String query = "DELETE FROM users WHERE userId = " + userId + ";";
-					  
+		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (0,'Customer','" +
+			userName + "','" +
+			userEmail + "','" +
+			userPassword + "')";
+				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			Statement statement = connection.createStatement();
@@ -40,7 +46,6 @@ public class User
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public static User getUserById(int userId)
 	{
@@ -69,46 +74,6 @@ public class User
 		return user;
 	}
 	
-	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
-	{
-		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (0,'Customer','" +
-			userName + "','" +
-			userEmail + "','" +
-			userPassword + "')";
-				  
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
-	{
-		String query = "UPDATE users SET "
-				+ "userRole = '" + userRole + "', "
-				+ "userName = '" + userName + "', "
-				+ "userEmail = '" + userEmail + "', "
-				+ "userPassword = '" + userPassword + "' "
-				+ "WHERE "
-				+ "userId = " + userId + ";";
-				
-		System.out.println(query);
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
 	public static ArrayList<User> getAllUsers()
 	{
 		ArrayList<User> users = new ArrayList<>();
@@ -135,12 +100,47 @@ public class User
 		return users;
 	}
 	
+	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
+	{
+		String query = "UPDATE users SET "
+				+ "userRole = '" + userRole + "', "
+				+ "userName = '" + userName + "', "
+				+ "userEmail = '" + userEmail + "', "
+				+ "userPassword = '" + userPassword + "' "
+				+ "WHERE "
+				+ "userId = " + userId + ";";
+				
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteUser(int userId)
+	{
+		String query = "DELETE FROM users WHERE userId = " + userId + ";";
+					  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public static User authenticateUser(String userEmail, String userPassword)
 	{
 		User user = null;
 		String query = "SELECT * FROM users WHERE userEmail = '" + userEmail + "' AND userPassword = '" + userPassword + "';";
 		
-		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			Statement statement = connection.createStatement();
@@ -163,44 +163,56 @@ public class User
 		} 
 		return user;
 	}
+	
+	// GETTERS & SETTERS
 
-	public int getUserId() {
+	public int getUserId()
+	{
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(int userId)
+	{
 		this.userId = userId;
 	}
 
-	public String getUserRole() {
+	public String getUserRole()
+	{
 		return userRole;
 	}
 
-	public void setUserRole(String userRole) {
+	public void setUserRole(String userRole)
+	{
 		this.userRole = userRole;
 	}
 
-	public String getUserName() {
+	public String getUserName()
+	{
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setUserName(String userName)
+	{
 		this.userName = userName;
 	}
 
-	public String getUserEmail() {
+	public String getUserEmail()
+	{
 		return userEmail;
 	}
 
-	public void setUserEmail(String userEmail) {
+	public void setUserEmail(String userEmail)
+	{
 		this.userEmail = userEmail;
 	}
 
-	public String getUserPassword() {
+	public String getUserPassword()
+	{
 		return userPassword;
 	}
 
-	public void setUserPassword(String userPassword) {
+	public void setUserPassword(String userPassword)
+	{
 		this.userPassword = userPassword;
 	}
 	

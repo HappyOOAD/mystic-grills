@@ -1,6 +1,12 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+
+import database.Connect;
 
 public class MenuItem
 {
@@ -9,6 +15,7 @@ public class MenuItem
 	private String menuItemDescription;
 	private int menuItemPrice;
 	
+	// CONSTRUCTOR
 	public MenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
 		super();
@@ -18,29 +25,109 @@ public class MenuItem
 		this.menuItemPrice = menuItemPrice;
 	}
 	
+	// CRUD
+	
 	public void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
-		
-	}
-	
-	public void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
-	{
-		
-	}
-	
-	public void deleteMenuItem(int menuItemId)
-	{
-		
+		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (0,'"
+			+ menuItemName 			+ "', '"
+			+ menuItemDescription 	+ "', '"
+			+ menuItemPrice 		+ "')";
+				  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public MenuItem getMenuItemById(int MenuItemId)
 	{
-		return null;
+		MenuItem menuItem = null;
+		String query = "SELECT * FROM menuitem WHERE menuItemId = " + menuItemId + ";";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			if(resultSet.next())
+			{
+				int id = resultSet.getInt("menuItemId");
+				String name = resultSet.getString("menuItemName");
+				String description = resultSet.getString("menuItemDescription");
+				int price = resultSet.getInt("menuItemPrice");
+				menuItem = new MenuItem(id, name, description, price);
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return menuItem;
 	}
 	
 	public ArrayList<MenuItem> getAllMenuItems()
 	{
-		return null;
+		ArrayList<MenuItem> menuItems = new ArrayList<>();
+		String query = "SELECT * FROM menuitem";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while(resultSet.next()) 
+			{
+				int id = resultSet.getInt("menuItemId");
+				String name = resultSet.getString("menuItemName");
+				String description = resultSet.getString("menuItemDescription");
+				int price = resultSet.getInt("menuItemPrice");
+				menuItems.add(new MenuItem(id, name, description, price));
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return menuItems;
 	}
 	
+	public void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	{
+		String query = "UPDATE menuitem SET "
+				+ "menuItemName = '" + menuItemName + "', "
+				+ "menuItemDescription = '" + menuItemDescription + "', "
+				+ "menuItemPrice = '" + menuItemPrice + "', "
+				+ "WHERE "
+				+ "userId = " + menuItemId + ";";
+				
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteMenuItem(int menuItemId)
+	{
+		String query = "DELETE FROM menuitem WHERE menuItemId = " + menuItemId + ";";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+		
 }
