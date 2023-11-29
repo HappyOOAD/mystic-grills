@@ -47,25 +47,29 @@ import model.User;
 
 
 
-// --- Common Java Main Class ---
+// --- Testing Java Main Class ---
 
 public class Main
 {
 	
 	public static void main(String[] args)
 	{
+//
 //		// --- Create User Test ---
 //		User.createUser(" ", "Patrick", "p@gmail.com", "p1234");
 //		System.out.println("[LOG]: Success Insert User");
 //
+//
 //		// --- Update User Test ---
 //		User.updateUser(1, "Customer", "Christiansen", "c@gmail.com", "c1234");
 //		System.out.println("[LOG]: Success Update User");
-//	
+//
+//
 //		// --- Delete User Test ---
 //		User.deleteUser(2);
 //		System.out.println("[LOG]: Success Delete User");
-//	
+//
+//
 		// --- Get All Users Test ---
 		ArrayList<User> users = User.getAllUsers();
 		
@@ -75,11 +79,16 @@ public class Main
 		}
 		System.out.println("[LOG]: Success Get All Users");
 //
+//
+//		// --- Get User By Id Test ---
 //		User user = User.getUserById(1);
 //		
 //		if(user != null) System.out.println(user.getUserName());
-//		else System.out.println("not found");
-		
+//		else System.out.println("User not found");
+//		System.out.println("[LOG]: Success Get User By Id");
+//
+//
+//		// --- Authenticate User Test ---
 //		User auth = User.authenticateUser("p@gmail.com", "p234");
 //		
 //		if(auth != null)
@@ -90,5 +99,6 @@ public class Main
 //		{
 //			System.out.println("Failed");
 //		}
+//		System.out.println("[LOG]: Success Authenticate User");
 	}
 }
