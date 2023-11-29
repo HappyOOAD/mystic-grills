@@ -1,3 +1,9 @@
+@ Mystic Grills
+
+A Restaurant Management App based on desktop
+
+## SQL Schema
+```sql
 CREATE DATABASE mysticgrills;
 
 CREATE TABLE users(
@@ -17,7 +23,7 @@ CREATE TABLE menuitem(
 
 CREATE TABLE orderitem(
     orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    menutItemId INT NOT NULL,
+    menuItemId INT NOT NULL,
     quantity INT NOT NULL,
     
     CONSTRAINT fk_menu_item_id FOREIGN KEY (menutItemId) REFERENCES menuitem(menutItemId)
@@ -46,4 +52,4 @@ CREATE TABLE receipt(
     
     CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)  
 );
-
+```
