@@ -9,8 +9,8 @@ CREATE TABLE users(
 );
 
 CREATE TABLE menuitem(
-    menutItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    menutItemName VARCHAR(30) NOT NULL,
+    menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    menuItemName VARCHAR(30) NOT NULL,
     menuItemDescription VARCHAR(30) NOT NULL,
     menuItemPrice INT NOT NULL 
 );
