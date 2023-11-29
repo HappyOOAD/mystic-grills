@@ -2,7 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
-public class User {
+public class User
+{
 
 	private int userId;
 	private String userRole;
@@ -10,7 +11,8 @@ public class User {
 	private String userEmail;
 	private String userPassword;
 
-	public User(int userId, String userRole, String userName, String userEmail, String userPassword) {
+	public User(int userId, String userRole, String userName, String userEmail, String userPassword)
+	{
 		super();
 		this.userId = userId;
 		this.userRole = userRole;

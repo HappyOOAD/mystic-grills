@@ -12,7 +12,8 @@ public class Receipt
 	private String receiptPaymentType;
 	
 	public Receipt(int receiptId, Order receiptOrder, int receiptPaymentAmount, Date receiptPaymentDate,
-			String receiptPaymentType) {
+			String receiptPaymentType)
+	{
 		super();
 		this.receiptId = receiptId;
 		this.receiptOrder = receiptOrder;

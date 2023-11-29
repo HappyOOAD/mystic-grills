@@ -3,8 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Order {
-
+public class Order
+{
 	private int orderId;
 	private User orderUser;
 	private ArrayList<OrderItem> orderItems;
@@ -13,7 +13,8 @@ public class Order {
 	private int orderTotal;
 	
 	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
-			int orderTotal) {
+			int orderTotal)
+	{
 		super();
 		this.orderId = orderId;
 		this.orderUser = orderUser;
