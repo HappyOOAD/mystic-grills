@@ -51,12 +51,16 @@ public class User
 		{
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
+			if(resultSet.next())
+			{
+				
 				int id = resultSet.getInt("userId");
 				String role = resultSet.getString("UserRole");
 				String name = resultSet.getString("UserName");
 				String email = resultSet.getString("UserEmail");
 				String password = resultSet.getString("UserPassword");
 				user = new User(id, role, name, email, password);
+			}
 		} 
 		catch (SQLException e)
 		{
@@ -67,7 +71,7 @@ public class User
 	
 	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
-		String query = "INSERT INTO users(userRole, userName, userEmail, userPassword) VALUES ('Customer','" +
+		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (0,'Customer','" +
 			userName + "','" +
 			userEmail + "','" +
 			userPassword + "')";
@@ -86,13 +90,14 @@ public class User
 	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
 		String query = "UPDATE users SET "
-				+ "userRole = " + userRole + ", "
-				+ "userName = " + userName + ", "
-				+ "userEmail = " + userEmail + ", "
-				+ "userPassword = " + userPassword + " "
-				+ "WHERE"
+				+ "userRole = '" + userRole + "', "
+				+ "userName = '" + userName + "', "
+				+ "userEmail = '" + userEmail + "', "
+				+ "userPassword = '" + userPassword + "' "
+				+ "WHERE "
 				+ "userId = " + userId + ";";
-				  
+				
+		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			Statement statement = connection.createStatement();
@@ -130,21 +135,27 @@ public class User
 		return users;
 	}
 	
-	public User authenticateUser(String userEmail, String userPassword)
+	public static User authenticateUser(String userEmail, String userPassword)
 	{
 		User user = null;
-		String query = "SELECT * FROM users WHERE userEmail = " + userEmail + "AND userPassword " + userPassword + ";";
+		String query = "SELECT * FROM users WHERE userEmail = '" + userEmail + "' AND userPassword = '" + userPassword + "';";
 		
+		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
+
+			if(resultSet.next())
+			{
+				
 				int id = resultSet.getInt("userId");
 				String role = resultSet.getString("UserRole");
 				String name = resultSet.getString("UserName");
 				String email = resultSet.getString("UserEmail");
 				String password = resultSet.getString("UserPassword");
 				user = new User(id, role, name, email, password);
+			}
 		} 
 		catch (SQLException e)
 		{
@@ -152,6 +163,45 @@ public class User
 		} 
 		return user;
 	}
-	
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
 	
 }

@@ -14,7 +14,7 @@ public class Connect {
 
     private void connectToDatabase() {
         try {
-            String url = "jdbc:mysql://localhost:3306/session8";
+            String url = "jdbc:mysql://localhost:3306/mysticgrills";
             String user = "root";
             String password = "";
             this.connection = DriverManager.getConnection(url, user, password);
