@@ -9,15 +9,15 @@ CREATE TABLE users(
 );
 
 CREATE TABLE menuitem(
-    menutItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    menutItemName VARCHAR(30) NOT NULL,
+    menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    menuItemName VARCHAR(30) NOT NULL,
     menuItemDescription VARCHAR(30) NOT NULL,
     menuItemPrice INT NOT NULL 
 );
 
 CREATE TABLE orderitem(
     orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-   	menutItemId INT NOT NULL,
+    menutItemId INT NOT NULL,
     quantity INT NOT NULL,
     
     CONSTRAINT fk_menu_item_id FOREIGN KEY (menutItemId) REFERENCES menuitem(menutItemId)
