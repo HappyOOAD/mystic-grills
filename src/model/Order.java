@@ -89,7 +89,7 @@ public class Order
 				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				String status = resultSet.getString("orderStatus");
 				Date date = resultSet.getDate("orderDate");
-				int total = 
+				int total = 0;
 				orders.add(new Order(id, user, orderItems, status, 0));
 			}
 		}

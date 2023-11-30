@@ -1,7 +1,12 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import database.Connect;
 
 public class Receipt
 {
@@ -28,7 +33,23 @@ public class Receipt
 	
 	public static void createReceipt(Order order, String receiptPaymentType, int receiptPaymentAmount, Date receiptPaymentDate)
 	{
-		
+		Date date = new Date();
+		String query = "INSERT INTO receipt (receiptId, receiptOrderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt    (1, 0);
+			prep.setInt	   (2, order.getOrderId());
+			prep.setInt	   (3, receiptPaymentAmount);
+			prep.setDate   (4, (java.sql.Date) date);
+			prep.setString (5, receiptPaymentType);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static Receipt getReceiptById(int orderId)

@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -51,8 +52,7 @@ import model.User;
 // --- Testing Java Main Class ---
 
 public class Main
-{
-	
+{	
 	public static void main(String[] args)
 	{
 //		// --- Create User Test ---
