@@ -17,8 +17,7 @@ public class Receipt
 	private String receiptPaymentType;
 	
 	// CONSTRUCTOR
-	public Receipt(int receiptId, Order receiptOrder, int receiptPaymentAmount, Date receiptPaymentDate,
-			String receiptPaymentType)
+	public Receipt(int receiptId, Order receiptOrder, int receiptPaymentAmount, Date receiptPaymentDate, String receiptPaymentType)
 	{
 		super();
 		this.receiptId = receiptId;

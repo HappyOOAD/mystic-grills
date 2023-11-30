@@ -12,12 +12,7 @@ public class UserController
 	}
 	
 	public String createUser(String userRole, String userName, String userEmail, String userPassword)
-	{
-		if(userRole.equals("")) return "userRole empty";
-		if(userName.equals("")) return "userName empty";
-		if(userEmail.equals("")) return "userEmail empty";
-		if(userPassword.equals("")) return "userPassword empty";
-		
+	{	
 		User.createUser(userRole, userName, userEmail, userPassword);
 		return "Success";
 	}
@@ -29,15 +24,19 @@ public class UserController
 	
 	public String authenticateUser(String userEmail, String userPassword)
 	{
+		if(userEmail.equalsIgnoreCase("")) return "Email Empty";
+		if(userPassword.equalsIgnoreCase("")) return "Password Empty";
+		
 		User user = User.authenticateUser(userEmail, userPassword);
 		if(user != null)
 		{
+			String role = user.getUserRole();
 			currentUser = user;
-			return "Login Success";
+			return "Login Success [Role : "+role+"]";
 		}
 		else
 		{
-			return "Invalid Credentials";
+			return "Login Failed";
 		}
 	}
 	
@@ -52,5 +51,4 @@ public class UserController
 	{
 		this.currentUser = currentUser;
 	}
-		
 }
