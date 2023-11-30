@@ -119,9 +119,9 @@ public class Main
 //		System.out.println(menu.getMenuItemName());
 //		System.out.println("[LOG]: Success get MenuItem By Id");
 		
-		// --- Delete MenuItem Test ---
-		MenuItem.deleteMenuItem(2);
-		System.out.println("[LOG]: Success Delete menuItem");
+//		// --- Delete MenuItem Test ---
+//		MenuItem.deleteMenuItem(2);
+//		System.out.println("[LOG]: Success Delete menuItem");
 				
 	}
 }
