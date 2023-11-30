@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,15 +31,16 @@ public class MenuItem
 	
 	public static void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
-		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (0,'"
-			+ menuItemName 			+ "', '"
-			+ menuItemDescription 	+ "', '"
-			+ menuItemPrice 		+ "')";
+		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt   (1, 0);
+			prep.setString(2, menuItemName);
+			prep.setString(3, menuItemDescription);
+			prep.setInt   (4, menuItemPrice);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{
@@ -49,12 +51,14 @@ public class MenuItem
 	public static MenuItem getMenuItemById(int menuItemId)
 	{
 		MenuItem menuItem = null;
-		String query = "SELECT * FROM menuitem WHERE menuItemId = " + menuItemId + ";";
+		String query = "SELECT * FROM menuitem WHERE menuItemId = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, menuItemId);
+			ResultSet resultSet = prep.executeQuery();
+			
 			if(resultSet.next())
 			{
 				int id = resultSet.getInt("menuItemId");
@@ -74,12 +78,13 @@ public class MenuItem
 	public static ArrayList<MenuItem> getAllMenuItems()
 	{
 		ArrayList<MenuItem> menuItems = new ArrayList<>();
-		String query = "SELECT * FROM menuitem";
+		String query = "SELECT * FROM menuitem;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			ResultSet resultSet = prep.executeQuery();
+			
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("menuItemId");
@@ -98,18 +103,16 @@ public class MenuItem
 	
 	public static void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
-		String query = "UPDATE menuitem SET "
-				+ "menuItemName = '" + menuItemName + "', "
-				+ "menuItemDescription = '" + menuItemDescription + "', "
-				+ "menuItemPrice = " + menuItemPrice + " "
-				+ "WHERE "
-				+ "menuItemId = " + menuItemId + ";";
-				
-		System.out.println(query);
+		String query = "UPDATE menuitem SET menuItemName = ?, menuItemDescription = ?, menuItemPrice = ? WHERE menuItemId = ?;";
+			
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setString(1, menuItemName);
+			prep.setString(2, menuItemDescription);
+			prep.setInt(3, menuItemPrice);
+			prep.setInt(4, menuItemId);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{
@@ -119,12 +122,13 @@ public class MenuItem
 	
 	public static void deleteMenuItem(int menuItemId)
 	{
-		String query = "DELETE FROM menuitem WHERE menuItemId = " + menuItemId + ";";
+		String query = "DELETE FROM menuitem WHERE menuItemId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, menuItemId);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{

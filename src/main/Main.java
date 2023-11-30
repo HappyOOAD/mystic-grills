@@ -83,27 +83,27 @@ public class Main
 //		else System.out.println("User not found");
 //		System.out.println("[LOG]: Success Get User By Id");
 
-		// --- Authenticate User Test ---
-		User auth = User.authenticateUser("mv@gmail.com", "mv1234");
-		
-		if(auth != null)
-		{
-			System.out.println("Success");
-		}
-		else
-		{
-			System.out.println("Failed");
-		}
-		System.out.println("[LOG]: Success Authenticate User");
+//		// --- Authenticate User Test ---
+//		User auth = User.authenticateUser("mv@gmail.com", "mv1234");
+//		
+//		if(auth != null)
+//		{
+//			System.out.println("Success");
+//		}
+//		else
+//		{
+//			System.out.println("Failed");
+//		}
+//		System.out.println("[LOG]: Success Authenticate User");
 
 		
 		
 //		// --- Create MenuItem Test ---
-//		MenuItem.createMenuItem("Spageti", "Welp", 25000);
+//		MenuItem.createMenuItem("Burger", "Bun", 25000);
 //		System.out.println("[LOG]: Success Create New MenuItem");
 		
 //		// --- Update MenuItem Test ---
-//		MenuItem.updateMenuItem(2, "Fried Noddle", "Sedap", 24000);
+//		MenuItem.updateMenuItem(2, "Fried Noodle", "Indomie", 24000);
 //		System.out.println("[LOG]: Success Update New MenuItem");
 		
 //		// --- Get All MenuItem Test ---
@@ -119,9 +119,9 @@ public class Main
 //		System.out.println(menu.getMenuItemName());
 //		System.out.println("[LOG]: Success get MenuItem By Id");
 		
-//		// --- Delete MenuItem Test ---
-//		MenuItem.deleteMenuItem(4);
-//		System.out.println("[LOG]: Success Delete menuItem");
+		// --- Delete MenuItem Test ---
+		MenuItem.deleteMenuItem(2);
+		System.out.println("[LOG]: Success Delete menuItem");
 				
 	}
 }
