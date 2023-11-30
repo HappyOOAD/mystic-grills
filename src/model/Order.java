@@ -1,7 +1,12 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import database.Connect;
 
 public class Order
 {
@@ -12,7 +17,7 @@ public class Order
 	private Date orderDate;
 	private int orderTotal;
 	
-	// CONSTRUCTOR
+	// CONSTRUCTOR [With Order Date]
 	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
 			int orderTotal)
 	{
@@ -24,13 +29,61 @@ public class Order
 		this.orderDate = orderDate;
 		this.orderTotal = orderTotal;
 	}
+
+	// CONSTRUCTOR [Without Order Date]
+	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, int orderTotal)
+	{
+		super();
+		this.orderId = orderId;
+		this.orderUser = orderUser;
+		this.orderItems = orderItems;
+		this.orderStatus = orderStatus;
+		this.orderTotal = orderTotal;
+	}
 	
 	
 	// CRUD
 	
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
+		Date date = new Date();
+		String query = "INSERT INTO order(orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt   (1, 0);
+			prep.setInt	  (2, orderUser.getUserId());
+			prep.setString(3, "Pending");
+			prep.setDate  (4, (java.sql.Date) orderDate);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 		
+		// Insert orderItem
+		
+		for (OrderItem orderItem : orderItems)
+		{
+			orderItem.createOrderitem(orderItem.getOrderId(), orderItem.getMenuItem(), orderItem.getQuantity());
+//			String queryItem = "INSERT INTO orderitem(orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
+//			  
+//			try (Connection connection = Connect.getInstance().getConnection())
+//			{
+//				PreparedStatement prep = connection.prepareStatement(queryItem);
+//				prep.setInt(1, 0);
+//				prep.setInt(2, orderItem.getOrderId());
+//				prep.setInt(3, orderItem.getMenuItem().getMenuItemId());
+//				prep.setInt(4, orderItem.getQuantity());
+//				prep.executeUpdate();
+//			}
+//			catch (SQLException e)
+//			{
+//				e.printStackTrace();
+//			}
+		}
 	}
 	
 	public static ArrayList<Order> getOrdersByCustomerId(int customerId)
