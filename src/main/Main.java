@@ -84,7 +84,7 @@ public class Main
 //		System.out.println("[LOG]: Success Get User By Id");
 
 //		// --- Authenticate User Test ---
-//		User auth = User.authenticateUser("p@gmail.com", "p234");
+//		User auth = User.authenticateUser("p@gmail.com", "p1234");
 //		
 //		if(auth != null)
 //		{

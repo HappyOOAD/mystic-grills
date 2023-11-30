@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -140,13 +141,17 @@ public class User
 	public static User authenticateUser(String userEmail, String userPassword)
 	{
 		User user = null;
-		String query = "SELECT * FROM users WHERE userEmail = '" + userEmail + "' AND userPassword = '" + userPassword + "';";
 		
-		try (Connection connection = Connect.getInstance().getConnection())
+		String query = "SELECT * FROM users WHERE userEmail = ? AND userPassword = ?;";
+		
+		try
 		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
-
+			Connection connection = Connect.getInstance().getConnection();
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setString(1, userEmail);
+			prep.setString(2, userPassword);
+			ResultSet resultSet = prep.executeQuery();
+			
 			if(resultSet.next())
 			{
 				
@@ -157,11 +162,12 @@ public class User
 				String password = resultSet.getString("UserPassword");
 				user = new User(id, role, name, email, password);
 			}
-		} 
-		catch (SQLException e)
-		{
+			
+		} catch (SQLException e)
+    	{
+			// TODO: handle exception
 			e.printStackTrace();
-		} 
+		}
 		return user;
 	}
 	
