@@ -13,8 +13,37 @@ public class UserController
 	
 	public String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{	
-		User.createUser(userRole, userName, userEmail, userPassword);
-		return "Success";
+		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
+		
+		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
+		
+		if(userPassword.isBlank()) return "Password cannot be empty";
+		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long
+		
+		String res = User.createUser(userRole, userName, userEmail, userPassword);
+		if(res.equals("success")) return "Success Create A New User";
+		else if(res.equals("exist")) return "Email already exist";
+		else return "Failed create a new user";
+	}
+	
+	public String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
+	{
+		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
+		
+		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
+		
+		if(userPassword.isBlank()) return "Password cannot be empty";
+		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long
+		
+		String res = User.updateUser(userId, userRole, userName, userEmail, userPassword);
+		if(res.equals("success")) return "Success Create A New User";
+		else if(res.equals("exist")) return "Email already exist";
+		else return "Failed create a new user";
+	}
+	
+	public void deleteUser(int userId)
+	{
+		User.deleteUser(userId);
 	}
 	
 	public User getUserById(int userId)

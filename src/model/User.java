@@ -32,11 +32,30 @@ public class User
 	
 	public static String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
-		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
+		// CHECK UNIQUE
+		String checkQuery = "SELECT * FROM users WHERE userEmail = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setString(1, userEmail);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) return "exist";
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "failed";
+		}
+		
+		// INSERT
+		String insertQuery = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(query);
+			PreparedStatement prep = connection.prepareStatement(insertQuery);
 			prep.setInt(1, 0);
 			prep.setString(2, "Customer");
 			prep.setString(3, userName);
@@ -108,8 +127,27 @@ public class User
 		return users;
 	}
 	
-	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
+	public static String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
+		// CHECK UNIQUE
+		String checkQuery = "SELECT * FROM users WHERE userEmail = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setString(1, userEmail);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) return "exist";
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "failed";
+		}
+				
+		// UPDATE
 		String query = "UPDATE users SET userRole = ?, userName = ?, userEmail = ?, userPassword = ? WHERE userId = ?;";
 				
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -121,10 +159,12 @@ public class User
 			prep.setString(4, userPassword);
 			prep.setInt(5, userId);
 			prep.executeUpdate();
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "failed";
 		}
 	}
 	

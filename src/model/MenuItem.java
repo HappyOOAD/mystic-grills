@@ -28,22 +28,43 @@ public class MenuItem
 	
 	// CRUD
 	
-	public static void createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static String createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
-		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
+		// CHECK UNIQUE
+		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setString(1, menuItemName);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) return "exist";
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "failed";
+		}
+		
+		// INSERT
+		String insertQuery = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(query);
+			PreparedStatement prep = connection.prepareStatement(insertQuery);
 			prep.setInt   (1, 0);
 			prep.setString(2, menuItemName);
 			prep.setString(3, menuItemDescription);
 			prep.setInt   (4, menuItemPrice);
 			prep.executeUpdate();
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "failed";
 		}
 	}
 	
@@ -100,8 +121,27 @@ public class MenuItem
 		return menuItems;
 	}
 	
-	public static void updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
+		// CHECK UNIQUE
+		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setString(1, menuItemName);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) return "exist";
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "failed";
+		}
+		
+		// INSERT
 		String query = "UPDATE menuitem SET menuItemName = ?, menuItemDescription = ?, menuItemPrice = ? WHERE menuItemId = ?;";
 			
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -112,10 +152,12 @@ public class MenuItem
 			prep.setInt(3, menuItemPrice);
 			prep.setInt(4, menuItemId);
 			prep.executeUpdate();
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "failed";
 		}
 	}
 	
