@@ -1,6 +1,11 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import database.Connect;
 
 public class OrderItem
 {
@@ -20,22 +25,36 @@ public class OrderItem
 	
 	// CRUD
 	
-	public void createOrderitem(int orderId, MenuItem menuItem, int quantity)
+	public static void createOrderitem(int orderId, MenuItem menuItem, int quantity)
 	{
+		String query = "INSERT INTO orderitem (orderItemId, orderId menuItemId, quantity) VALUES (? ,? ,? ,? );";
 		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, 0);
+			prep.setInt(1, orderId);
+			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(3, quantity);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	public ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
+	public static ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
 		return null;
 	}
 	
-	public void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
 	{
 		
 	}
 	
-	public void deleteOrderItem(int orderId, int menuItemId)
+	public static void deleteOrderItem(int orderId, int menuItemId)
 	{
 		
 	}

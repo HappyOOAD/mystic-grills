@@ -30,7 +30,7 @@ public class User
 	
 	// CRUD & Authenticate
 	
-	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
+	public static String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
 		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
 				  
@@ -43,10 +43,12 @@ public class User
 			prep.setString(4, userEmail);
 			prep.setString(5, userPassword);
 			prep.executeUpdate();
+			return "Create User Success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "Create User Failed";
 		}
 	}
 	

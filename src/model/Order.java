@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class Order
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
 		Date date = new Date();
-		String query = "INSERT INTO order(orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
+		String query = "INSERT INTO order (orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -64,31 +65,39 @@ public class Order
 		}
 		
 		// Insert orderItem
-		
 		for (OrderItem orderItem : orderItems)
 		{
-			orderItem.createOrderitem(orderItem.getOrderId(), orderItem.getMenuItem(), orderItem.getQuantity());
-//			String queryItem = "INSERT INTO orderitem(orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
-//			  
-//			try (Connection connection = Connect.getInstance().getConnection())
-//			{
-//				PreparedStatement prep = connection.prepareStatement(queryItem);
-//				prep.setInt(1, 0);
-//				prep.setInt(2, orderItem.getOrderId());
-//				prep.setInt(3, orderItem.getMenuItem().getMenuItemId());
-//				prep.setInt(4, orderItem.getQuantity());
-//				prep.executeUpdate();
-//			}
-//			catch (SQLException e)
-//			{
-//				e.printStackTrace();
-//			}
+			OrderItem.createOrderitem(orderItem.getOrderId(), orderItem.getMenuItem(), orderItem.getQuantity());
 		}
 	}
 	
 	public static ArrayList<Order> getOrdersByCustomerId(int customerId)
 	{
-		return null;
+		ArrayList<Order> orders = new ArrayList<Order>();
+		String query = "SELECT * FROM order WHERE userId = ?;";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt   (1, customerId);
+			ResultSet resultSet = prep.executeQuery();
+			while(resultSet.next())
+			{
+				int id = resultSet.getInt("orderId");
+				int userId = resultSet.getInt("userId");
+				User user = User.getUserById(userId);
+				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
+				String status = resultSet.getString("orderStatus");
+				Date date = resultSet.getDate("orderDate");
+				int total = 
+				orders.add(new Order(id, user, orderItems, status, 0));
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return orders;
 	}
 	
 	public static ArrayList<Order> getAllOrders()
