@@ -33,15 +33,17 @@ public class User
 	
 	public static void createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
-		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (0,'Customer','" +
-			userName + "','" +
-			userEmail + "','" +
-			userPassword + "')";
+		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, 0);
+			prep.setString(2, "Customer");
+			prep.setString(3, userName);
+			prep.setString(4, userEmail);
+			prep.setString(5, userPassword);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{
@@ -52,12 +54,14 @@ public class User
 	public static User getUserById(int userId)
 	{
 		User user = null;
-		String query = "SELECT * FROM users WHERE userId = " + userId + ";";
+		String query = "SELECT * FROM users WHERE userId = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, userId);
+			ResultSet resultSet = prep.executeQuery();
+
 			if(resultSet.next())
 			{
 				
@@ -83,8 +87,9 @@ public class User
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			ResultSet resultSet = prep.executeQuery(query);
+			
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("userId");
@@ -104,18 +109,17 @@ public class User
 	
 	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
-		String query = "UPDATE users SET "
-				+ "userRole = '" + userRole + "', "
-				+ "userName = '" + userName + "', "
-				+ "userEmail = '" + userEmail + "', "
-				+ "userPassword = '" + userPassword + "' "
-				+ "WHERE "
-				+ "userId = " + userId + ";";
+		String query = "UPDATE users SET userRole = ?, userName = ?, userEmail = ?, userPassword = ? WHERE userId = ?;";
 				
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setString(1, userRole);
+			prep.setString(2, userName);
+			prep.setString(3, userEmail);
+			prep.setString(4, userPassword);
+			prep.setInt(5, userId);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{
@@ -125,12 +129,13 @@ public class User
 	
 	public static void deleteUser(int userId)
 	{
-		String query = "DELETE FROM users WHERE userId = " + userId + ";";
+		String query = "DELETE FROM users WHERE userId = ?;";
 					  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, userId);
+			prep.executeUpdate();
 		}
 		catch (SQLException e)
 		{

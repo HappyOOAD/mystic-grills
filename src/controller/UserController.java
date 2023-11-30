@@ -40,4 +40,17 @@ public class UserController
 			return "Invalid Credentials";
 		}
 	}
+	
+	// GETTERS SETTERS
+	
+	public User getCurrentUser()
+	{
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser)
+	{
+		this.currentUser = currentUser;
+	}
+		
 }

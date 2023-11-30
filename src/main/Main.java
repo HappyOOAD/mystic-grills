@@ -56,15 +56,15 @@ public class Main
 	public static void main(String[] args)
 	{
 //		// --- Create User Test ---
-//		User.createUser(" ", "Patrick", "p@gmail.com", "p1234");
+//		User.createUser(" ", "Maverick", "mv@gmail.com", "mv1234");
 //		System.out.println("[LOG]: Success Insert User");
 
 //		// --- Update User Test ---
-//		User.updateUser(1, "Customer", "Christiansen", "c@gmail.com", "c1234");
+//		User.updateUser(2, "Customer", "Christiansen", "c@gmail.com", "c1234");
 //		System.out.println("[LOG]: Success Update User");
 
 //		// --- Delete User Test ---
-//		User.deleteUser(2);
+//		User.deleteUser(1);
 //		System.out.println("[LOG]: Success Delete User");
 
 //		// --- Get All Users Test ---
@@ -77,24 +77,24 @@ public class Main
 //		System.out.println("[LOG]: Success Get All Users");
 
 //		// --- Get User By Id Test ---
-//		User user = User.getUserById(1);
+//		User user = User.getUserById(4);
 //		
 //		if(user != null) System.out.println(user.getUserName());
 //		else System.out.println("User not found");
 //		System.out.println("[LOG]: Success Get User By Id");
 
-//		// --- Authenticate User Test ---
-//		User auth = User.authenticateUser("p@gmail.com", "p1234");
-//		
-//		if(auth != null)
-//		{
-//			System.out.println("Success");
-//		}
-//		else
-//		{
-//			System.out.println("Failed");
-//		}
-//		System.out.println("[LOG]: Success Authenticate User");
+		// --- Authenticate User Test ---
+		User auth = User.authenticateUser("mv@gmail.com", "mv1234");
+		
+		if(auth != null)
+		{
+			System.out.println("Success");
+		}
+		else
+		{
+			System.out.println("Failed");
+		}
+		System.out.println("[LOG]: Success Authenticate User");
 
 		
 		
