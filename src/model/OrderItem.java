@@ -2,8 +2,10 @@ package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import database.Connect;
 
@@ -46,7 +48,32 @@ public class OrderItem
 	
 	public static ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
-		return null;
+		ArrayList<OrderItem> orderItems = new ArrayList<>();
+		String query = "SELECT * FROM orderitem WHERE orderId = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			ResultSet resultSet = prep.executeQuery(query);
+			
+			while(resultSet.next()) 
+			{
+				int id = resultSet.getInt("orderId");
+				int userId = resultSet.getInt("userId");
+				String orderStatus = resultSet.getString("orderStatus");
+				Date orderDate = resultSet.getDate("orderDate");
+				User user = User.getUserById(userId);
+				int total = 0;
+//				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
+//				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return orderItems;
 	}
 	
 	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)

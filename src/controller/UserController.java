@@ -16,13 +16,13 @@ public class UserController
 		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
 		
 		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
+		if(User.emailIsUnique(userEmail) == false) return "Email already taken"; // Email must be unique
 		
 		if(userPassword.isBlank()) return "Password cannot be empty";
 		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long
 		
 		String res = User.createUser(userRole, userName, userEmail, userPassword);
 		if(res.equals("success")) return "Success Create A New User";
-		else if(res.equals("exist")) return "Email already exist";
 		else return "Failed create a new user";
 	}
 	
@@ -54,6 +54,8 @@ public class UserController
 	public String authenticateUser(String userEmail, String userPassword)
 	{
 		if(userEmail.equalsIgnoreCase("")) return "Email Empty";
+		if(User.emailIsExist(userEmail) == false) return "Email not found";
+		
 		if(userPassword.equalsIgnoreCase("")) return "Password Empty";
 		
 		User user = User.authenticateUser(userEmail, userPassword);

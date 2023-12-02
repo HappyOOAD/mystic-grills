@@ -18,8 +18,7 @@ public class Order
 	private Date orderDate;
 	private double orderTotal;
 	
-	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
-			int orderTotal)
+	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate, double orderTotal)
 	{
 		super();
 		this.orderId = orderId;
@@ -99,7 +98,7 @@ public class Order
 				String orderStatus = resultSet.getString("orderStatus");
 				Date orderDate = resultSet.getDate("orderDate");
 				User user = User.getUserById(userId);
-				int total = 0;
+				double total = 0;
 				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
 			}

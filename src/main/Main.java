@@ -12,61 +12,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.User;
+import view.Login;
 
 
 
 // --- JavaFX Main Class ---
-public class Main extends Application
+public class Main
 {
     public static void main(String[] args)
     {
-    	User.createUser("customer", "chris", "christiansen@gmail.com", "mynameisc");
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage)
-    {
-        primaryStage.setTitle("Login Page");
-
-        GridPane grid = new GridPane();
-        grid.setAlignment(javafx.geometry.Pos.CENTER);
-        grid.setVgap(20);
-        grid.setHgap(10);
-        
-        grid.add(new Label("Email :"), 0, 1);
-
-        TextField emailTextField = new TextField();
-        grid.add(emailTextField, 1, 1);
-
-        Label passwordLabel = new Label("Password :");
-        grid.add(passwordLabel, 0, 2);
-
-        PasswordField passwordField = new PasswordField();
-        grid.add(passwordField, 1, 2);
-
-        Button loginButton = new Button("Login");
-        grid.add(loginButton, 0, 3);
-
-        final Text actionTarget = new Text("");
-        actionTarget.setFill(Color.RED);
-        grid.add(actionTarget, 1, 4);
-
-        loginButton.setOnAction(e -> {
-            String username = emailTextField.getText();
-            String password = passwordField.getText();
-        	UserController controller = new UserController();
-            String res = controller.authenticateUser(username, password);
-            if(!res.equals(""))
-            {
-            	actionTarget.setText(res);
-            }
-        });
-
-        Scene scene = new Scene(grid, 300, 200);
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
+//    	User.createUser("customer", "chris", "christiansen@gmail.com", "mynameisc");
+        new Login();
     }
 }
 
