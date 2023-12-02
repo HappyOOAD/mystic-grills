@@ -19,16 +19,6 @@ CREATE TABLE menuitem(
     menuItemPrice DOUBLE NOT NULL 
 );
 
-CREATE TABLE orderitem(
-    orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    orderId INT NOT NULL,
-    menuItemId INT NOT NULL,
-    quantity INT NOT NULL,
-    
-    CONSTRAINT fk_menu_item_id FOREIGN KEY (menutItemId) REFERENCES menuitem(menutItemId),
-    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
-);
-
 CREATE TABLE orders(
     orderId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     userId INT NOT NULL,
@@ -38,14 +28,25 @@ CREATE TABLE orders(
     CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(userId)  
 );
 
+
+CREATE TABLE orderitem(
+    orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    orderId INT NOT NULL,
+    menuItemId INT NOT NULL,
+    quantity INT NOT NULL,
+    
+    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitem(menuItemId),
+    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
+);
+
 CREATE TABLE receipt(
     receiptId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    orderItemId INT NOT NULL,
+    orderId INT NOT NULL,
     receiptPaymentAmount DOUBLE NOT NULL,
     receiptPaymentDate DATE NOT NULL,
     receiptPaymentType VARCHAR(30) NOT NULL,
     
     
-    CONSTRAINT fk_menu_item_ids FOREIGN KEY (orderItemId) REFERENCES orderitem(orderItemId)  
+    CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId)  
 );
 ```
