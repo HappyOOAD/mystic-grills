@@ -2,7 +2,6 @@ package controller;
 
 import model.User;
 import view.Admin.AdminPanel;
-import view.Admin.UserManagement;
 import view.Cashier.CashierPanel;
 import view.Chef.ChefPanel;
 import view.Customer.CustomerPanel;
@@ -68,7 +67,7 @@ public class UserController
 		{
 			String role = user.getUserRole();
 			currentUser = user;
-			switch (user.getUserRole())
+			switch (role)
 			{
 				case "Admin": new AdminPanel().show(); break;
 				case "Cashier": new CashierPanel().show(); break;

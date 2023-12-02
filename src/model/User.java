@@ -32,11 +32,11 @@ public class User
 	
 	public static String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
-		String insertQuery = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
+		String query = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
 			  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(insertQuery);
+			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, 0);
 			prep.setString(2, "Customer");
 			prep.setString(3, userName);
@@ -109,26 +109,7 @@ public class User
 	}
 	
 	public static String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
-	{
-		// CHECK UNIQUE
-		String checkQuery = "SELECT * FROM users WHERE userEmail = ?;";
-		
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			PreparedStatement prep = connection.prepareStatement(checkQuery);
-			prep.setString(1, userEmail);
-			ResultSet resultSet = prep.executeQuery();
-			
-			if(resultSet.next()) return "exist";
-			
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return "failed";
-		}
-				
-		// UPDATE
+	{			
 		String query = "UPDATE users SET userRole = ?, userName = ?, userEmail = ?, userPassword = ? WHERE userId = ?;";
 				
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -203,7 +184,6 @@ public class User
 	
 	public static boolean emailIsUnique(String userEmail)
 	{
-
 		String query = "SELECT * FROM users WHERE userEmail = ?;";
 		
 		try

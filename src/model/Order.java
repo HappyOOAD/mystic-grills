@@ -34,7 +34,6 @@ public class Order
 	
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
-		Date date = new Date();
 		String query = "INSERT INTO order (orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -70,7 +69,7 @@ public class Order
 				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				String status = resultSet.getString("orderStatus");
 				Date date = resultSet.getDate("orderDate");
-				int total = 0;
+				double total = getTotalByOrderId(id);
 				orders.add(new Order(id, user, orderItems, status, date, total));
 			}
 		}
@@ -84,7 +83,7 @@ public class Order
 	public static ArrayList<Order> getAllOrders()
 	{
 		ArrayList<Order> order = new ArrayList<>();
-		String query = "SELECT * FROM orders";
+		String query = "SELECT * FROM orders;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -98,7 +97,7 @@ public class Order
 				String orderStatus = resultSet.getString("orderStatus");
 				Date orderDate = resultSet.getDate("orderDate");
 				User user = User.getUserById(userId);
-				double total = 0;
+				double total = getTotalByOrderId(id);
 				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
 			}
@@ -126,10 +125,10 @@ public class Order
 				
 				int id = resultSet.getInt("orderId");
 				int userId = resultSet.getInt("userId");
+				User user = User.getUserById(userId);
 				String orderStatus = resultSet.getString("orderStatus");
 				Date orderDate = resultSet.getDate("orderDate");
-				User user = User.getUserById(userId);
-				int total = 0;
+				double total = getTotalByOrderId(id);
 				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				order = new Order(id, user, orderItems, orderStatus, orderDate, total);
 			}
@@ -143,7 +142,48 @@ public class Order
 	
 	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{
+		String deleteOrderItemsQuery = "DELETE FROM orderitem WHERE orderId = ?";
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(deleteOrderItemsQuery);
+			prep.setInt(1, orderId);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 		
+		String reinsertOrderItemsQuery = "INSERT INTO orderitem (orderId, menuItemId, quantity) VALUES (?, ?, ?);";
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(reinsertOrderItemsQuery);
+			for (OrderItem orderItem : orderItems) {
+				prep.setInt(1, orderId);
+				prep.setInt(2, orderItem.getMenuItem().getMenuItemId());
+				prep.setInt(3, orderItem.getQuantity());
+				prep.executeUpdate();
+				
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+		String statusQuery = "UPDATE orders SET orderStatus = ? WHERE orderId = ?;";
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(statusQuery);
+			prep.setString(1, orderStatus);
+			prep.setInt(2, orderId);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static void deleteOrder(int orderId)
@@ -162,6 +202,30 @@ public class Order
 		}
 	}
 
+	public static double getTotalByOrderId(int orderId)
+	{
+		int orderTotalPrice = 0;
+		String query = "SELECT * FROM orderitem JOIN menuitem ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			ResultSet resultSet = prep.executeQuery();
+			
+			while(resultSet.next())
+			{
+				int quantity = resultSet.getInt("quantity");
+				double menuItemPrice = resultSet.getDouble("menuItemPrice");
+				orderTotalPrice += (double) quantity * menuItemPrice;
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return orderTotalPrice;
+	}
 	
 	// GETTERS & SETTERS
 	

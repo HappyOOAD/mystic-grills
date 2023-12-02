@@ -11,14 +11,16 @@ import database.Connect;
 
 public class OrderItem
 {
+	private int orderItemId; // not necessary
 	private int orderId;
 	private MenuItem menuItem;
 	private int quantity;
 	
 	// CONSTRUCTOR
-	public OrderItem(int orderId, MenuItem menuItem, int quantity)
+	public OrderItem(int orderItemId, int orderId, MenuItem menuItem, int quantity)
 	{
 		super();
+		this.orderItemId = orderItemId;
 		this.orderId = orderId;
 		this.menuItem = menuItem;
 		this.quantity = quantity;
@@ -59,14 +61,11 @@ public class OrderItem
 			
 			while(resultSet.next()) 
 			{
-				int id = resultSet.getInt("orderId");
-				int userId = resultSet.getInt("userId");
-				String orderStatus = resultSet.getString("orderStatus");
-				Date orderDate = resultSet.getDate("orderDate");
-				User user = User.getUserById(userId);
-				int total = 0;
-//				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
-//				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
+				int id = resultSet.getInt("orderItemId");
+				int menuItemId = resultSet.getInt("menuItemId");
+				MenuItem menuItem = MenuItem.getMenuItemById(menuItemId);
+				int quantity = resultSet.getInt("quantity");
+				orderItems.add(new OrderItem(id, orderId, menuItem, quantity));
 			}
 		} 
 		catch (SQLException e)
@@ -78,15 +77,39 @@ public class OrderItem
 	
 	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
 	{
-		
+		String query = "UPDATE orderitem SET quantity = ? WHERE orderId = ? AND menuItemId = ?;";
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, quantity);
+			prep.setInt(2, orderId);
+			prep.setInt(2, menuItem.getMenuItemId());
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static void deleteOrderItem(int orderId, int menuItemId)
 	{
-		
+		String query = "DELETE FROM orderitem WHERE orderId = ? AND menuItemId = ?;";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			prep.setInt(1, menuItemId);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-
+	
 	// GETTERS & SETTERS
 	
 	public int getOrderId()
