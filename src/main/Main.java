@@ -40,8 +40,6 @@ public class Main extends Application
         Button registerButton = new Button("Register");
 
         loginButton.setOnAction(e -> {
-//            System.out.println("Login button clicked!");
-            // Add your login logic here
             new Login(primaryStage);
         });
 

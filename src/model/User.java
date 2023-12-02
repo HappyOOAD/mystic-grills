@@ -33,7 +33,8 @@ public class User
 	public static String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{
 		String insertQuery = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
-				  
+			  
+		System.out.println(insertQuery);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(insertQuery);
@@ -43,12 +44,13 @@ public class User
 			prep.setString(4, userEmail);
 			prep.setString(5, userPassword);
 			prep.executeUpdate();
-			return "Create User Success";
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return "Create User Failed";
+			System.out.println(e);
+			return "failed";
 		}
 	}
 	

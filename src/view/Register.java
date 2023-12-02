@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Register extends Application{
@@ -51,15 +52,25 @@ public class Register extends Application{
         Button registerButton = new Button("Register");
         grid.add(registerButton, 1, 4);
         
-
+        // Action Text
+        Text actionTarget = new Text();
+        grid.add(actionTarget, 1, 6);
         registerButton.setOnAction(e ->
         {
-            if (validateInput(usernameField.getText(), emailField.getText(), passwordField.getText(), confirmPasswordField.getText())) {
-                // Perform registration logic here
-                System.out.println("User registered successfully!");
-            } else {
-                System.out.println("Registration failed. Please check your input.");
+        	String username = usernameField.getText();
+        	String email = emailField.getText();
+            String password = passwordField.getText();
+            String confirmPassword = confirmPasswordField.getText();
+            if(password.equals(confirmPassword))
+            {            	
+            	String res = controller.createUser("Customer", username, email, password);  
+            	actionTarget.setText(res);
             }
+            else
+            {            	
+            	actionTarget.setText("Password don't Match");
+            }
+            
         });
 
         Scene scene = new Scene(grid, 400, 300);

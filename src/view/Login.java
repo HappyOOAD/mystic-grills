@@ -41,7 +41,7 @@ public class Login extends Application
         Button loginButton = new Button("Login");
         grid.add(loginButton, 1, 2);
         
-        // action Text
+        // Action Text
         Text actionTarget = new Text();
         grid.add(actionTarget, 1, 6);
 

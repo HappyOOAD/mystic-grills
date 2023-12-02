@@ -37,7 +37,6 @@ public class UserController
 		
 		String res = User.updateUser(userId, userRole, userName, userEmail, userPassword);
 		if(res.equals("success")) return "Success Create A New User";
-		else if(res.equals("exist")) return "Email already exist";
 		else return "Failed create a new user";
 	}
 	
