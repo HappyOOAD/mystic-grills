@@ -16,7 +16,7 @@ CREATE TABLE menuitem(
     menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     menuItemName VARCHAR(30) NOT NULL,
     menuItemDescription VARCHAR(30) NOT NULL,
-    menuItemPrice INT NOT NULL 
+    menuItemPrice DOUBLE NOT NULL 
 );
 
 CREATE TABLE orderitem(
@@ -41,7 +41,7 @@ CREATE TABLE orders(
 CREATE TABLE receipt(
     receiptId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     orderItemId INT NOT NULL,
-    receiptPaymentAmount INT NOT NULL,
+    receiptPaymentAmount DOUBLE NOT NULL,
     receiptPaymentDate DATE NOT NULL,
     receiptPaymentType VARCHAR(30) NOT NULL,
     
