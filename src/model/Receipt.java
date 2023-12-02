@@ -52,7 +52,7 @@ public class Receipt
 		}
 	}
 	
-	public static Receipt getReceiptById(int orderId)
+	public static Receipt getReceiptById(int receiptId)
 	{
 		Receipt receipt = null;
 		String query = "SELECT * FROM receipts WHERE receiptId = ?;";
@@ -60,7 +60,7 @@ public class Receipt
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
-			prep.setInt(1, orderId);
+			prep.setInt(1, receiptId);
 			ResultSet resultSet = prep.executeQuery();
 			
 			if(resultSet.next()) 

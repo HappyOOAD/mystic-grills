@@ -18,11 +18,9 @@ import model.User;
 // --- JavaFX Main Class ---
 public class Main extends Application
 {
-	UserController controller = new UserController();
-
     public static void main(String[] args)
     {
-    	User.createUser("customer", "kwon", "kwonmaster@gmail.com", "mynameiskwon");
+    	User.createUser("customer", "chris", "christiansen@gmail.com", "mynameisc");
         launch(args);
     }
 
@@ -57,9 +55,12 @@ public class Main extends Application
         loginButton.setOnAction(e -> {
             String username = emailTextField.getText();
             String password = passwordField.getText();
-
+        	UserController controller = new UserController();
             String res = controller.authenticateUser(username, password);
-            actionTarget.setText(res);
+            if(!res.equals(""))
+            {
+            	actionTarget.setText(res);
+            }
         });
 
         Scene scene = new Scene(grid, 300, 200);
