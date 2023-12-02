@@ -11,7 +11,7 @@ import database.Connect;
 
 public class OrderItem
 {
-	private int orderItemId; // not necessary
+	private int orderItemId; // ??? NOT NECESSARY
 	private int orderId;
 	private MenuItem menuItem;
 	private int quantity;

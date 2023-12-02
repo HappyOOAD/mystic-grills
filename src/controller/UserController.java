@@ -76,7 +76,7 @@ public class UserController
 				case "Customer": new CustomerPanel().show(); break;
 				default: return "Role Undefined";
 			}
-			return "Role undefined";
+			return "Login Success";
 		}
 		else
 		{

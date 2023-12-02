@@ -33,11 +33,13 @@ public class Main extends Application
         loginButton.setOnAction(e ->
         {
             new Login().show();
+            primaryStage.close();
         });
 
         registerButton.setOnAction(e ->
         {
             new Login().show();
+            primaryStage.close();
         });
 
         vbox.getChildren().addAll(loginButton, registerButton);
