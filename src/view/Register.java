@@ -74,7 +74,8 @@ public class Register extends Application{
                 && !password.isEmpty() && password.length() >= 6 && password.equals(confirmPassword);
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public Register(Stage args)
+    {
+        start(args);
     }
 }

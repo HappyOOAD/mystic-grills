@@ -2,17 +2,20 @@ package main;
 
 import controller.UserController;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.User;
 import view.Login;
+import view.Register;
 
 
 
@@ -26,9 +29,34 @@ public class Main extends Application
     }
 
 	@Override
-	public void start(Stage arg0) throws Exception {
-		// TODO Auto-generated method stub
-		new Login(arg0);
+	public void start(Stage primaryStage) throws Exception
+	{
+		primaryStage.setTitle("Login/Register App");
+
+        HBox hbox = new HBox(10);
+        hbox.setPadding(new Insets(20, 20, 20, 20));
+
+        Button loginButton = new Button("Login");
+        Button registerButton = new Button("Register");
+
+        loginButton.setOnAction(e -> {
+//            System.out.println("Login button clicked!");
+            // Add your login logic here
+            new Login(primaryStage);
+        });
+
+        registerButton.setOnAction(e -> {
+//            System.out.println("Register button clicked!");
+            // Add your registration logic here
+            new Register(primaryStage);
+        });
+
+        hbox.getChildren().addAll(loginButton, registerButton);
+
+        Scene scene = new Scene(hbox, 300, 100);
+        primaryStage.setScene(scene);
+
+        primaryStage.show();
 	}
 }
 
