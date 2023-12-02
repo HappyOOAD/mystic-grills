@@ -55,7 +55,7 @@ public class Register extends Stage
         
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 1, 6);
+        grid.add(actionTarget, 1, 5);
         registerButton.setOnAction(e ->
         {
         	String username = usernameField.getText();

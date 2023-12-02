@@ -42,7 +42,7 @@ public class Login extends Stage
         
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 1, 6);
+        grid.add(actionTarget, 1, 3);
 
         loginButton.setOnAction(e ->
         {
