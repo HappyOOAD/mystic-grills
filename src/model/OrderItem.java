@@ -27,7 +27,7 @@ public class OrderItem
 	
 	public static void createOrderitem(int orderId, MenuItem menuItem, int quantity)
 	{
-		String query = "INSERT INTO orderitem (orderItemId, orderId menuItemId, quantity) VALUES (? ,? ,? ,? );";
+		String query = "INSERT INTO orderitem (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
