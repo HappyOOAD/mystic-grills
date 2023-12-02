@@ -11,7 +11,6 @@ import database.Connect;
 
 public class OrderItem
 {
-	private int orderItemId; // ??? NOT NECESSARY
 	private int orderId;
 	private MenuItem menuItem;
 	private int quantity;
@@ -20,7 +19,6 @@ public class OrderItem
 	public OrderItem(int orderItemId, int orderId, MenuItem menuItem, int quantity)
 	{
 		super();
-		this.orderItemId = orderItemId;
 		this.orderId = orderId;
 		this.menuItem = menuItem;
 		this.quantity = quantity;
