@@ -46,13 +46,12 @@ CREATE TABLE receipt(
     receiptPaymentDate DATE NOT NULL,
     receiptPaymentType VARCHAR(30) NOT NULL,
     
-    
     CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId)  
 );
 ```
 
-```Values
-
+## SQL Dummies
+```sql
 INSERT INTO users (userRole, userName, userEmail, userPassword)
 VALUES
     ('Admin', 'Admin User', 'admin@example.com', 'adminpassword'),
