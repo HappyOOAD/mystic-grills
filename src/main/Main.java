@@ -1,25 +1,16 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import controller.UserController;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import model.MenuItem;
 import model.User;
 
 
@@ -27,11 +18,11 @@ import model.User;
 // --- JavaFX Main Class ---
 public class Main extends Application
 {
-	
 	UserController controller = new UserController();
 
     public static void main(String[] args)
     {
+    	User.createUser("customer", "kwon", "kwonmaster@gmail.com", "mynameiskwon");
         launch(args);
     }
 
@@ -45,12 +36,12 @@ public class Main extends Application
         grid.setVgap(20);
         grid.setHgap(10);
         
-        grid.add(new Label("Username:"), 0, 1);
+        grid.add(new Label("Email :"), 0, 1);
 
-        TextField usernameTextField = new TextField();
-        grid.add(usernameTextField, 1, 1);
+        TextField emailTextField = new TextField();
+        grid.add(emailTextField, 1, 1);
 
-        Label passwordLabel = new Label("Password:");
+        Label passwordLabel = new Label("Password :");
         grid.add(passwordLabel, 0, 2);
 
         PasswordField passwordField = new PasswordField();
@@ -64,7 +55,7 @@ public class Main extends Application
         grid.add(actionTarget, 1, 4);
 
         loginButton.setOnAction(e -> {
-            String username = usernameTextField.getText();
+            String username = emailTextField.getText();
             String password = passwordField.getText();
 
             String res = controller.authenticateUser(username, password);
@@ -77,7 +68,6 @@ public class Main extends Application
         primaryStage.show();
     }
 }
-
 
 
 

@@ -1,8 +1,8 @@
 package view;
 
-public class UserView {
+public class Register {
 
-	public UserView() {
+	public Register() {
 		// TODO Auto-generated constructor stub
 	}
 

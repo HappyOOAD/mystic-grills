@@ -34,7 +34,7 @@ public class Receipt
 	public static void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		Date date = new Date();
-		String query = "INSERT INTO receipt (receiptId, receiptOrderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
+		String query = "INSERT INTO receipt (receiptId, orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -66,9 +66,8 @@ public class Receipt
 			if(resultSet.next()) 
 			{
 				int id = resultSet.getInt("receiptId");
-				Order order = new Order(id, null, null, query, id); // TESTING
-//				int orderId = resultSet.getInt("receiptOrderId");
-//				Order order = Order.getOrderById(orderId);
+				int orderId = resultSet.getInt("orderId");
+				Order order = Order.getOrderById(orderId);
 				double amount = resultSet.getDouble("receiptPaymentAmount");
 				Date date = resultSet.getDate("receiptPaymentDate");
 				String type = resultSet.getString("receiptPaymentType");
@@ -95,9 +94,8 @@ public class Receipt
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("receiptId");
-				Order order = new Order(id, null, null, query, id); // TESTING
-//				int orderId = resultSet.getInt("receiptOrderId");
-//				Order order = Order.getOrderById(orderId);
+				int orderId = resultSet.getInt("orderId");
+				Order order = Order.getOrderById(orderId);
 				double amount = resultSet.getDouble("receiptPaymentAmount");
 				Date date = resultSet.getDate("receiptPaymentDate");
 				String type = resultSet.getString("receiptPaymentType");
@@ -132,7 +130,7 @@ public class Receipt
 
 	public static void deleteReceipt(int orderId)
 	{
-		String query = "DELETE FROM menuitem WHERE orderId = ?;";
+		String query = "DELETE FROM receipt WHERE orderId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -146,7 +144,7 @@ public class Receipt
 		}
 	}
 	
-	
+
 	// GETTERS & SETTERS
 	
 	public int getReceiptId()
@@ -183,7 +181,6 @@ public class Receipt
 	{
 		return receiptPaymentDate;
 	}
-
 	public void setReceiptPaymentDate(Date receiptPaymentDate)
 	{
 		this.receiptPaymentDate = receiptPaymentDate;
