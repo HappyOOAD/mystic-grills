@@ -65,6 +65,8 @@ public class Register extends Stage
             {            	
             	String res = controller.createUser("Customer", username, email, password);  
             	actionTarget.setText(res);
+            	new Login().show();
+            	this.close();
             }
             else
             {            	
