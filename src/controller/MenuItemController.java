@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import model.MenuItem;
 
-public class MenuItemController {
+public class MenuItemController
+{
 
-	public MenuItemController() {
+	public MenuItemController()
+	{
 		// TODO Auto-generated constructor stub
 	}
 

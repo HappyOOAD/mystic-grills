@@ -13,10 +13,10 @@ public class MenuItem
 	private int menuItemId;
 	private String menuItemName;
 	private String menuItemDescription;
-	private int menuItemPrice;
+	private double menuItemPrice;
 	
 	// CONSTRUCTOR
-	public MenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	public MenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		super();
 		this.menuItemId = menuItemId;
@@ -28,7 +28,7 @@ public class MenuItem
 	
 	// CRUD
 	
-	public static String createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static String createMenuItem(String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		// CHECK UNIQUE
 		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
@@ -57,7 +57,7 @@ public class MenuItem
 			prep.setInt   (1, 0);
 			prep.setString(2, menuItemName);
 			prep.setString(3, menuItemDescription);
-			prep.setInt   (4, menuItemPrice);
+			prep.setDouble(4, menuItemPrice);
 			prep.executeUpdate();
 			return "success";
 		}
@@ -84,7 +84,7 @@ public class MenuItem
 				int id = resultSet.getInt("menuItemId");
 				String name = resultSet.getString("menuItemName");
 				String description = resultSet.getString("menuItemDescription");
-				int price = resultSet.getInt("menuItemPrice");
+				double price = resultSet.getDouble("menuItemPrice");
 				menuItem = new MenuItem(id, name, description, price);
 			}
 		} 
@@ -110,7 +110,7 @@ public class MenuItem
 				int id = resultSet.getInt("menuItemId");
 				String name = resultSet.getString("menuItemName");
 				String description = resultSet.getString("menuItemDescription");
-				int price = resultSet.getInt("menuItemPrice");
+				double price = resultSet.getDouble("menuItemPrice");
 				menuItems.add(new MenuItem(id, name, description, price));
 			}
 		} 
@@ -121,7 +121,7 @@ public class MenuItem
 		return menuItems;
 	}
 	
-	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		// CHECK UNIQUE
 		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
@@ -149,7 +149,7 @@ public class MenuItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setString(1, menuItemName);
 			prep.setString(2, menuItemDescription);
-			prep.setInt(3, menuItemPrice);
+			prep.setDouble(3, menuItemPrice);
 			prep.setInt(4, menuItemId);
 			prep.executeUpdate();
 			return "success";
@@ -210,12 +210,12 @@ public class MenuItem
 		this.menuItemDescription = menuItemDescription;
 	}
 
-	public int getMenuItemPrice()
+	public double getMenuItemPrice()
 	{
 		return menuItemPrice;
 	}
 
-	public void setMenuItemPrice(int menuItemPrice)
+	public void setMenuItemPrice(double menuItemPrice)
 	{
 		this.menuItemPrice = menuItemPrice;
 	}

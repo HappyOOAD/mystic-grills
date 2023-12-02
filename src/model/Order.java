@@ -16,7 +16,7 @@ public class Order
 	private ArrayList<OrderItem> orderItems;
 	private String orderStatus;
 	private Date orderDate;
-	private int orderTotal;
+	private double orderTotal;
 	
 	// CONSTRUCTOR [With Order Date]
 	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
@@ -62,12 +62,6 @@ public class Order
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-		}
-		
-		// Insert orderItem
-		for (OrderItem orderItem : orderItems)
-		{
-			OrderItem.createOrderitem(orderItem.getOrderId(), orderItem.getMenuItem(), orderItem.getQuantity());
 		}
 	}
 	
@@ -128,68 +122,57 @@ public class Order
 		return orderId;
 	}
 
-
 	public void setOrderId(int orderId)
 	{
 		this.orderId = orderId;
 	}
-
 
 	public User getOrderUser() 
 	{
 		return orderUser;
 	}
 
-
 	public void setOrderUser(User orderUser)
 	{
 		this.orderUser = orderUser;
 	}
-
 
 	public ArrayList<OrderItem> getOrderItems()
 	{
 		return orderItems;
 	}
 
-
 	public void setOrderItems(ArrayList<OrderItem> orderItems)
 	{
 		this.orderItems = orderItems;
 	}
-
 
 	public String getOrderStatus()
 	{
 		return orderStatus;
 	}
 
-
 	public void setOrderStatus(String orderStatus)
 	{
 		this.orderStatus = orderStatus;
 	}
-
 
 	public Date getOrderDate()
 	{
 		return orderDate;
 	}
 
-
 	public void setOrderDate(Date orderDate)
 	{
 		this.orderDate = orderDate;
 	}
 
-
-	public int getOrderTotal()
+	public double getOrderTotal()
 	{
 		return orderTotal;
 	}
 
-
-	public void setOrderTotal(int orderTotal)
+	public void setOrderTotal(double orderTotal)
 	{
 		this.orderTotal = orderTotal;
 	}		
