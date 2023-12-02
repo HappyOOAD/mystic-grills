@@ -50,3 +50,55 @@ CREATE TABLE receipt(
     CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId)  
 );
 ```
+
+```Values
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES
+    ('Admin', 'Admin User', 'admin@example.com', 'adminpassword'),
+    ('Customer', 'John Doe', 'john.doe@example.com', 'johnpassword'),
+    ('Customer', 'Jane Doe', 'jane.doe@example.com', 'janepassword'),
+    ('Customer', 'Alice Smith', 'alice.smith@example.com', 'alicepassword'),
+    ('Customer', 'Bob Johnson', 'bob.johnson@example.com', 'bobpassword'),
+    ('Admin', 'Super Admin', 'superadmin@example.com', 'superadminpassword');
+
+INSERT INTO menuitem (menuItemName, menuItemDescription, menuItemPrice)
+VALUES
+    ('Grilled Chicken', 'Juicy grilled chicken served with vegetables', 15.99),
+    ('Vegetarian Pasta', 'Pasta with a mix of fresh vegetables', 12.99),
+    ('BBQ Ribs', 'Tender BBQ ribs with a side of coleslaw', 18.99),
+    ('Salmon Steak', 'Grilled salmon steak with lemon butter sauce', 22.99),
+    ('Margherita Pizza', 'Classic pizza with tomato, mozzarella, and basil', 14.99),
+    ('Shrimp Scampi', 'Garlic butter shrimp served over pasta', 19.99);
+
+INSERT INTO orders (userId, orderStatus, orderDate)
+VALUES
+    (2, 'Pending', '2023-12-01'),
+    (3, 'Completed', '2023-12-02'),
+    (2, 'Processing', '2023-12-03'),
+    (4, 'Completed', '2023-12-04'),
+    (5, 'Pending', '2023-12-05'),
+    (4, 'Processing', '2023-12-06');
+
+INSERT INTO orderitem (orderId, menuItemId, quantity)
+VALUES
+    (1, 1, 2),
+    (1, 2, 1),
+    (2, 3, 3),
+    (3, 1, 1),
+    (3, 2, 2),
+    (4, 3, 2),
+    (5, 2, 1),
+    (6, 1, 3),
+    (6, 2, 2),
+    (6, 3, 1);
+
+INSERT INTO receipt (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
+VALUES
+    (1, 43.97, '2023-12-01', 'Credit Card'),
+    (2, 56.97, '2023-12-02', 'PayPal'),
+    (3, 74.97, '2023-12-03', 'Cash'),
+    (4, 45.98, '2023-12-04', 'Debit Card'),
+    (5, 29.99, '2023-12-05', 'Cash'),
+    (6, 78.96, '2023-12-06', 'Credit Card');
+```
