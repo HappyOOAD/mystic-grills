@@ -18,7 +18,6 @@ public class Order
 	private Date orderDate;
 	private double orderTotal;
 	
-	// CONSTRUCTOR [With Order Date]
 	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate,
 			int orderTotal)
 	{
@@ -28,17 +27,6 @@ public class Order
 		this.orderItems = orderItems;
 		this.orderStatus = orderStatus;
 		this.orderDate = orderDate;
-		this.orderTotal = orderTotal;
-	}
-
-	// CONSTRUCTOR [Without Order Date]
-	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, int orderTotal)
-	{
-		super();
-		this.orderId = orderId;
-		this.orderUser = orderUser;
-		this.orderItems = orderItems;
-		this.orderStatus = orderStatus;
 		this.orderTotal = orderTotal;
 	}
 	
@@ -84,7 +72,7 @@ public class Order
 				String status = resultSet.getString("orderStatus");
 				Date date = resultSet.getDate("orderDate");
 				int total = 0;
-				orders.add(new Order(id, user, orderItems, status, 0));
+				orders.add(new Order(id, user, orderItems, status, date, total));
 			}
 		}
 		catch (SQLException e)
@@ -96,12 +84,62 @@ public class Order
 	
 	public static ArrayList<Order> getAllOrders()
 	{
-		return null;
+		ArrayList<Order> order = new ArrayList<>();
+		String query = "SELECT * FROM orders";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			ResultSet resultSet = prep.executeQuery(query);
+			
+			while(resultSet.next()) 
+			{
+				int id = resultSet.getInt("orderId");
+				int userId = resultSet.getInt("userId");
+				String orderStatus = resultSet.getString("orderStatus");
+				Date orderDate = resultSet.getDate("orderDate");
+				User user = User.getUserById(userId);
+				int total = 0;
+				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
+				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return order;
 	}
 	
 	public static Order getOrderById(int orderId)
 	{
-		return null;
+		Order order = null;
+		String query = "SELECT * FROM orders WHERE orderId = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			ResultSet resultSet = prep.executeQuery();
+
+			if(resultSet.next())
+			{
+				
+				int id = resultSet.getInt("orderId");
+				int userId = resultSet.getInt("userId");
+				String orderStatus = resultSet.getString("orderStatus");
+				Date orderDate = resultSet.getDate("orderDate");
+				User user = User.getUserById(userId);
+				int total = 0;
+				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
+				order = new Order(id, user, orderItems, orderStatus, orderDate, total);
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return order;
 	}
 	
 	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
@@ -111,7 +149,18 @@ public class Order
 	
 	public static void deleteOrder(int orderId)
 	{
-		
+		String query = "DELETE FROM orders WHERE orderId = ?;";
+		  
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			prep.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	
