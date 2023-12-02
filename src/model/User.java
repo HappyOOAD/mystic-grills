@@ -34,7 +34,6 @@ public class User
 	{
 		String insertQuery = "INSERT INTO users(userId, userRole, userName, userEmail, userPassword) VALUES (? ,? ,? ,? ,? )";
 			  
-		System.out.println(insertQuery);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(insertQuery);
@@ -49,7 +48,6 @@ public class User
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			System.out.println(e);
 			return "failed";
 		}
 	}

@@ -1,4 +1,4 @@
-package view;
+package view.Admin;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -72,7 +72,8 @@ public class UserManagement extends Application{
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public UserManagement(Stage args)
+    {
+        start(args);
     }
 }

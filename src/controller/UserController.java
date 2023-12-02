@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import view.Admin.UserManagement;
 
 public class UserController
 {
@@ -62,7 +63,7 @@ public class UserController
 		{
 			String role = user.getUserRole();
 			currentUser = user;
-			return "Login Success [Role : "+role+"]";
+			return "Login Success";
 		}
 		else
 		{

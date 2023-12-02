@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.User;
+import view.Admin.UserManagement;
 
 public class Login extends Application
 {
@@ -51,6 +52,7 @@ public class Login extends Application
             String password = passwordField.getText();
             
             String res = controller.authenticateUser(email, password);
+            if(res.equals("Login Success")) new UserManagement(primaryStage);
             actionTarget.setText(res);
         });
 
@@ -58,14 +60,6 @@ public class Login extends Application
         primaryStage.setScene(scene);
 
         primaryStage.show();
-    }
-
-    private boolean validateInput(String email, String password) {
-        // Perform input validation based on the specified rules
-        // In a real application, you would check against a database
-        // For simplicity, here we assume a hardcoded email and password
-        return !email.isEmpty() && email.equals("user@example.com") &&
-               !password.isEmpty() && password.equals("password123");
     }
 
     public Login(Stage args)
