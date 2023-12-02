@@ -1,7 +1,6 @@
 package view;
 
 import controller.UserController;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,17 +10,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.User;
-import view.Admin.UserManagement;
 
-public class Login extends Application
+public class Login extends Stage
 {
 	UserController controller = new UserController();
 	
-	public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mystic Grills - Login");
-
+	public Login() 
+	{
+		setTitle("Mystic Grills - Login");
         GridPane grid = new GridPane();
+        grid.setAlignment(javafx.geometry.Pos.CENTER);
         grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
@@ -52,18 +50,11 @@ public class Login extends Application
             String password = passwordField.getText();
             
             String res = controller.authenticateUser(email, password);
-            if(res.equals("Login Success")) new UserManagement(primaryStage);
-            actionTarget.setText(res);
+            if(res.equals("Login Success")) this.close();
+            else actionTarget.setText(res);
         });
 
         Scene scene = new Scene(grid, 400, 200);
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-    }
-
-    public Login(Stage args)
-    {
-        start(args);
+        setScene(scene);
     }
 }

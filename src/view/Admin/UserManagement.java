@@ -1,6 +1,5 @@
 package view.Admin;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,9 +9,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class UserManagement extends Application{
-	public void start(Stage primaryStage) {
-        primaryStage.setTitle("User Management - Admin View");
+public class UserManagement extends Stage {
+    public UserManagement() {
+        setTitle("User Management - Admin View");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20, 20, 20, 20));
@@ -67,13 +66,6 @@ public class UserManagement extends Application{
         });
 
         Scene scene = new Scene(grid, 400, 300);
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-    }
-
-    public UserManagement(Stage args)
-    {
-        start(args);
+        setScene(scene);
     }
 }

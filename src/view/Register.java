@@ -12,14 +12,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Register extends Application{
-	
+public class Register extends Stage
+{	
 	UserController controller = new UserController();
 	
-	public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mystic Grills - User Registration");
-
+	public Register() 
+	{
+        setTitle("Mystic Grills - Register");
         GridPane grid = new GridPane();
+        grid.setAlignment(javafx.geometry.Pos.CENTER);
         grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
@@ -74,19 +75,6 @@ public class Register extends Application{
         });
 
         Scene scene = new Scene(grid, 400, 300);
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-    }
-
-    private boolean validateInput(String username, String email, String password, String confirmPassword) {
-        // Perform input validation based on the specified rules
-        return !username.isEmpty() && !email.isEmpty() && email.matches("^[\\w.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$")
-                && !password.isEmpty() && password.length() >= 6 && password.equals(confirmPassword);
-    }
-
-    public Register(Stage args)
-    {
-        start(args);
+        setScene(scene);
     }
 }

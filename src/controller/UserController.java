@@ -1,7 +1,12 @@
 package controller;
 
 import model.User;
+import view.Admin.AdminPanel;
 import view.Admin.UserManagement;
+import view.Cashier.CashierPanel;
+import view.Chef.ChefPanel;
+import view.Customer.CustomerPanel;
+import view.Waiter.WaiterPanel;
 
 public class UserController
 {
@@ -63,7 +68,16 @@ public class UserController
 		{
 			String role = user.getUserRole();
 			currentUser = user;
-			return "Login Success";
+			switch (user.getUserRole())
+			{
+				case "Admin": new AdminPanel().show(); break;
+				case "Cashier": new CashierPanel().show(); break;
+				case "Chef": new ChefPanel().show(); break;
+				case "Waiter": new WaiterPanel().show(); break;
+				case "Customer": new CustomerPanel().show(); break;
+				default: return "Role Undefined";
+			}
+			return "Role undefined";
 		}
 		else
 		{
