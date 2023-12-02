@@ -17,13 +17,19 @@ import view.Login;
 
 
 // --- JavaFX Main Class ---
-public class Main
+public class Main extends Application
 {
     public static void main(String[] args)
     {
 //    	User.createUser("customer", "chris", "christiansen@gmail.com", "mynameisc");
-        new Login();
+    	launch(args);
     }
+
+	@Override
+	public void start(Stage arg0) throws Exception {
+		// TODO Auto-generated method stub
+		new Login(arg0);
+	}
 }
 
 

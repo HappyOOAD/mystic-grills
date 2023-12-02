@@ -1,5 +1,6 @@
 package view;
 
+import controller.UserController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,9 +9,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.User;
 
-public class Login extends Application{
+public class Login extends Application
+{
+	UserController controller = new UserController();
+	
 	public void start(Stage primaryStage) {
         primaryStage.setTitle("Mystic Grills - Login");
 
@@ -34,15 +40,18 @@ public class Login extends Application{
         // Login Button
         Button loginButton = new Button("Login");
         grid.add(loginButton, 1, 2);
+        
+        // action Text
+        Text actionTarget = new Text();
+        grid.add(actionTarget, 1, 6);
 
-        loginButton.setOnAction(e -> {
-            // Validate input
-            if (validateInput(emailField.getText(), passwordField.getText())) {
-                // Perform login logic here
-                System.out.println("Login successful!");
-            } else {
-                System.out.println("Login failed. Please check your credentials.");
-            }
+        loginButton.setOnAction(e ->
+        {
+        	String email = emailField.getText();
+            String password = passwordField.getText();
+            
+            String res = controller.authenticateUser(email, password);
+            actionTarget.setText(res);
         });
 
         Scene scene = new Scene(grid, 400, 200);
@@ -59,7 +68,8 @@ public class Login extends Application{
                !password.isEmpty() && password.equals("password123");
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public Login(Stage args)
+    {
+        start(args);
     }
 }

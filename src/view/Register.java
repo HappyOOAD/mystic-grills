@@ -52,10 +52,8 @@ public class Register extends Application{
         grid.add(registerButton, 1, 4);
         
 
-        registerButton.setOnAction(e -> {
-            // Validate input
-        	Login login = new Login();
-            login.start(primaryStage);
+        registerButton.setOnAction(e ->
+        {
             if (validateInput(usernameField.getText(), emailField.getText(), passwordField.getText(), confirmPasswordField.getText())) {
                 // Perform registration logic here
                 System.out.println("User registered successfully!");
