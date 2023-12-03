@@ -51,14 +51,18 @@ public class Register extends Stage
         // Register Button
         Button registerButton = new Button("Register");
         grid.add(registerButton, 1, 4);
+		
+        //Login Button
+        Button loginButton = new Button("Login");
+        grid.add(loginButton, 1, 6);
         
         // Action Text
         Text actionTarget = new Text();
         grid.add(actionTarget, 1, 5);
         registerButton.setOnAction(e ->
         {
-        	String username = usernameField.getText();
-        	String email = emailField.getText();
+            String username = usernameField.getText();
+            String email = emailField.getText();
             String password = passwordField.getText();
             String confirmPassword = confirmPasswordField.getText();
             if(password.equals(confirmPassword))
@@ -73,6 +77,11 @@ public class Register extends Stage
             	actionTarget.setText("Password don't Match");
             }
             
+        });
+		
+        loginButton.setOnAction(e ->
+        {
+            new Login().show();
         });
 
         Scene scene = new Scene(grid, 400, 300);
