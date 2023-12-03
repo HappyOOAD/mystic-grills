@@ -39,6 +39,10 @@ public class Login extends Stage
         // Login Button
         Button loginButton = new Button("Login");
         grid.add(loginButton, 1, 2);
+		
+        //Register Button
+        Button RegisterButton = new Button("Regiser");
+        grid.add(RegisterButton, 1, 4);
         
         // Action Text
         Text actionTarget = new Text();
@@ -46,12 +50,17 @@ public class Login extends Stage
 
         loginButton.setOnAction(e ->
         {
-        	String email = emailField.getText();
+            String email = emailField.getText();
             String password = passwordField.getText();
             
             String res = controller.authenticateUser(email, password);
             if(res.equals("Login Success")) this.close();
             else actionTarget.setText(res);
+        });
+
+        RegisterButton.setOnAction(e ->
+        {
+            new Register().show();
         });
 
         Scene scene = new Scene(grid, 400, 200);
