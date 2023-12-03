@@ -15,6 +15,8 @@ public class Main extends Application
 {
     public static void main(String[] args)
     {
+    	Order o = Order.getOrderById(1);
+    	System.out.println(o.getOrderTotal());
     	launch(args);
     }
 

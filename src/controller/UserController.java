@@ -21,7 +21,7 @@ public class UserController
 		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
 		
 		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
-		if(User.emailIsUnique(userEmail) == false) return "Email already taken"; // Email must be unique
+		if(User.emailIsExist(userEmail)) return "Email already taken"; // Email must be unique
 		
 		if(userPassword.isBlank()) return "Password cannot be empty";
 		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long

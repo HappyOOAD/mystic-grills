@@ -52,7 +52,7 @@ public class Receipt
 		}
 	}
 	
-	public static Receipt getReceiptById(int receiptId)
+	public static Receipt getReceiptById(int receiptId) // NEED JOIN??
 	{
 		Receipt receipt = null;
 		String query = "SELECT * FROM receipts WHERE receiptId = ?;";
@@ -81,7 +81,7 @@ public class Receipt
 		return receipt;
 	}
 	
-	public static ArrayList<Receipt> getAllReceipts()
+	public static ArrayList<Receipt> getAllReceipts() // NEED JOIN
 	{
 		ArrayList<Receipt> receipts = new ArrayList<>();
 		String query = "SELECT * FROM receipts;";

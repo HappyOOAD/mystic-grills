@@ -51,7 +51,7 @@ public class Order
 		}
 	}
 	
-	public static ArrayList<Order> getOrdersByCustomerId(int customerId)
+	public static ArrayList<Order> getOrdersByCustomerId(int customerId)  // NEED JOIN
 	{
 		ArrayList<Order> orders = new ArrayList<Order>();
 		String query = "SELECT * FROM order WHERE userId = ?;";
@@ -80,7 +80,7 @@ public class Order
 		return orders;
 	}
 	
-	public static ArrayList<Order> getAllOrders()
+	public static ArrayList<Order> getAllOrders() // NEED JOIN
 	{
 		ArrayList<Order> order = new ArrayList<>();
 		String query = "SELECT * FROM orders;";
@@ -109,7 +109,7 @@ public class Order
 		return order;
 	}
 	
-	public static Order getOrderById(int orderId)
+	public static Order getOrderById(int orderId) // NEED JOIN??
 	{
 		Order order = null;
 		String query = "SELECT * FROM orders WHERE orderId = ?;";
@@ -120,18 +120,20 @@ public class Order
 			prep.setInt(1, orderId);
 			ResultSet resultSet = prep.executeQuery();
 
+			int userId = 0;
+			String orderStatus = null;
+			Date orderDate = null;
 			if(resultSet.next())
 			{
-				
-				int id = resultSet.getInt("orderId");
-				int userId = resultSet.getInt("userId");
-				User user = User.getUserById(userId);
-				String orderStatus = resultSet.getString("orderStatus");
-				Date orderDate = resultSet.getDate("orderDate");
-				double total = getTotalByOrderId(id);
-				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
-				order = new Order(id, user, orderItems, orderStatus, orderDate, total);
+				userId = resultSet.getInt("userId");
+				orderStatus = resultSet.getString("orderStatus");
+				orderDate = resultSet.getDate("orderDate");
 			}
+			resultSet.close();
+			User user = User.getUserById(userId);
+			double total = getTotalByOrderId(orderId);
+			ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(orderId);
+			order = new Order(orderId, user, orderItems, orderStatus, orderDate, total);
 		} 
 		catch (SQLException e)
 		{

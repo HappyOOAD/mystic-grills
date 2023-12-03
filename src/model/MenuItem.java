@@ -30,30 +30,11 @@ public class MenuItem
 	
 	public static String createMenuItem(String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
-		// CHECK UNIQUE
-		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
-		
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			PreparedStatement prep = connection.prepareStatement(checkQuery);
-			prep.setString(1, menuItemName);
-			ResultSet resultSet = prep.executeQuery();
-			
-			if(resultSet.next()) return "exist";
-			
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return "failed";
-		}
-		
-		// INSERT
-		String insertQuery = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
+		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(insertQuery);
+			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt   (1, 0);
 			prep.setString(2, menuItemName);
 			prep.setString(3, menuItemDescription);
@@ -177,7 +158,27 @@ public class MenuItem
 		}
 	}
 	
+	// Validate Functions
 	
+	public static boolean nameIsExist(String menuItemName)
+	{
+		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setString(1, menuItemName);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) return true;
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
 	// GETTERS & SETTERS
 
 	public int getMenuItemId()

@@ -182,29 +182,6 @@ public class User
 	
 	// Validate Functions
 	
-	public static boolean emailIsUnique(String userEmail)
-	{
-		String query = "SELECT * FROM users WHERE userEmail = ?;";
-		
-		try
-		{
-			Connection connection = Connect.getInstance().getConnection();
-			PreparedStatement prep = connection.prepareStatement(query);
-			prep.setString(1, userEmail);
-			ResultSet resultSet = prep.executeQuery();
-			
-			if(resultSet.next())
-			{
-				return false;
-			}
-			
-		} catch (SQLException e)
-    	{
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
 	public static boolean emailIsExist(String userEmail)
 	{
 		String query = "SELECT * FROM users WHERE userEmail = ?;";

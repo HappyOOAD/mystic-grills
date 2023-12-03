@@ -49,19 +49,23 @@ public class OrderItem
 	public static ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
 		ArrayList<OrderItem> orderItems = new ArrayList<>();
-		String query = "SELECT * FROM orderitem WHERE orderId = ?;";
+		String query = "SELECT * FROM orderitem JOIN menuitem ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
 		
+		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, orderId);
-			ResultSet resultSet = prep.executeQuery(query);
+			ResultSet resultSet = prep.executeQuery();
 			
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("orderItemId");
 				int menuItemId = resultSet.getInt("menuItemId");
-				MenuItem menuItem = MenuItem.getMenuItemById(menuItemId);
+				String menuItemName = resultSet.getString("menuItemName");
+				String menuItemDescription = resultSet.getString("menuItemDescription");
+				double menuItemPrice = resultSet.getDouble("menuItemPrice");
+				MenuItem menuItem = new MenuItem(menuItemId, menuItemName, menuItemDescription, menuItemPrice);
 				int quantity = resultSet.getInt("quantity");
 				orderItems.add(new OrderItem(id, orderId, menuItem, quantity));
 			}
