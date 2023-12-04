@@ -19,6 +19,7 @@ public class Main extends Application
 {
     public static void main(String[] args)
     {
+// 	Testing
 //    	Order o = Order.getOrderById(1);
 //    	System.out.println(o.getOrderTotal());
 //    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
