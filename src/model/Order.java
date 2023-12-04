@@ -150,7 +150,7 @@ public class Order
 	
 	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{
-		String deleteOrderItemsQuery = "DELETE FROM orderitem WHERE orderId = ?";
+		String deleteOrderItemsQuery = "DELETE FROM orderitems WHERE orderId = ?";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(deleteOrderItemsQuery);
@@ -162,7 +162,7 @@ public class Order
 			e.printStackTrace();
 		}
 		
-		String reinsertOrderItemsQuery = "INSERT INTO orderitem (orderId, menuItemId, quantity) VALUES (?, ?, ?);";
+		String reinsertOrderItemsQuery = "INSERT INTO orderitems (orderId, menuItemId, quantity) VALUES (?, ?, ?);";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(reinsertOrderItemsQuery);
@@ -213,7 +213,7 @@ public class Order
 	public static double getTotalByOrderId(int orderId)
 	{
 		int orderTotalPrice = 0;
-		String query = "SELECT * FROM orderitem JOIN menuitem ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
+		String query = "SELECT * FROM orderitems JOIN menuitems ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{

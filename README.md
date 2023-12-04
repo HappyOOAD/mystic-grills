@@ -12,7 +12,7 @@ CREATE TABLE users(
     userPassword VARCHAR(30) NOT NULL  
 );
 
-CREATE TABLE menuitem(
+CREATE TABLE menuitems(
     menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     menuItemName VARCHAR(30) NOT NULL,
     menuItemDescription VARCHAR(30) NOT NULL,
@@ -29,17 +29,17 @@ CREATE TABLE orders(
 );
 
 
-CREATE TABLE orderitem(
-    orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+CREATE TABLE orderitems(
     orderId INT NOT NULL,
     menuItemId INT NOT NULL,
     quantity INT NOT NULL,
-    
-    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitem(menuItemId),
+
+    PRIMARY KEY (orderId, menuItemId),
+    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId),
     CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
 
-CREATE TABLE receipt(
+CREATE TABLE receipts(
     receiptId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     orderId INT NOT NULL,
     receiptPaymentAmount DOUBLE NOT NULL,
@@ -61,7 +61,7 @@ VALUES
     ('Customer', 'Bob Johnson', 'bob.johnson@example.com', 'bobpassword'),
     ('Admin', 'Super Admin', 'superadmin@example.com', 'superadminpassword');
 
-INSERT INTO menuitem (menuItemName, menuItemDescription, menuItemPrice)
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
 VALUES
     ('Grilled Chicken', 'Juicy grilled chicken served with vegetables', 15.99),
     ('Vegetarian Pasta', 'Pasta with a mix of fresh vegetables', 12.99),
@@ -79,20 +79,18 @@ VALUES
     (5, 'Pending', '2023-12-05'),
     (4, 'Processing', '2023-12-06');
 
-INSERT INTO orderitem (orderId, menuItemId, quantity)
+INSERT INTO orderitems (orderId, menuItemId, quantity)
 VALUES
-    (1, 1, 2),
-    (1, 2, 1),
-    (2, 3, 3),
-    (3, 1, 1),
+    (1, 2, 2),
+    (2, 1, 1),
+    (3, 3, 3),
+    (1, 1, 1),
+    (2, 2, 2),
     (3, 2, 2),
-    (4, 3, 2),
-    (5, 2, 1),
-    (6, 1, 3),
-    (6, 2, 2),
-    (6, 3, 1);
+    (1, 3, 1),
+    (3, 1, 1);
 
-INSERT INTO receipt (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
+INSERT INTO receipts (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
 VALUES
     (1, 43.97, '2023-12-01', 'Credit Card'),
     (2, 56.97, '2023-12-02', 'PayPal'),

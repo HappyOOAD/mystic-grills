@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import model.Order;
 import model.OrderItem;
 import model.Receipt;
+import model.User;
 import view.Login;
 
 
@@ -18,13 +19,20 @@ public class Main extends Application
 {
     public static void main(String[] args)
     {
+// 	Testing
 //    	Order o = Order.getOrderById(1);
 //    	System.out.println(o.getOrderTotal());
-    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
-    	for (OrderItem orderItem : o) {
-			System.out.println(orderItem.getMenuItem().getMenuItemName());
-		}
+//    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
+//    	for (OrderItem orderItem : o) {
+//			System.out.println(orderItem.getMenuItem().getMenuItemName());
+//		}
 //    	Receipt.getAllReceipts();
+    	ArrayList<User> x = User.getAllUsers();
+    	for (User temp : x) {
+			System.out.println(temp.getUserName());
+		}
+    	
+    	
     	launch(args);
     }
 
