@@ -84,7 +84,7 @@ public class Receipt
 	public static ArrayList<Receipt> getAllReceipts() // NEED JOIN
 	{
 		ArrayList<Receipt> receipts = new ArrayList<>();
-		String query = "SELECT * FROM receipts;";
+		String query = "SELECT * FROM receipt;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{

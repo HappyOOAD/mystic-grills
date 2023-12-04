@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Order;
 import model.OrderItem;
+import model.Receipt;
 import view.Login;
 
 
@@ -15,8 +18,13 @@ public class Main extends Application
 {
     public static void main(String[] args)
     {
-    	Order o = Order.getOrderById(1);
-    	System.out.println(o.getOrderTotal());
+//    	Order o = Order.getOrderById(1);
+//    	System.out.println(o.getOrderTotal());
+    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
+    	for (OrderItem orderItem : o) {
+			System.out.println(orderItem.getMenuItem().getMenuItemName());
+		}
+//    	Receipt.getAllReceipts();
     	launch(args);
     }
 

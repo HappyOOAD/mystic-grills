@@ -12,15 +12,16 @@ import database.Connect;
 public class OrderItem
 {
 	private int orderId;
+	private int menuItemId;
 	private MenuItem menuItem;
 	private int quantity;
 	
 	// CONSTRUCTOR
-	public OrderItem(int orderItemId, int orderId, MenuItem menuItem, int quantity)
+	public OrderItem(int orderItemId, int orderId, int menuItemId, int quantity)
 	{
 		super();
 		this.orderId = orderId;
-		this.menuItem = menuItem;
+		this.menuItemId = menuItemId;
 		this.quantity = quantity;
 	}
 	
@@ -49,7 +50,7 @@ public class OrderItem
 	public static ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
 		ArrayList<OrderItem> orderItems = new ArrayList<>();
-		String query = "SELECT * FROM orderitem JOIN menuitem ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
+		String query = "SELECT * FROM orderitem WHERE orderId = ?;";
 		
 		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -62,12 +63,14 @@ public class OrderItem
 			{
 				int id = resultSet.getInt("orderItemId");
 				int menuItemId = resultSet.getInt("menuItemId");
-				String menuItemName = resultSet.getString("menuItemName");
-				String menuItemDescription = resultSet.getString("menuItemDescription");
-				double menuItemPrice = resultSet.getDouble("menuItemPrice");
-				MenuItem menuItem = new MenuItem(menuItemId, menuItemName, menuItemDescription, menuItemPrice);
+				System.out.println(menuItemId);
 				int quantity = resultSet.getInt("quantity");
-				orderItems.add(new OrderItem(id, orderId, menuItem, quantity));
+				orderItems.add(new OrderItem(id, orderId, menuItemId, quantity));
+			}
+			
+			for (OrderItem orderItem : orderItems)
+			{
+				orderItem.setMenuItem(MenuItem.getMenuItemById(orderItem.getMenuItemId()));
 			}
 		} 
 		catch (SQLException e)
@@ -122,6 +125,16 @@ public class OrderItem
 	public void setOrderId(int orderId)
 	{
 		this.orderId = orderId;
+	}
+	
+	public int getMenuItemId()
+	{
+		return menuItemId;
+	}
+	
+	public void getMenuItemId(int menuItemId)
+	{
+		this.menuItemId = menuItemId;
 	}
 
 	public MenuItem getMenuItem()
