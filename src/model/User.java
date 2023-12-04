@@ -94,10 +94,10 @@ public class User
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("userId");
-				String role = resultSet.getString("UserRole");
-				String name = resultSet.getString("UserName");
-				String email = resultSet.getString("UserEmail");
-				String password = resultSet.getString("UserPassword");
+				String role = resultSet.getString("userRole");
+				String name = resultSet.getString("userName");
+				String email = resultSet.getString("userEmail");
+				String password = resultSet.getString("userPassword");
 				users.add(new User(id, role, name, email, password));
 			}
 		} 
