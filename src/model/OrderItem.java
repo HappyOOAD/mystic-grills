@@ -30,7 +30,7 @@ public class OrderItem
 	
 	public static void createOrderitem(int orderId, MenuItem menuItem, int quantity)
 	{
-		String query = "INSERT INTO orderitem (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
+		String query = "INSERT INTO orderitems (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -50,7 +50,7 @@ public class OrderItem
 	public static ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
 		ArrayList<OrderItem> orderItems = new ArrayList<>();
-		String query = "SELECT * FROM orderitem WHERE orderId = ?;";
+		String query = "SELECT * FROM orderitems WHERE orderId = ?;";
 		
 		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -82,7 +82,7 @@ public class OrderItem
 	
 	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
 	{
-		String query = "UPDATE orderitem SET quantity = ? WHERE orderId = ? AND menuItemId = ?;";
+		String query = "UPDATE orderitems SET quantity = ? WHERE orderId = ? AND menuItemId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
@@ -99,7 +99,7 @@ public class OrderItem
 	
 	public static void deleteOrderItem(int orderId, int menuItemId)
 	{
-		String query = "DELETE FROM orderitem WHERE orderId = ? AND menuItemId = ?;";
+		String query = "DELETE FROM orderitems WHERE orderId = ? AND menuItemId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{

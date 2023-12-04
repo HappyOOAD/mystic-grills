@@ -34,7 +34,7 @@ public class Receipt
 	public static void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		Date date = new Date();
-		String query = "INSERT INTO receipt (receiptId, orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
+		String query = "INSERT INTO receipts (receiptId, orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -84,7 +84,7 @@ public class Receipt
 	public static ArrayList<Receipt> getAllReceipts() // NEED JOIN
 	{
 		ArrayList<Receipt> receipts = new ArrayList<>();
-		String query = "SELECT * FROM receipt;";
+		String query = "SELECT * FROM receipts;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -111,7 +111,7 @@ public class Receipt
 	
 	public static void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount,  Date receiptPaymentDate)
 	{
-		String query = "UPDATE receipt SET receiptPaymentType = ?, receiptPaymentAmount = ?, receiptPaymentDate = ? WHERE orderId = ?;";
+		String query = "UPDATE receipts SET receiptPaymentType = ?, receiptPaymentAmount = ?, receiptPaymentDate = ? WHERE orderId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -130,7 +130,7 @@ public class Receipt
 
 	public static void deleteReceipt(int orderId)
 	{
-		String query = "DELETE FROM receipt WHERE orderId = ?;";
+		String query = "DELETE FROM receipts WHERE orderId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
