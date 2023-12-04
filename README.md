@@ -30,11 +30,11 @@ CREATE TABLE orders(
 
 
 CREATE TABLE orderitem(
-    orderItemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     orderId INT NOT NULL,
     menuItemId INT NOT NULL,
     quantity INT NOT NULL,
-    
+
+    PRIMARY KEY (orderId, menuItemId),
     CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitem(menuItemId),
     CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
@@ -81,16 +81,16 @@ VALUES
 
 INSERT INTO orderitem (orderId, menuItemId, quantity)
 VALUES
-    (1, 1, 2),
-    (1, 2, 1),
-    (2, 3, 3),
-    (3, 1, 1),
-    (3, 2, 2),
-    (4, 3, 2),
-    (5, 2, 1),
-    (6, 1, 3),
-    (6, 2, 2),
-    (6, 3, 1);
+    (1, 2),
+    (2, 1),
+    (3, 3),
+    (1, 1),
+    (2, 2),
+    (3, 2),
+    (2, 1),
+    (1, 3),
+    (2, 2),
+    (3, 1);
 
 INSERT INTO receipt (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
 VALUES
