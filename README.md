@@ -35,7 +35,7 @@ CREATE TABLE orderitems(
     quantity INT NOT NULL,
 
     PRIMARY KEY (orderId, menuItemId),
-    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitem(menuItemId),
+    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId),
     CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
 
