@@ -30,7 +30,7 @@ public class MenuItem
 	
 	public static String createMenuItem(String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
-		String query = "INSERT INTO menuitem(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
+		String query = "INSERT INTO menuitems(menuItemId, menuItemName, menuItemDescription, menuItemPrice) VALUES (? ,? ,? ,? )";
 				  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -52,7 +52,7 @@ public class MenuItem
 	public static MenuItem getMenuItemById(int menuItemId)
 	{
 		MenuItem menuItem = null;
-		String query = "SELECT * FROM menuitem WHERE menuItemId = ?;";
+		String query = "SELECT * FROM menuitems WHERE menuItemId = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -79,7 +79,7 @@ public class MenuItem
 	public static ArrayList<MenuItem> getAllMenuItems()
 	{
 		ArrayList<MenuItem> menuItems = new ArrayList<>();
-		String query = "SELECT * FROM menuitem;";
+		String query = "SELECT * FROM menuitems;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -105,7 +105,7 @@ public class MenuItem
 	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		// CHECK UNIQUE
-		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
+		String checkQuery = "SELECT * FROM menuitems WHERE menuItemName = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -123,7 +123,7 @@ public class MenuItem
 		}
 		
 		// INSERT
-		String query = "UPDATE menuitem SET menuItemName = ?, menuItemDescription = ?, menuItemPrice = ? WHERE menuItemId = ?;";
+		String query = "UPDATE menuitems SET menuItemName = ?, menuItemDescription = ?, menuItemPrice = ? WHERE menuItemId = ?;";
 			
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -144,7 +144,7 @@ public class MenuItem
 	
 	public static void deleteMenuItem(int menuItemId)
 	{
-		String query = "DELETE FROM menuitem WHERE menuItemId = ?;";
+		String query = "DELETE FROM menuitems WHERE menuItemId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -162,7 +162,7 @@ public class MenuItem
 	
 	public static boolean nameIsExist(String menuItemName)
 	{
-		String checkQuery = "SELECT * FROM menuitem WHERE menuItemName = ?;";
+		String checkQuery = "SELECT * FROM menuitems WHERE menuItemName = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{

@@ -12,21 +12,20 @@ import database.Connect;
 public class Order
 {
 	private int orderId;
+	private int orderUserId;
 	private User orderUser;
 	private ArrayList<OrderItem> orderItems;
 	private String orderStatus;
 	private Date orderDate;
 	private double orderTotal;
 	
-	public Order(int orderId, User orderUser, ArrayList<OrderItem> orderItems, String orderStatus, Date orderDate, double orderTotal)
+	public Order(int orderId, int orderUserId, String orderStatus, Date orderDate)
 	{
 		super();
 		this.orderId = orderId;
-		this.orderUser = orderUser;
-		this.orderItems = orderItems;
+		this.orderUserId = orderUserId;
 		this.orderStatus = orderStatus;
 		this.orderDate = orderDate;
-		this.orderTotal = orderTotal;
 	}
 	
 	
@@ -34,7 +33,7 @@ public class Order
 	
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
-		String query = "INSERT INTO order (orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
+		String query = "INSERT INTO orders (orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -51,10 +50,10 @@ public class Order
 		}
 	}
 	
-	public static ArrayList<Order> getOrdersByCustomerId(int customerId)  // NEED JOIN
+	public static ArrayList<Order> getOrdersByCustomerId(int customerId)
 	{
 		ArrayList<Order> orders = new ArrayList<Order>();
-		String query = "SELECT * FROM order WHERE userId = ?;";
+		String query = "SELECT * FROM orders WHERE userId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -65,12 +64,17 @@ public class Order
 			{
 				int id = resultSet.getInt("orderId");
 				int userId = resultSet.getInt("userId");
-				User user = User.getUserById(userId);
-				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
 				String status = resultSet.getString("orderStatus");
 				Date date = resultSet.getDate("orderDate");
-				double total = getTotalByOrderId(id);
-				orders.add(new Order(id, user, orderItems, status, date, total));
+				orders.add(new Order(id, userId, status, date));
+			}
+			resultSet.close();
+			
+			for (Order order : orders)
+			{
+				order.setOrderUser(User.getUserById(order.getOrderUserId()));
+				order.setOrderItems(OrderItem.getAllOrderItemsByOrderId(order.getOrderId()));
+				order.setOrderTotal(Order.getTotalByOrderId(order.getOrderId()));
 			}
 		}
 		catch (SQLException e)
@@ -80,33 +84,38 @@ public class Order
 		return orders;
 	}
 	
-	public static ArrayList<Order> getAllOrders() // NEED JOIN
+	public static ArrayList<Order> getAllOrders()
 	{
-		ArrayList<Order> order = new ArrayList<>();
+		ArrayList<Order> orders = new ArrayList<>();
 		String query = "SELECT * FROM orders;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
-			ResultSet resultSet = prep.executeQuery(query);
+			ResultSet resultSet = prep.executeQuery();
 			
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("orderId");
 				int userId = resultSet.getInt("userId");
-				String orderStatus = resultSet.getString("orderStatus");
-				Date orderDate = resultSet.getDate("orderDate");
-				User user = User.getUserById(userId);
-				double total = getTotalByOrderId(id);
-				ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(id);
-				order.add(new Order(id, user, orderItems, orderStatus, orderDate, total));
+				String status = resultSet.getString("orderStatus");
+				Date date = resultSet.getDate("orderDate");
+				orders.add(new Order(id, userId, status, date));
+			}
+			resultSet.close();
+			
+			for (Order order : orders)
+			{
+				order.setOrderUser(User.getUserById(order.getOrderUserId()));
+				order.setOrderItems(OrderItem.getAllOrderItemsByOrderId(order.getOrderId()));
+				order.setOrderTotal(Order.getTotalByOrderId(order.getOrderId()));
 			}
 		} 
 		catch (SQLException e)
 		{
 			e.printStackTrace();
 		} 
-		return order;
+		return orders;
 	}
 	
 	public static Order getOrderById(int orderId) // NEED JOIN??
@@ -120,20 +129,17 @@ public class Order
 			prep.setInt(1, orderId);
 			ResultSet resultSet = prep.executeQuery();
 
-			int userId = 0;
-			String orderStatus = null;
-			Date orderDate = null;
 			if(resultSet.next())
 			{
-				userId = resultSet.getInt("userId");
-				orderStatus = resultSet.getString("orderStatus");
-				orderDate = resultSet.getDate("orderDate");
+				int orderUserId = resultSet.getInt("userId");
+				String orderStatus = resultSet.getString("orderStatus");
+				Date orderDate = resultSet.getDate("orderDate");
+				order = new Order(orderId, orderUserId, orderStatus, orderDate);
 			}
 			resultSet.close();
-			User user = User.getUserById(userId);
-			double total = getTotalByOrderId(orderId);
-			ArrayList<OrderItem> orderItems = OrderItem.getAllOrderItemsByOrderId(orderId);
-			order = new Order(orderId, user, orderItems, orderStatus, orderDate, total);
+			order.setOrderUser(User.getUserById(order.getOrderUserId()));
+			order.setOrderItems(OrderItem.getAllOrderItemsByOrderId(order.getOrderId()));
+			order.setOrderTotal(Order.getTotalByOrderId(order.getOrderId()));
 		} 
 		catch (SQLException e)
 		{
@@ -221,6 +227,7 @@ public class Order
 				double menuItemPrice = resultSet.getDouble("menuItemPrice");
 				orderTotalPrice += (double) quantity * menuItemPrice;
 			}
+			resultSet.close();
 		}
 		catch (SQLException e)
 		{
@@ -241,6 +248,16 @@ public class Order
 		this.orderId = orderId;
 	}
 
+	public int getOrderUserId()
+	{
+		return orderUserId;
+	}
+	
+	public void setOrderUserId(int orderUserId)
+	{
+		this.orderUserId = orderUserId;
+	}
+	
 	public User getOrderUser() 
 	{
 		return orderUser;

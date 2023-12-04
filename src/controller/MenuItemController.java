@@ -15,6 +15,7 @@ public class MenuItemController
 	public String createMenuItem(String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
 		if(menuItemName.isBlank()) return "Menu Item Name Empty"; // CANNOT EMPTY
+		if(MenuItem.nameIsExist(menuItemName)) return "Menu Item Name Exist"; // MUST BE UNIQUE
 		
 		if(menuItemDescription.length() <= 10) return "Menu Item Description Length must be more than 10 characters"; // Must be more than 10 characters
 				
@@ -29,6 +30,7 @@ public class MenuItemController
 	public String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
 	{
 		if(menuItemName.isBlank()) return "Menu Item Name Empty"; // CANNOT EMPTY
+		if(MenuItem.nameIsExist(menuItemName)) return "Menu Item Name Exist"; // MUST BE UNIQUE
 		
 		if(menuItemDescription.length() <= 10) return "Menu Item Description Length must be more than 10 characters"; // Must be more than 10 characters
 				

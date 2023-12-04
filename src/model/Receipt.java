@@ -12,17 +12,18 @@ import database.Connect;
 public class Receipt
 {
 	private int receiptId;
+	private int receiptOrderId;
 	private Order receiptOrder;
 	private double receiptPaymentAmount;
 	private Date receiptPaymentDate;
 	private String receiptPaymentType;
 	
-	// CONSTRUCTOR
-	public Receipt(int receiptId, Order receiptOrder, double receiptPaymentAmount, Date receiptPaymentDate, String receiptPaymentType)
+	// CONSTRUCTOR [Only Primitive Data Type]
+	public Receipt(int receiptId, int receiptOrderId, double receiptPaymentAmount, Date receiptPaymentDate, String receiptPaymentType)
 	{
 		super();
 		this.receiptId = receiptId;
-		this.receiptOrder = receiptOrder;
+		this.receiptOrderId = receiptOrderId;
 		this.receiptPaymentAmount = receiptPaymentAmount;
 		this.receiptPaymentDate = receiptPaymentDate;
 		this.receiptPaymentType = receiptPaymentType;
@@ -52,7 +53,7 @@ public class Receipt
 		}
 	}
 	
-	public static Receipt getReceiptById(int receiptId) // NEED JOIN??
+	public static Receipt getReceiptById(int receiptId)
 	{
 		Receipt receipt = null;
 		String query = "SELECT * FROM receipts WHERE receiptId = ?;";
@@ -62,17 +63,18 @@ public class Receipt
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, receiptId);
 			ResultSet resultSet = prep.executeQuery();
-			
 			if(resultSet.next()) 
 			{
 				int id = resultSet.getInt("receiptId");
 				int orderId = resultSet.getInt("orderId");
-				Order order = Order.getOrderById(orderId);
 				double amount = resultSet.getDouble("receiptPaymentAmount");
 				Date date = resultSet.getDate("receiptPaymentDate");
 				String type = resultSet.getString("receiptPaymentType");
-				receipt = new Receipt(id, order, amount, date, type);
+				receipt = new Receipt(id, orderId, amount, date, type);
 			}
+			resultSet.close();
+			
+			receipt.setReceiptOrder(Order.getOrderById(receipt.getReceiptOrderId()));
 		} 
 		catch (SQLException e)
 		{
@@ -95,11 +97,16 @@ public class Receipt
 			{
 				int id = resultSet.getInt("receiptId");
 				int orderId = resultSet.getInt("orderId");
-				Order order = Order.getOrderById(orderId);
 				double amount = resultSet.getDouble("receiptPaymentAmount");
 				Date date = resultSet.getDate("receiptPaymentDate");
 				String type = resultSet.getString("receiptPaymentType");
-				receipts.add(new Receipt(id, order, amount, date, type));
+				receipts.add(new Receipt(id, orderId, amount, date, type));
+			}
+			resultSet.close();
+			
+			for (Receipt receipt : receipts)
+			{	
+				receipt.setReceiptOrder(Order.getOrderById(receipt.getReceiptOrderId()));
 			}
 		} 
 		catch (SQLException e)
@@ -155,6 +162,16 @@ public class Receipt
 	public void setReceiptId(int receiptId)
 	{
 		this.receiptId = receiptId;
+	}
+	
+	public int getReceiptOrderId()
+	{
+		return receiptOrderId;
+	}
+	
+	public void setReceiptOrderId(int receiptOrderId)
+	{
+		this.receiptOrderId = receiptOrderId;
 	}
 
 	public Order getReceiptOrder()
