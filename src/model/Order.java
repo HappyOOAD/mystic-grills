@@ -144,7 +144,7 @@ public class Order
 	
 	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{
-		String deleteOrderItemsQuery = "DELETE FROM orderitem WHERE orderId = ?";
+		String deleteOrderItemsQuery = "DELETE FROM orderitems WHERE orderId = ?";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(deleteOrderItemsQuery);
