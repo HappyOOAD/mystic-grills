@@ -75,16 +75,117 @@ public class UserManagement extends Stage {
     }
     
     private void openNewPageMenuItem() {
+    	TextField menuItemId = new TextField();
+    	TextField menuItemName = new TextField();
+    	TextField menuItemDescription = new TextField();
+    	TextField menuItemPrice = new TextField();
+    	
     	contentArea.getChildren().clear();
     	TableView<MenuItems>menuItemTable = createMenuItemTableView();
-		contentArea.getChildren().add(menuItemTable); 
+		contentArea.getChildren().add(menuItemTable);
+		
+		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+            	menuItemId.setText(newSelection.getMenuItemId()+"");
+            	menuItemName.setText(newSelection.getMenuItemName());
+            	menuItemDescription.setText(String.valueOf(newSelection.getMenuItemDescription()));
+            	menuItemPrice.setText(String.valueOf(newSelection.getMenuItemPrice()+""));
+            }
+        });
+		
+		GridPane form = new GridPane();
+        form.setVgap(20);
+        form.setHgap(10);
+		
+		Button updateButton = new Button("Update");
+        Button deleteButton = new Button("Delete");
+        
+        
+        form.add(new Label("MenuItem ID:"), 0, 0);
+        menuItemId.setDisable(true);
+        form.add(menuItemId, 1, 0);
+        form.add(new Label("MenuItem Name:"), 0, 1);
+        form.add(menuItemName, 1, 1); 
+        form.add(new Label("MenuItem Description:"), 0, 2);
+        form.add(menuItemDescription, 1, 2);
+        form.add(new Label("MenuItem Price:"), 0, 3);
+        form.add(menuItemPrice, 1, 3);
+        
+        form.add(updateButton, 0, 4);
+        form.add(deleteButton, 1, 4);
+       
+        
+        contentArea.getChildren().add(form);
+		
     }
     
     private void openNewPageAccount() {
+    	TextField userId = new TextField();
+    	TextField userName = new TextField();
+    	TextField userRole = new TextField();
+    	TextField userEmail = new TextField();
+    	TextField userPassword = new TextField();
+    	
     	contentArea.getChildren().clear();
     	TableView<User>accountsTable = createAccountsTableView();
 		contentArea.getChildren().add(accountsTable); 
+		
+		accountsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+            	userId.setText(newSelection.getUserId()+"");
+            	userName.setText(newSelection.getUserName());
+            	userRole.setText(String.valueOf(newSelection.getUserRole()));
+            	userEmail.setText(String.valueOf(newSelection.getUserEmail()));
+            	userPassword.setText(String.valueOf(newSelection.getUserPassword()));
+            }
+        });
+		
+		GridPane form = new GridPane();
+        form.setVgap(20);
+        form.setHgap(10);
+		
+		Button updateButton = new Button("Update");
+        Button deleteButton = new Button("Delete");
+        
+        
+        form.add(new Label("User ID:"), 0, 0);
+        userId.setDisable(true);
+        form.add(userId, 1, 0);
+        form.add(new Label("User Name:"), 0, 1);
+        form.add(userName, 1, 1);
+        userName.setDisable(true);
+        form.add(new Label("User Role:"), 0, 2);
+        form.add(userRole, 1, 2);
+        form.add(new Label("User Email:"), 0, 3);
+        form.add(userEmail, 1, 3);
+        userEmail.setDisable(true);
+        form.add(new Label("User Password:"), 0, 4);
+        form.add(userPassword, 1, 4);
+        userPassword.setDisable(true);
+        
+        form.add(updateButton, 0, 5);
+        form.add(deleteButton, 1, 5);
+        
+        updateButton.setOnAction(e ->
+        {
+        	
+			int id= Integer.parseInt(userId.getText());
+			String role = userRole.getText();
+			String name = userName.getText();
+			String email = userEmail.getText();
+			String password = userPassword.getText();
+            UserController.updateUser(id, role, name, email, password);
+        });
+        
+        deleteButton.setOnAction(e ->
+        {
+			int id= Integer.parseInt(userId.getText());
+			UserController.deleteUser(id);
+        });
+        
+        contentArea.getChildren().add(form);
     }
+    
     
     private TableView<MenuItems> createMenuItemTableView() {
     	TableView<MenuItems> tableView = new TableView<>();
@@ -138,7 +239,7 @@ public class UserManagement extends Stage {
             
         
         tableView.getColumns().addAll(usernameColumn, userroleColumn, userId, userEmailColumn, userPasswordColumn);
-        tableView.setItems(FXCollections.observableArrayList(User.getAllUsers()));
+        tableView.setItems(FXCollections.observableArrayList(UserController.getAllUsers()));
         
         return tableView;
     }

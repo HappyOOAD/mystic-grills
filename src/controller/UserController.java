@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import model.MenuItems;
 import model.User;
 import view.Admin.AdminPanel;
 import view.Admin.UserManagement;
@@ -34,7 +35,7 @@ public class UserController
 		else return "Failed create a new user";
 	}
 	
-	public String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
+	public static String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
 		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
 		
@@ -48,7 +49,7 @@ public class UserController
 		else return "Failed create a new user";
 	}
 	
-	public void deleteUser(int userId)
+	public static void deleteUser(int userId)
 	{
 		User.deleteUser(userId);
 	}
@@ -87,6 +88,10 @@ public class UserController
 		}
 	}
 	
+	public static ArrayList<User> getAllUsers()
+	{
+		return User.getAllUsers();
+	}
 	
 	// GETTERS SETTERS
 	
