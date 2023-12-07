@@ -12,7 +12,7 @@ public class OrderItem
 {
 	private int orderId;
 	private int menuItemId;
-	private MenuItem menuItem;
+	private MenuItems menuItem;
 	private int quantity;
 	
 	// CONSTRUCTOR
@@ -27,7 +27,7 @@ public class OrderItem
 	
 	// CRUD
 	
-	public static void createOrderitem(int orderId, MenuItem menuItem, int quantity)
+	public static void createOrderitem(int orderId, MenuItems menuItem, int quantity)
 	{
 		String query = "INSERT INTO orderitems (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
 		
@@ -69,7 +69,7 @@ public class OrderItem
 			
 			for (OrderItem orderItem : orderItems)
 			{
-				orderItem.setMenuItem(MenuItem.getMenuItemById(orderItem.getMenuItemId()));
+				orderItem.setMenuItem(MenuItems.getMenuItemById(orderItem.getMenuItemId()));
 			}
 		} 
 		catch (SQLException e)
@@ -79,7 +79,7 @@ public class OrderItem
 		return orderItems;
 	}
 	
-	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public static void updateOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
 		String query = "UPDATE orderitems SET quantity = ? WHERE orderId = ? AND menuItemId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -136,12 +136,12 @@ public class OrderItem
 		this.menuItemId = menuItemId;
 	}
 
-	public MenuItem getMenuItem()
+	public MenuItems getMenuItem()
 	{
 		return menuItem;
 	}
 
-	public void setMenuItem(MenuItem menuItem)
+	public void setMenuItem(MenuItems menuItem)
 	{
 		this.menuItem = menuItem;
 	}

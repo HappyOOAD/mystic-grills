@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.MenuItems;
 import model.Order;
 import model.OrderItem;
 import model.Receipt;
@@ -27,10 +28,14 @@ public class Main extends Application
 //			System.out.println(orderItem.getMenuItem().getMenuItemName());
 //		}
 //    	Receipt.getAllReceipts();
-    	ArrayList<User> x = User.getAllUsers();
-    	for (User temp : x) {
-			System.out.println(temp.getUserName());
-		}
+//    	ArrayList<User> x = User.getAllUsers();
+//    	for (User temp : x) {
+//			System.out.println(temp.getUserName());
+//		}
+//    	ArrayList<MenuItem> x = MenuItem.getAllMenuItems();
+//    	for (MenuItem temp : x) {
+//			System.out.println(temp.getMenuItemName());
+//		}
     	
     	
     	launch(args);

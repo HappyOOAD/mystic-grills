@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import database.Connect;
 
-public class MenuItem
+public class MenuItems
 {
 	private int menuItemId;
 	private String menuItemName;
@@ -16,7 +16,7 @@ public class MenuItem
 	private double menuItemPrice;
 	
 	// CONSTRUCTOR
-	public MenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
+	public MenuItems(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		super();
 		this.menuItemId = menuItemId;
@@ -49,9 +49,9 @@ public class MenuItem
 		}
 	}
 	
-	public static MenuItem getMenuItemById(int menuItemId)
+	public static MenuItems getMenuItemById(int menuItemId)
 	{
-		MenuItem menuItem = null;
+		MenuItems menuItem = null;
 		String query = "SELECT * FROM menuitems WHERE menuItemId = ?;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -66,7 +66,7 @@ public class MenuItem
 				String name = resultSet.getString("menuItemName");
 				String description = resultSet.getString("menuItemDescription");
 				double price = resultSet.getDouble("menuItemPrice");
-				menuItem = new MenuItem(id, name, description, price);
+				menuItem = new MenuItems(id, name, description, price);
 			}
 		} 
 		catch (SQLException e)
@@ -76,9 +76,9 @@ public class MenuItem
 		return menuItem;
 	}
 	
-	public static ArrayList<MenuItem> getAllMenuItems()
+	public static ArrayList<MenuItems> getAllMenuItems()
 	{
-		ArrayList<MenuItem> menuItems = new ArrayList<>();
+		ArrayList<MenuItems> menuItems = new ArrayList<>();
 		String query = "SELECT * FROM menuitems;";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -86,13 +86,14 @@ public class MenuItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			ResultSet resultSet = prep.executeQuery();
 			
+			
 			while(resultSet.next()) 
 			{
 				int id = resultSet.getInt("menuItemId");
 				String name = resultSet.getString("menuItemName");
 				String description = resultSet.getString("menuItemDescription");
 				double price = resultSet.getDouble("menuItemPrice");
-				menuItems.add(new MenuItem(id, name, description, price));
+				menuItems.add(new MenuItems(id, name, description, price));
 			}
 		} 
 		catch (SQLException e)

@@ -2,6 +2,7 @@ package view.Admin;
 
 import java.util.ArrayList;
 
+import controller.MenuItemController;
 import controller.UserController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.User;
+import model.MenuItems;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -56,12 +58,10 @@ public class UserManagement extends Stage {
         root.setTop(menuBar);
         
         UserManagementItem.setOnAction(e -> {
-        	System.out.println("Clicked");
-        	openNewPage();
+        	openNewPageAccount();
         });
         MenuItemManagementItem.setOnAction(e -> {
-        	System.out.println("Clicked");
-        	openNewPage();
+        	openNewPageMenuItem();
         });
 
         contentArea = new VBox(20);
@@ -74,12 +74,42 @@ public class UserManagement extends Stage {
         root.setCenter(contentDivide);
     }
     
+    private void openNewPageMenuItem() {
+    	contentArea.getChildren().clear();
+    	TableView<MenuItems>menuItemTable = createMenuItemTableView();
+		contentArea.getChildren().add(menuItemTable); 
+    }
     
-    private void openNewPage() {
+    private void openNewPageAccount() {
     	contentArea.getChildren().clear();
     	TableView<User>accountsTable = createAccountsTableView();
-		contentArea.getChildren().add(accountsTable);
+		contentArea.getChildren().add(accountsTable); 
+    }
+    
+    private TableView<MenuItems> createMenuItemTableView() {
+    	TableView<MenuItems> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	
+        TableColumn<MenuItems, Integer> menuItemIdColumn = new TableColumn<>("ID");
+        menuItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemId"));
+        menuItemIdColumn.setPrefWidth(150);
+    	    
+        TableColumn<MenuItems, String> menuItemNameColumn = new TableColumn<>("Name");
+        menuItemNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
+        menuItemNameColumn.setPrefWidth(150);
         
+        TableColumn<MenuItems, String> menuItemDescriptionColumn = new TableColumn<>("Description");
+        menuItemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
+        menuItemDescriptionColumn.setPrefWidth(150);
+        
+        TableColumn<MenuItems, Integer> menuItemPriceColumn = new TableColumn<>("Price");
+        menuItemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
+        menuItemPriceColumn.setPrefWidth(150);       
+        
+        tableView.getColumns().addAll(menuItemIdColumn, menuItemNameColumn, menuItemDescriptionColumn, menuItemPriceColumn);
+        tableView.setItems(FXCollections.observableArrayList(MenuItemController.getAllMenuItem()));
+        
+        return tableView;
     }
     
     private TableView<User> createAccountsTableView() {

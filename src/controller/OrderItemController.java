@@ -2,7 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.MenuItem;
+import model.MenuItems;
 import model.OrderItem;
 
 public class OrderItemController
@@ -14,7 +14,7 @@ public class OrderItemController
 	}
 
 	
-	public String createOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public String createOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
 		if(menuItem == null) return "Menu Item must be chosen";
 		if(quantity < 1) return "Quantity cannot below 1";
@@ -23,7 +23,7 @@ public class OrderItemController
 		return "Successfully Create an Order Item";
 	}
 	
-	public String updateOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public String updateOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
 		if(menuItem == null) return "Menu Item must be chosen";
 		if(quantity < 1) return "Quantity cannot below 1";
@@ -32,7 +32,7 @@ public class OrderItemController
 		return "Successfully Update an Order Item";
 	}
 	
-	public void deleteOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public void deleteOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
 		OrderItem.deleteOrderItem(orderId, quantity);
 	}
