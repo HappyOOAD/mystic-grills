@@ -113,7 +113,22 @@ public class UserManagement extends Stage {
         
         form.add(updateButton, 0, 4);
         form.add(deleteButton, 1, 4);
-       
+        
+        
+        updateButton.setOnAction(e ->
+        {
+        	int id= Integer.parseInt(menuItemId.getText());
+			String name = menuItemName.getText();
+			String description = menuItemDescription.getText();
+			int price = Integer.parseInt(menuItemPrice.getText());
+            MenuItemController.updateMenuItem(id, name, description, price);
+        });
+        
+        deleteButton.setOnAction(e ->
+        {
+        	int id= Integer.parseInt(menuItemId.getText());
+			MenuItemController.deleteMenuItem(id);
+        });
         
         contentArea.getChildren().add(form);
 		
