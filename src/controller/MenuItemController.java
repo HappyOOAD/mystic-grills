@@ -27,7 +27,7 @@ public class MenuItemController
 		else return "Failed Create A New Menu Item";
 	}
 	
-	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, int menuItemPrice)
+	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
 		if(menuItemName.isBlank()) return "Menu Item Name Empty"; // CANNOT EMPTY
 		if(MenuItems.nameIsExist(menuItemName)) return "Menu Item Name Exist"; // MUST BE UNIQUE

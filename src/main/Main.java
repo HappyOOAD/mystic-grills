@@ -37,6 +37,7 @@ public class Main extends Application
 //			System.out.println(temp.getMenuItemName());
 //		}
     	
+//    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
     	
     	launch(args);
     }

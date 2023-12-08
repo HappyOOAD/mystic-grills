@@ -7,6 +7,7 @@ import controller.UserController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -120,8 +121,14 @@ public class UserManagement extends Stage {
         	int id= Integer.parseInt(menuItemId.getText());
 			String name = menuItemName.getText();
 			String description = menuItemDescription.getText();
-			int price = Integer.parseInt(menuItemPrice.getText());
-            MenuItemController.updateMenuItem(id, name, description, price);
+			double price = Double.parseDouble(menuItemPrice.getText());
+            
+            
+            String result = MenuItemController.updateMenuItem(id, name, description, price);
+            
+            if (!"Success Update A Menu Item".equals(result)) {
+            	showErrorDialog(result);
+            }
         });
         
         deleteButton.setOnAction(e ->
@@ -132,6 +139,14 @@ public class UserManagement extends Stage {
         
         contentArea.getChildren().add(form);
 		
+    }
+    
+    private void showErrorDialog(String errorMessage) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(errorMessage);
+        alert.showAndWait();
     }
     
     private void openNewPageAccount() {

@@ -128,6 +128,7 @@ public class MenuItems
 			
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
+			System.out.println(query);
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setString(1, menuItemName);
 			prep.setString(2, menuItemDescription);
