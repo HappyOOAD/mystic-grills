@@ -2,8 +2,6 @@ package view.Admin;
 
 import java.util.ArrayList;
 
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.MenuItems;
 import model.User;
 
 public class UserManagement extends Stage {
@@ -134,7 +133,7 @@ public class UserManagement extends Stage {
     }
     
     TableView<User> tableView;
-    TableView<model.MenuItem> MenuTable;
+    TableView<MenuItems> MenuTable;
     
     private TableView<User> createAccountsTableView() {
     	tableView = new TableView<>();
@@ -179,7 +178,7 @@ public class UserManagement extends Stage {
 	private void loadProductData1() {
 
 		// TODO Auto-generated method stub
-		ArrayList<model.MenuItem> menu = model.MenuItem.getAllMenuItems();
+		ArrayList<MenuItems> menu = MenuItems.getAllMenuItems();
 		MenuTable.getItems().setAll(menu);
 		
 	}
@@ -268,7 +267,7 @@ public class UserManagement extends Stage {
     private TextField itemDesc_menu;
     private TextField itemPrice_menu;
     
-    private GridPane createUserForm1(TableView<model.MenuItem> menuTable2) {
+    private GridPane createUserForm1(TableView<MenuItems> menuTable2) {
         GridPane form = new GridPane();
         form.setVgap(20);
         form.setHgap(10);
@@ -304,7 +303,7 @@ public class UserManagement extends Stage {
 				String name = nameInput_menu.getText();
 				String desc= itemDesc_menu.getText();
 				double price= Double.parseDouble(itemPrice_menu.getText());
-				model.MenuItem.createMenuItem(name, desc, price);
+				MenuItems.createMenuItem(name, desc, price);
 				loadProductData1();
 			}
 		});
@@ -318,7 +317,7 @@ public class UserManagement extends Stage {
 				String name = nameInput_menu.getText();
 				String desc= itemDesc_menu.getText();
 				double price= Double.parseDouble(itemPrice_menu.getText());
-				model.MenuItem.updateMenuItem(id, name, desc, price);
+				MenuItems.updateMenuItem(id, name, desc, price);
 				loadProductData1();
 			}
 		});
@@ -328,9 +327,9 @@ public class UserManagement extends Stage {
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				model.MenuItem selectedProduct = menuTable2.getSelectionModel().getSelectedItem();
+				MenuItems selectedProduct = menuTable2.getSelectionModel().getSelectedItem();
 				if(selectedProduct!=null) {
-					model.MenuItem.deleteMenuItem(selectedProduct.getMenuItemId());
+					MenuItems.deleteMenuItem(selectedProduct.getMenuItemId());
 					loadProductData1();
 				}
 			}
@@ -340,32 +339,28 @@ public class UserManagement extends Stage {
         return form;
     }
     
-    private TableView<model.MenuItem> createAccountsTableView1() {
-    	TableView<model.MenuItem> tableView = new TableView<>();
+    private TableView<MenuItems> createAccountsTableView1() {
+    	TableView<MenuItems> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	    
-        TableColumn<model.MenuItem, String> menuItemName = new TableColumn<>("Name");
+        TableColumn<MenuItems, String> menuItemName = new TableColumn<>("Name");
         menuItemName.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
         menuItemName.setPrefWidth(150);
         
-        TableColumn<model.MenuItem, String> menuItemDescription = new TableColumn<>("Description");
+        TableColumn<MenuItems, String> menuItemDescription = new TableColumn<>("Description");
         menuItemDescription.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
         menuItemDescription.setPrefWidth(150);
         
-        TableColumn<model.MenuItem, Integer> menuItemPrice = new TableColumn<>("Price");
+        TableColumn<MenuItems, Integer> menuItemPrice = new TableColumn<>("Price");
         menuItemPrice.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
         menuItemPrice.setPrefWidth(150);
        
             
         
         tableView.getColumns().addAll(menuItemName, menuItemDescription, menuItemPrice);
-        tableView.setItems(FXCollections.observableArrayList(model.MenuItem.getAllMenuItems()));
+        tableView.setItems(FXCollections.observableArrayList(MenuItems.getAllMenuItems()));
         
         return tableView;
     }
     
-//    public static void main(String[] args) {
-//        // Create an instance of your custom stage
-//    	launch(args);
-//    }
 }

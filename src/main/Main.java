@@ -1,6 +1,5 @@
 package main;
 
-import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -8,11 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.MenuItems;
-import model.Order;
-import model.OrderItem;
-import model.Receipt;
-import model.User;
 import view.Login;
 
 
