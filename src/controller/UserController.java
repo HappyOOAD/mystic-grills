@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import model.MenuItems;
 import model.User;
 import view.Admin.AdminPanel;
-import view.Admin.UserManagement;
 import view.Cashier.CashierPanel;
 import view.Chef.ChefPanel;
 import view.Customer.CustomerPanel;
@@ -73,7 +72,7 @@ public class UserController
 			currentUser = user;
 			switch (role)
 			{
-				case "Admin": new UserManagement().show(); break;
+				case "Admin": new AdminPanel().show(); break;
 				case "Cashier": new CashierPanel().show(); break;
 				case "Chef": new ChefPanel().show(); break;
 				case "Waiter": new WaiterPanel().show(); break;
