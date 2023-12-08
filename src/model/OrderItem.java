@@ -138,12 +138,12 @@ public class OrderItem
 
 	public MenuItems getMenuItem()
 	{
-		return menuItem1;
+		return menuItem;
 	}
 
 	public void setMenuItem(MenuItems menuItem)
 	{
-		this.menuItem1 = menuItem1;
+		this.menuItem1 = menuItem;
 	}
 
 	public int getQuantity()
