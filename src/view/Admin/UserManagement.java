@@ -100,7 +100,7 @@ public class UserManagement extends Stage {
 		
 		Button updateButton = new Button("Update");
         Button deleteButton = new Button("Delete");
-        
+        Button addButton = new Button("Add");
         
         form.add(new Label("MenuItem ID:"), 0, 0);
         menuItemId.setDisable(true);
@@ -114,7 +114,7 @@ public class UserManagement extends Stage {
         
         form.add(updateButton, 0, 4);
         form.add(deleteButton, 1, 4);
-        
+        form.add(addButton, 3, 4);
         
         updateButton.setOnAction(e ->
         {
@@ -126,8 +126,10 @@ public class UserManagement extends Stage {
             
             String result = MenuItemController.updateMenuItem(id, name, description, price);
             
-            if (!"Success Update A Menu Item".equals(result)) {
-            	showErrorDialog(result);
+            if ("Success Update A Menu Item".equals(result)) {
+                showSuccessDialog("Update success");
+            } else {
+                showErrorDialog(result);
             }
         });
         
@@ -135,11 +137,36 @@ public class UserManagement extends Stage {
         {
         	int id= Integer.parseInt(menuItemId.getText());
 			MenuItemController.deleteMenuItem(id);
+			
+			showSuccessDialog("Delete Success");
+        });
+        
+        addButton.setOnAction(e ->
+        {
+			String name = menuItemName.getText();
+			String description = menuItemDescription.getText();
+			double price = Double.parseDouble(menuItemPrice.getText());
+			String result = MenuItemController.createMenuItem(name, description, price);
+			
+			if ("Success Create A New Menu Item".equals(result)) {
+                showSuccessDialog("Add success");
+            } else {
+                showErrorDialog(result);
+            }
         });
         
         contentArea.getChildren().add(form);
 		
     }
+    
+    private void showSuccessDialog(String successMessage) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(successMessage);
+        alert.showAndWait();
+    }
+    
     
     private void showErrorDialog(String errorMessage) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -198,19 +225,22 @@ public class UserManagement extends Stage {
         
         updateButton.setOnAction(e ->
         {
-        	
 			int id= Integer.parseInt(userId.getText());
 			String role = userRole.getText();
 			String name = userName.getText();
 			String email = userEmail.getText();
 			String password = userPassword.getText();
             UserController.updateUser(id, role, name, email, password);
+            
+            showSuccessDialog("Update Success");
         });
         
         deleteButton.setOnAction(e ->
         {
 			int id= Integer.parseInt(userId.getText());
 			UserController.deleteUser(id);
+			
+			showSuccessDialog("Delete Success");
         });
         
         contentArea.getChildren().add(form);
