@@ -16,19 +16,19 @@ public class OrderItemController
 	
 	public String createOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		if(menuItem == null) return "Menu Item must be chosen";
+		if(menuItem1 == null) return "Menu Item must be chosen";
 		if(quantity < 1) return "Quantity cannot below 1";
 		
-		OrderItem.createOrderitem(orderId, menuItem, quantity);
+		OrderItem.createOrderitem(orderId, menuItem1, quantity);
 		return "Successfully Create an Order Item";
 	}
 	
 	public String updateOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		if(menuItem == null) return "Menu Item must be chosen";
+		if(menuItem1 == null) return "Menu Item must be chosen";
 		if(quantity < 1) return "Quantity cannot below 1";
 		
-		OrderItem.updateOrderItem(orderId, menuItem, quantity);
+		OrderItem.updateOrderItem(orderId, menuItem1, quantity);
 		return "Successfully Update an Order Item";
 	}
 	

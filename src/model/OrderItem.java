@@ -36,7 +36,7 @@ public class OrderItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, 0);
 			prep.setInt(1, orderId);
-			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(2, menuItem1.getMenuItemId());
 			prep.setInt(3, quantity);
 			prep.executeUpdate();
 		}
@@ -87,7 +87,7 @@ public class OrderItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, quantity);
 			prep.setInt(2, orderId);
-			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(2, menuItem1.getMenuItemId());
 			prep.executeUpdate();
 		}
 		catch (SQLException e)
@@ -138,12 +138,12 @@ public class OrderItem
 
 	public MenuItems getMenuItem()
 	{
-		return menuItem;
+		return menuItem1;
 	}
 
 	public void setMenuItem(MenuItems menuItem)
 	{
-		this.menuItem = menuItem;
+		this.menuItem1 = menuItem1;
 	}
 
 	public int getQuantity()
