@@ -12,7 +12,7 @@ public class OrderItem
 {
 	private int orderId;
 	private int menuItemId;
-	private MenuItem menuItem;
+	private MenuItem menuItem1;
 	private int quantity;
 	
 	// CONSTRUCTOR
@@ -27,7 +27,7 @@ public class OrderItem
 	
 	// CRUD
 	
-	public static void createOrderitem(int orderId, MenuItem menuItem, int quantity)
+	public static void createOrderitem(int orderId, MenuItem menuItem1, int quantity)
 	{
 		String query = "INSERT INTO orderitems (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
 		
@@ -36,7 +36,7 @@ public class OrderItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, 0);
 			prep.setInt(1, orderId);
-			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(2, menuItem1.getMenuItemId());
 			prep.setInt(3, quantity);
 			prep.executeUpdate();
 		}
@@ -79,7 +79,7 @@ public class OrderItem
 		return orderItems;
 	}
 	
-	public static void updateOrderItem(int orderId, MenuItem menuItem, int quantity)
+	public static void updateOrderItem(int orderId, MenuItem menuItem1, int quantity)
 	{
 		String query = "UPDATE orderitems SET quantity = ? WHERE orderId = ? AND menuItemId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
@@ -87,7 +87,7 @@ public class OrderItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, quantity);
 			prep.setInt(2, orderId);
-			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(2, menuItem1.getMenuItemId());
 			prep.executeUpdate();
 		}
 		catch (SQLException e)
@@ -138,12 +138,12 @@ public class OrderItem
 
 	public MenuItem getMenuItem()
 	{
-		return menuItem;
+		return menuItem1;
 	}
 
-	public void setMenuItem(MenuItem menuItem)
+	public void setMenuItem(MenuItem menuItem1)
 	{
-		this.menuItem = menuItem;
+		this.menuItem1 = menuItem1;
 	}
 
 	public int getQuantity()
