@@ -83,14 +83,14 @@ VALUES
 INSERT INTO orders (userId, orderStatus, orderDate)
 VALUES
     (2, 'Pending', '2023-12-01'),
-    (3, 'Completed', '2023-12-02'),
-    (2, 'Processing', '2023-12-03'),
-    (4, 'Completed', '2023-12-04'),
+    (3, 'Pending', '2023-12-02'),
+    (2, 'Pending', '2023-12-03'),
+    (4, 'Pending', '2023-12-04'),
     (5, 'Pending', '2023-12-05'),
-    (4, 'Processing', '2023-12-06'),
-    (6, 'Pending', '2023-12-07'),
-    (7, 'Processing', '2023-12-08'),
-    (8, 'Completed', '2023-12-09');
+    (4, 'Pending', '2023-12-06'),
+    (6, 'Served', '2023-12-07'),
+    (7, 'Served', '2023-12-08'),
+    (8, 'Served', '2023-12-09');
 
 INSERT INTO orderitems (orderId, menuItemId, quantity)
 VALUES
