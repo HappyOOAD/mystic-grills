@@ -4,49 +4,48 @@
 ```sql
 CREATE DATABASE mysticgrills;
 
-CREATE TABLE users(
+CREATE TABLE users (
     userId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     userRole VARCHAR(20) NOT NULL,
     userName VARCHAR(30) NOT NULL,
     userEmail VARCHAR(30) NOT NULL,
-    userPassword VARCHAR(30) NOT NULL  
+    userPassword VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE menuitems(
+CREATE TABLE menuitems (
     menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     menuItemName VARCHAR(30) NOT NULL,
     menuItemDescription VARCHAR(30) NOT NULL,
-    menuItemPrice DOUBLE NOT NULL 
+    menuItemPrice DOUBLE NOT NULL
 );
 
-CREATE TABLE orders(
+CREATE TABLE orders (
     orderId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     userId INT NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     orderDate DATE NOT NULL,
     
-    CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(userId)  
+    CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
 
-
-CREATE TABLE orderitems(
+CREATE TABLE orderitems (
     orderId INT NOT NULL,
     menuItemId INT NOT NULL,
     quantity INT NOT NULL,
 
     PRIMARY KEY (orderId, menuItemId),
-    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId),
-    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId)
+    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId) ON DELETE CASCADE,
+    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE
 );
 
-CREATE TABLE receipts(
+CREATE TABLE receipts (
     receiptId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     orderId INT NOT NULL,
     receiptPaymentAmount DOUBLE NOT NULL,
     receiptPaymentDate DATE NOT NULL,
     receiptPaymentType VARCHAR(30) NOT NULL,
     
-    CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId)  
+    CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE
 );
 ```
 
@@ -59,7 +58,12 @@ VALUES
     ('Customer', 'Jane Doe', 'jane.doe@example.com', 'janepassword'),
     ('Customer', 'Alice Smith', 'alice.smith@example.com', 'alicepassword'),
     ('Customer', 'Bob Johnson', 'bob.johnson@example.com', 'bobpassword'),
-    ('Admin', 'Super Admin', 'superadmin@example.com', 'superadminpassword');
+    ('Admin', 'Super Admin', 'superadmin@example.com', 'superadminpassword'),
+    ('Chef', 'Gandi', 'chef@gmail.com', 'chef'),
+    ('Waiter', 'Makro', 'waiter@gmail.com', 'waiter'),
+    ('Customer', 'Joni', 'customer@gmail.com', 'customer'),
+    ('Admin', 'Kevin', 'admin@gmail.com', 'admin'),
+    ('Cashier', 'Salsha', 'cashier@gmail.com', 'cashier');
 
 INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
 VALUES
@@ -68,7 +72,13 @@ VALUES
     ('BBQ Ribs', 'Tender BBQ ribs with a side of coleslaw', 18.99),
     ('Salmon Steak', 'Grilled salmon steak with lemon butter sauce', 22.99),
     ('Margherita Pizza', 'Classic pizza with tomato, mozzarella, and basil', 14.99),
-    ('Shrimp Scampi', 'Garlic butter shrimp served over pasta', 19.99);
+    ('Shrimp Scampi', 'Garlic butter shrimp served over pasta', 19.99),
+        ('Steakhouse Burger', 'Juicy beef patty with cheese and bacon', 16.99),
+    ('Chicken Caesar Salad', 'Fresh salad with grilled chicken and Caesar dressing', 13.99),
+    ('Vegetable Stir-Fry', 'Assorted vegetables stir-fried in a savory sauce', 11.99),
+    ('Tiramisu', 'Classic Italian dessert with coffee-flavored layers', 8.99),
+    ('Fish Tacos', 'Tacos filled with grilled fish and slaw', 17.99),
+    ('Mango Sorbet', 'Refreshing mango-flavored sorbet', 6.99);
 
 INSERT INTO orders (userId, orderStatus, orderDate)
 VALUES
@@ -77,7 +87,10 @@ VALUES
     (2, 'Processing', '2023-12-03'),
     (4, 'Completed', '2023-12-04'),
     (5, 'Pending', '2023-12-05'),
-    (4, 'Processing', '2023-12-06');
+    (4, 'Processing', '2023-12-06'),
+    (6, 'Pending', '2023-12-07'),
+    (7, 'Processing', '2023-12-08'),
+    (8, 'Completed', '2023-12-09');
 
 INSERT INTO orderitems (orderId, menuItemId, quantity)
 VALUES
@@ -88,7 +101,16 @@ VALUES
     (2, 2, 2),
     (3, 2, 2),
     (1, 3, 1),
-    (3, 1, 1);
+    (3, 1, 1),
+    (4, 4, 2),
+    (5, 5, 3),
+    (6, 6, 1),
+    (4, 1, 2),
+    (5, 2, 1),
+    (6, 3, 2),
+    (7, 1, 1),
+    (7, 2, 2),
+    (8, 3, 1);
 
 INSERT INTO receipts (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
 VALUES
@@ -97,5 +119,8 @@ VALUES
     (3, 74.97, '2023-12-03', 'Cash'),
     (4, 45.98, '2023-12-04', 'Debit Card'),
     (5, 29.99, '2023-12-05', 'Cash'),
-    (6, 78.96, '2023-12-06', 'Credit Card');
+    (6, 78.96, '2023-12-06', 'Credit Card'),
+    (7, 33.98, '2023-12-07', 'Credit Card'),
+    (8, 45.97, '2023-12-08', 'Cash'),
+    (9, 26.99, '2023-12-09', 'Debit Card');
 ```
