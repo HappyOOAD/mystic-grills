@@ -196,7 +196,7 @@ public class Order
 	
 	public static void deleteOrder(int orderId)
 	{
-		String query = "DELETE FROM orders WHERE orderId = ?;";
+		String query = "DELETE FROM orders WHERE orderId = ?";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -213,7 +213,7 @@ public class Order
 	public static double getTotalByOrderId(int orderId)
 	{
 		int orderTotalPrice = 0;
-		String query = "SELECT * FROM orderitems JOIN menuitems ON orderitem.menuItemId = menuitem.menuItemId WHERE orderitem.orderId = ?;";
+		String query = "SELECT * FROM orderitems JOIN menuitems ON orderitems.menuItemId = menuitems.menuItemId WHERE orderitems.orderId = ?;";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{

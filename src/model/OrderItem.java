@@ -16,7 +16,7 @@ public class OrderItem
 	private int quantity;
 	
 	// CONSTRUCTOR
-	public OrderItem(int orderItemId, int orderId, int menuItemId, int quantity)
+	public OrderItem(int orderId, int menuItemId, int quantity)
 	{
 		super();
 		this.orderId = orderId;
@@ -51,7 +51,6 @@ public class OrderItem
 		ArrayList<OrderItem> orderItems = new ArrayList<>();
 		String query = "SELECT * FROM orderitems WHERE orderId = ?;";
 		
-		System.out.println(query);
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
@@ -60,11 +59,10 @@ public class OrderItem
 			
 			while(resultSet.next()) 
 			{
-				int id = resultSet.getInt("orderItemId");
+				int id = resultSet.getInt("orderId");
 				int menuItemId = resultSet.getInt("menuItemId");
-				System.out.println(menuItemId);
 				int quantity = resultSet.getInt("quantity");
-				orderItems.add(new OrderItem(id, orderId, menuItemId, quantity));
+				orderItems.add(new OrderItem(id, menuItemId, quantity));
 			}
 			
 			for (OrderItem orderItem : orderItems)
