@@ -47,7 +47,7 @@ public class MenuItemController
 		MenuItems.deleteMenuItem(menuItemId);
 	}
 	
-	public MenuItems getMenuItemById(int menuItemId)
+	public static MenuItems getMenuItemById(int menuItemId)
 	{
 		return MenuItems.getMenuItemById(menuItemId);
 	}

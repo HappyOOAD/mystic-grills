@@ -1,5 +1,8 @@
 package view.Admin;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import controller.MenuItemController;
 import controller.UserController;
 import javafx.geometry.Insets;
@@ -18,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.User;
 import model.MenuItems;
+import model.Order;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,6 +33,8 @@ public class AdminPanel extends Stage {
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
+    TableView<MenuItems>menuItemTable;
+    TableView<User>accountsTable;
     
     public AdminPanel() {
     	super(StageStyle.DECORATED);
@@ -76,7 +82,7 @@ public class AdminPanel extends Stage {
     	TextField menuItemPrice = new TextField();
     	
     	contentArea.getChildren().clear();
-    	TableView<MenuItems>menuItemTable = createMenuItemTableView();
+    	menuItemTable = createMenuItemTableView();
 		contentArea.getChildren().add(menuItemTable);
 		
 		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -122,8 +128,10 @@ public class AdminPanel extends Stage {
             
             if ("Success Update A Menu Item".equals(result)) {
                 showSuccessDialog("Update success");
+                loadMenuItemData();
             } else {
                 showErrorDialog(result);
+                loadMenuItemData();
             }
         });
         
@@ -133,6 +141,7 @@ public class AdminPanel extends Stage {
 			MenuItemController.deleteMenuItem(id);
 			
 			showSuccessDialog("Delete Success");
+			loadMenuItemData();
         });
         
         addButton.setOnAction(e ->
@@ -144,14 +153,27 @@ public class AdminPanel extends Stage {
 			
 			if ("Success Create A New Menu Item".equals(result)) {
                 showSuccessDialog("Add success");
+                loadMenuItemData();
             } else {
                 showErrorDialog(result);
+                loadMenuItemData();
             }
         });
         
         contentArea.getChildren().add(form);
 		
     }
+    
+	private void loadUserData() {
+		ArrayList<User> users = UserController.getAllUsers();
+		accountsTable.getItems().setAll(users);
+	}
+	
+	private void loadMenuItemData() {
+		ArrayList<MenuItems> menuItems = MenuItemController.getAllMenuItem();
+		menuItemTable.getItems().setAll(menuItems);
+	}
+	
     
     private void showSuccessDialog(String successMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -178,7 +200,7 @@ public class AdminPanel extends Stage {
     	TextField userPassword = new TextField();
     	
     	contentArea.getChildren().clear();
-    	TableView<User>accountsTable = createAccountsTableView();
+    	accountsTable = createAccountsTableView();
 		contentArea.getChildren().add(accountsTable); 
 		
 		accountsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -227,6 +249,7 @@ public class AdminPanel extends Stage {
             UserController.updateUser(id, role, name, email, password);
             
             showSuccessDialog("Update Success");
+            loadUserData();
         });
         
         deleteButton.setOnAction(e ->
@@ -235,6 +258,7 @@ public class AdminPanel extends Stage {
 			UserController.deleteUser(id);
 			
 			showSuccessDialog("Delete Success");
+			loadUserData();
         });
         
         contentArea.getChildren().add(form);

@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Order;
 import model.OrderItem;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class ChefPanel extends Stage
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
+    TableView<Order>menuItemTable;
     
 	public ChefPanel() {
 		super(StageStyle.DECORATED);
@@ -63,6 +65,15 @@ public class ChefPanel extends Stage
         root.setCenter(contentDivide);
 	}
 	
+	private void loadOrdersData() {
+	    ArrayList<Order> allOrders = Order.getAllOrders();
+
+	    ArrayList<Order> prepareOrders = allOrders.stream()
+	            .filter(order -> "pending".equalsIgnoreCase(order.getOrderStatus()))
+	            .collect(Collectors.toCollection(ArrayList::new));
+
+	    menuItemTable.getItems().setAll(prepareOrders);
+	}
 
 	private void openNewPageOrder() {
     	TextField orderId = new TextField();
@@ -71,7 +82,7 @@ public class ChefPanel extends Stage
     	TextField orderDate = new TextField();
 		
     	contentArea.getChildren().clear();
-    	TableView<Order>menuItemTable = createOrderTableView();
+    	menuItemTable = createOrderTableView();
 		contentArea.getChildren().add(menuItemTable);
 	
 		Listener(menuItemTable, orderId, userId, orderStatus, orderDate);
@@ -109,6 +120,7 @@ public class ChefPanel extends Stage
             Order.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
+            loadOrdersData();
         });
         
         deleteButton.setOnAction(e ->
@@ -117,6 +129,7 @@ public class ChefPanel extends Stage
         	Order.deleteOrder(id);
         	
         	showSuccessDialog("Delete Success");
+        	loadOrdersData();
         });
         
         prepareButton.setOnAction(e ->
@@ -129,6 +142,7 @@ public class ChefPanel extends Stage
             Order.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
+            loadOrdersData();
         });
         
         contentArea.getChildren().add(form);

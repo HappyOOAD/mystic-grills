@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Order;
 import model.OrderItem;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class WaiterPanel extends Stage
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
+    TableView<Order>menuItemTable;
     
 	public WaiterPanel() {
 		super(StageStyle.DECORATED);
@@ -63,7 +65,15 @@ public class WaiterPanel extends Stage
         root.setCenter(contentDivide);
 	}
 	
+	private void loadOrdersData() {
+	    ArrayList<Order> allOrders = Order.getAllOrders();
 
+	    ArrayList<Order> prepareOrders = allOrders.stream()
+	            .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
+	            .collect(Collectors.toCollection(ArrayList::new));
+
+	    menuItemTable.getItems().setAll(prepareOrders);
+	}
 	private void openNewPageOrder() {
     	TextField orderId = new TextField();
     	TextField userId = new TextField();
@@ -71,7 +81,7 @@ public class WaiterPanel extends Stage
     	TextField orderDate = new TextField();
 		
     	contentArea.getChildren().clear();
-    	TableView<Order>menuItemTable = createOrderTableView();
+    	menuItemTable = createOrderTableView();
 		contentArea.getChildren().add(menuItemTable);
 	
 		Listener(menuItemTable, orderId, userId, orderStatus, orderDate);
@@ -82,7 +92,7 @@ public class WaiterPanel extends Stage
 		
 		Button updateButton = new Button("Update");
         Button deleteButton = new Button("Delete");
-        Button prepareButton = new Button("Serve");
+        Button serveButton = new Button("Serve");
         
         form.add(new Label("Order ID:"), 0, 0);
         orderId.setDisable(true);
@@ -97,7 +107,7 @@ public class WaiterPanel extends Stage
         
         form.add(updateButton, 0, 5);
         form.add(deleteButton, 1, 5);
-        form.add(prepareButton, 2, 5);
+        form.add(serveButton, 2, 5);
         
         updateButton.setOnAction(e ->
         {
@@ -109,6 +119,7 @@ public class WaiterPanel extends Stage
             Order.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
+            loadOrdersData();
         });
         
         deleteButton.setOnAction(e ->
@@ -117,9 +128,10 @@ public class WaiterPanel extends Stage
         	Order.deleteOrder(id);
         	
         	showSuccessDialog("Delete Success");
+        	loadOrdersData();
         });
         
-        prepareButton.setOnAction(e ->
+        serveButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
 			String status = "Served";
@@ -129,6 +141,7 @@ public class WaiterPanel extends Stage
             Order.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
+            loadOrdersData();
         });
         
         contentArea.getChildren().add(form);
