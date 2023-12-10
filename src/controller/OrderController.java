@@ -15,7 +15,7 @@ public class OrderController
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
+	public static String createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
 		if(orderItems.size() == 0) return "Order Items Empty"; // Menu Item must be chosen
 		
@@ -23,27 +23,27 @@ public class OrderController
 		return "Success Create An Order";
 	}
 	
-	public void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{
 		Order.updateOrder(orderId, orderItems, orderStatus);
 	}
 	
-	public ArrayList<Order> getOrderByCustomerId(int customerId)
+	public static ArrayList<Order> getOrderByCustomerId(int customerId)
 	{
 		return Order.getOrdersByCustomerId(customerId);
 	}
 	
-	public void deleteOrder(int orderId)
+	public static void deleteOrder(int orderId)
 	{
 		Order.deleteOrder(orderId);
 	}
 	
-	public ArrayList<Order> getAllOrders()
+	public static ArrayList<Order> getAllOrders()
 	{
 		return Order.getAllOrders();
 	}
 	
-	public Order getOrderByOrderId(int orderId)
+	public static Order getOrderByOrderId(int orderId)
 	{
 		return Order.getOrderById(orderId);
 	}

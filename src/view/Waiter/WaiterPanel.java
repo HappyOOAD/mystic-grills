@@ -22,11 +22,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Order;
 import model.OrderItem;
-import model.User;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Collectors;
+
+import controller.OrderController;
 
 public class WaiterPanel extends Stage
 {
@@ -66,7 +67,7 @@ public class WaiterPanel extends Stage
 	}
 	
 	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = Order.getAllOrders();
+	    ArrayList<Order> allOrders = OrderController.getAllOrders();
 
 	    ArrayList<Order> prepareOrders = allOrders.stream()
 	            .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
@@ -114,9 +115,9 @@ public class WaiterPanel extends Stage
 			int id= Integer.parseInt(orderId.getText());
 			String status = orderStatus.getText();
 			
-			Order x = Order.getOrderById(id);
+			Order x = OrderController.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            Order.updateOrder(id, orderItem, status);
+            OrderController.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
             loadOrdersData();
@@ -125,7 +126,7 @@ public class WaiterPanel extends Stage
         deleteButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
-        	Order.deleteOrder(id);
+        	OrderController.deleteOrder(id);
         	
         	showSuccessDialog("Delete Success");
         	loadOrdersData();
@@ -136,9 +137,9 @@ public class WaiterPanel extends Stage
         	int id= Integer.parseInt(orderId.getText());
 			String status = "Served";
 			
-			Order x = Order.getOrderById(id);
+			Order x = OrderController.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            Order.updateOrder(id, orderItem, status);
+            OrderController.updateOrder(id, orderItem, status);
             
             showSuccessDialog("Update Success");
             loadOrdersData();
@@ -198,7 +199,7 @@ public class WaiterPanel extends Stage
         orderDateColumn.setPrefWidth(150);
         
         ObservableList<Order> pendingOrders = FXCollections.observableArrayList(
-                Order.getAllOrders().stream()
+                OrderController.getAllOrders().stream()
                         .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
                         .collect(Collectors.toList())
         );
