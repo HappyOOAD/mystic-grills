@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.Date;
 
+import model.Order;
 import model.OrderItem;
 import model.User;
 
@@ -20,6 +21,31 @@ public class OrderController
 		
 		
 		return "Success Create An Order";
+	}
+	
+	public void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	{
+		Order.updateOrder(orderId, orderItems, orderStatus);
+	}
+	
+	public ArrayList<Order> getOrderByCustomerId(int customerId)
+	{
+		return Order.getOrdersByCustomerId(customerId);
+	}
+	
+	public void deleteOrder(int orderId)
+	{
+		Order.deleteOrder(orderId);
+	}
+	
+	public ArrayList<Order> getAllOrders()
+	{
+		return Order.getAllOrders();
+	}
+	
+	public Order getOrderByOrderId(int orderId)
+	{
+		return Order.getOrderById(orderId);
 	}
 
 }
