@@ -1,12 +1,17 @@
 package main;
 
 
+import java.util.Date;
+
+import controller.ReceiptController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Order;
+import model.Receipt;
 import view.Login;
 
 
@@ -32,7 +37,7 @@ public class Main extends Application
 //		}
     	
 //    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
-    	
+      
     	launch(args);
     }
 

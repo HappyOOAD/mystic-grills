@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import database.Connect;
 
@@ -34,7 +34,7 @@ public class Receipt
 	
 	public static void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
-		Date date = new Date();
+		Date date = new Date(System.currentTimeMillis());
 		String query = "INSERT INTO receipts (receiptId, orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType) VALUES (? ,? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
