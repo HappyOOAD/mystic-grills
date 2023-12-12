@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.stream.Collectors;
 
+import controller.MenuItemController;
 import controller.OrderController;
 import controller.ReceiptController;
 import javafx.collections.FXCollections;
@@ -29,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Order;
 import model.OrderItem;
-import model.User;
+import model.Receipt;
 
 public class CashierPanel extends Stage
 {
@@ -38,6 +39,7 @@ public class CashierPanel extends Stage
     private VBox contentArea;
     private MenuBar menuBar;
     TableView<Order>menuItemTable;
+    TableView<Receipt>ReceiptTable;
     
 	public CashierPanel() {
 		super(StageStyle.DECORATED);
@@ -65,9 +67,9 @@ public class CashierPanel extends Stage
         	openNewPageOrder();
         });
         
-//        ReceiptMenuItem.setOnAction(e -> {
-//        	openNewPageReceipt();
-//        });
+        ReceiptMenuItem.setOnAction(e -> {
+        	openNewPageReceipt();
+        });
 
         contentArea = new VBox(20);
         contentArea.setPadding(new Insets(20));
@@ -80,7 +82,20 @@ public class CashierPanel extends Stage
 	}
 
 	
-    private void showSuccessDialog(String successMessage) {
+    private void openNewPageReceipt() {
+    	contentArea.getChildren().clear();
+    	ReceiptTable = createReceiptTableView();
+		contentArea.getChildren().add(ReceiptTable);
+		
+		GridPane form = new GridPane();
+        form.setVgap(20);
+        form.setHgap(10);
+        
+        contentArea.getChildren().add(form);
+	}
+
+
+	private void showSuccessDialog(String successMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
@@ -165,14 +180,30 @@ public class CashierPanel extends Stage
 			String status = "Paid";
 			
 			Order x = Order.getOrderById(id);
-			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            OrderController.updateOrder(id, orderItem, status);
+			ArrayList<OrderItem> orderItem = x.getOrderItems();
             
+            String receiptAdd = ReceiptController.createReceipt(x, receiptsPaymentType, receiptsPaymentAmount, date);
             
-            ReceiptController.createReceipt(x, receiptsPaymentType, receiptsPaymentAmount, date);
+            if ("Create Receipt Success".equals(receiptAdd)) {
+                showSuccessDialog("Add Receipt success");
+                
+                
+                String orderUpdating = OrderController.updateOrder(id, orderItem, status);
+                
+                if ("Success Update Order".equals(orderUpdating)) {
+                    showSuccessDialog("Update Order success");
+                    loadOrdersData();
+                } else {
+                    showErrorDialog(orderUpdating);
+                    loadOrdersData();
+                }
+                
+                loadOrdersData();
+            } else {
+                showErrorDialog(receiptAdd);
+                loadOrdersData();
+            }
             
-            showSuccessDialog("Update Success");
-            loadOrdersData();
         });
         
         contentArea.getChildren().add(form);
@@ -216,6 +247,37 @@ public class CashierPanel extends Stage
         
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
         tableView.setItems(pendingOrders);
+        
+        return tableView;
+    }
+    
+    private TableView<Receipt> createReceiptTableView() {
+    	TableView<Receipt> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	
+        TableColumn<Receipt, Integer> receiptIdColumn = new TableColumn<>("receipt ID");
+        receiptIdColumn.setCellValueFactory(new PropertyValueFactory<>("receiptId"));
+        receiptIdColumn.setPrefWidth(150);
+    	    
+        TableColumn<Receipt, Integer> orderIdColumn = new TableColumn<>("order Id");
+        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("receiptOrderId"));
+        orderIdColumn.setPrefWidth(150);
+        
+        TableColumn<Receipt, Double> receiptPaymentAmountColumn = new TableColumn<>("Receipt Payment Amount");
+        receiptPaymentAmountColumn.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentAmount"));
+        receiptPaymentAmountColumn.setPrefWidth(150);
+        
+        TableColumn<Receipt, Date> receiptPaymentDate = new TableColumn<>("Receipt Payment Date");
+        receiptPaymentDate.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentDate"));
+        receiptPaymentDate.setPrefWidth(150);
+        
+        TableColumn<Receipt, String> receiptPaymentType = new TableColumn<>("Receipt Payment Type");
+        receiptPaymentType.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentType"));
+        receiptPaymentType.setPrefWidth(150);
+        
+        
+        tableView.getColumns().addAll(receiptIdColumn, orderIdColumn, receiptPaymentAmountColumn, receiptPaymentType, receiptPaymentDate);
+        tableView.setItems(FXCollections.observableArrayList(ReceiptController.getAllReceipts()));
         
         return tableView;
     }

@@ -115,22 +115,35 @@ public class ChefPanel extends Stage
         {
 			int id= Integer.parseInt(orderId.getText());
 			String status = orderStatus.getText();
-
+			
+			
 			Order x = OrderController.getOrderByOrderId(id);
+			
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            OrderController.updateOrder(id, orderItem, status);
+            String updatingOrder = OrderController.updateOrder(id, orderItem, status);
             
-            showSuccessDialog("Update Success");
-            loadOrdersData();
+            if ("Success Update Order".equals(updatingOrder)) {
+                showSuccessDialog("Update success");
+                loadOrdersData();
+            } else {
+                showErrorDialog(updatingOrder);
+                loadOrdersData();
+            }
+            
         });
         
         deleteButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
-        	OrderController.deleteOrder(id);
+        	String deleteOrder = OrderController.deleteOrder(id);
         	
-        	showSuccessDialog("Delete Success");
-        	loadOrdersData();
+        	if ("Sucess Delete Order".equals(deleteOrder)) {
+                showSuccessDialog("Delete success");
+                loadOrdersData();
+            } else {
+                showErrorDialog(deleteOrder);
+                loadOrdersData();
+            }
         });
         
         prepareButton.setOnAction(e ->
@@ -140,10 +153,15 @@ public class ChefPanel extends Stage
 			
 			Order x = Order.getOrderById(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            OrderController.updateOrder(id, orderItem, status);
+            String updatingOrder = OrderController.updateOrder(id, orderItem, status);
             
-            showSuccessDialog("Update Success");
-            loadOrdersData();
+            if ("Success Update Order".equals(updatingOrder)) {
+                showSuccessDialog("Update success");
+                loadOrdersData();
+            } else {
+                showErrorDialog(updatingOrder);
+                loadOrdersData();
+            }
         });
         
         contentArea.getChildren().add(form);

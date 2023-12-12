@@ -1,8 +1,10 @@
 package main;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import controller.OrderController;
 import controller.ReceiptController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -37,7 +39,12 @@ public class Main extends Application
 //		}
     	
 //    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
-      
+//    	ArrayList<Receipt> x = Receipt.getAllReceipts();
+//    	for (Receipt temp : x) {
+//			System.out.println(temp.getReceiptId());
+//		}
+    	Order x = OrderController.getOrderByOrderId(7);
+		System.out.println(x.getOrderId());
     	launch(args);
     }
 

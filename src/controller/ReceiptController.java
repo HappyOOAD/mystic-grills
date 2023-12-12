@@ -14,13 +14,14 @@ public class ReceiptController
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
+	public static String createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
-		if(order == null) return;
-		if(receiptPaymentType.isBlank()) return;
-		if(receiptPaymentAmount <= 0.0) return;
-		if(receiptPaymentDate == null) return;
+		if(order == null) return "Order is Empty";
+		if(receiptPaymentType.isBlank()) return "Receipt Payment Type is Empty";
+		if(receiptPaymentAmount <= 0.0) return "Receipt Payment Amount must greater than 0";
+		if(receiptPaymentDate == null) return "Receipt Payment Date is Empty";
 		Receipt.createReceipt(order, receiptPaymentType, receiptPaymentAmount, receiptPaymentDate);
+		return "Create Receipt Success";
 	}
 	
 	public static void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)

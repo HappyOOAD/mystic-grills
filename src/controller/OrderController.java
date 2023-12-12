@@ -24,8 +24,7 @@ public class OrderController
 	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{ 
 		String res = Order.updateOrder(orderId, orderItems, orderStatus);
-		if(res.equals("not exist")) return "Order doesn't exist";
-		else if(res.equals("success")) return "Success Update Order";
+		if(res.equals("success")) return "Success Update Order";
 		else return "Failed Update Order";
 	}
 	
@@ -34,9 +33,13 @@ public class OrderController
 		return Order.getOrdersByCustomerId(customerId);
 	}
 	
-	public static void deleteOrder(int orderId)
+	public static String deleteOrder(int orderId)
 	{
-		Order.deleteOrder(orderId);
+		String res = Order.deleteOrder(orderId);
+		
+		if(res.equals("Success")) return "Sucess Delete Order";
+		
+		return "Failed Delete Order";
 	}
 	
 	public static ArrayList<Order> getAllOrders()
