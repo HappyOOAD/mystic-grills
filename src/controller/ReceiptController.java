@@ -14,7 +14,7 @@ public class ReceiptController
 		// TODO Auto-generated constructor stub
 	}
 
-	public void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
+	public static void createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		if(order == null) return;
 		if(receiptPaymentType.isBlank()) return;
@@ -23,7 +23,7 @@ public class ReceiptController
 		Receipt.createReceipt(order, receiptPaymentType, receiptPaymentAmount, receiptPaymentDate);
 	}
 	
-	public void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
+	public static void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		if(orderId <= 0) return;
 		if(receiptPaymentType.isBlank()) return;
@@ -32,18 +32,18 @@ public class ReceiptController
 		Receipt.updateReceipt(orderId, receiptPaymentType, receiptPaymentAmount, receiptPaymentDate);
 	}
 	
-	public void deleteReceipt(int orderId)
+	public static void deleteReceipt(int orderId)
 	{
 		if(orderId <= 0) return;
 		Receipt.deleteReceipt(orderId);
 	}
 	
-	public Receipt getReceiptById(int receiptId)
+	public static Receipt getReceiptById(int receiptId)
 	{
 		return Receipt.getReceiptById(receiptId);
 	}
 	
-	public ArrayList<Receipt> getAllReceipts()
+	public static ArrayList<Receipt> getAllReceipts()
 	{
 		return Receipt.getAllReceipts();
 	}

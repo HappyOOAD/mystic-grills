@@ -1,7 +1,9 @@
 package main;
 
 
-import java.sql.Date;
+import java.util.Date;
+
+import controller.ReceiptController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,15 +19,25 @@ public class Main extends Application
 {
     public static void main(String[] args)
     {
-    	// 	--- TESTING ---
-
-    	Date date = new Date(System.currentTimeMillis());
-        String receiptsPaymentType = "Debit";
-        Double receiptsPaymentAmount = 29.1;
-        Order o = Order.getOrderById(4);
-
-        Receipt.createReceipt(o, receiptsPaymentType, receiptsPaymentAmount, date);
+// 	Testing
+//    	Order o = Order.getOrderById(1);
+//    	System.out.println(o.getOrderTotal());
+//    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
+//    	for (OrderItem orderItem : o) {
+//			System.out.println(orderItem.getMenuItem().getMenuItemName());
+//		}
+//    	Receipt.getAllReceipts();
+//    	ArrayList<User> x = User.getAllUsers();
+//    	for (User temp : x) {
+//			System.out.println(temp.getUserName());
+//		}
+//    	ArrayList<MenuItem> x = MenuItem.getAllMenuItems();
+//    	for (MenuItem temp : x) {
+//			System.out.println(temp.getMenuItemName());
+//		}
     	
+//    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
+      
     	launch(args);
     }
 
