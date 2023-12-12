@@ -10,11 +10,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class AdminPanel extends Stage {
 	
@@ -195,7 +198,9 @@ public class AdminPanel extends Stage {
     private void openNewPageAccount() {
     	TextField userId = new TextField();
     	TextField userName = new TextField();
-    	TextField userRole = new TextField();
+    	ObservableList<String> options = FXCollections.observableArrayList("Admin", "Chef", "Waiter", "Cashier", "Customer");
+    	ComboBox<String> userRole= new ComboBox<String>(options);
+//    	TextField userRole = new TextField();
     	TextField userEmail = new TextField();
     	TextField userPassword = new TextField();
     	
@@ -207,7 +212,8 @@ public class AdminPanel extends Stage {
             if (newSelection != null) {
             	userId.setText(newSelection.getUserId()+"");
             	userName.setText(newSelection.getUserName());
-            	userRole.setText(String.valueOf(newSelection.getUserRole()));
+            	userRole.setValue(String.valueOf(newSelection.getUserRole()));
+//            	userRole.setText(String.valueOf(newSelection.getUserRole()));
             	userEmail.setText(String.valueOf(newSelection.getUserEmail()));
             	userPassword.setText(String.valueOf(newSelection.getUserPassword()));
             }
@@ -223,17 +229,17 @@ public class AdminPanel extends Stage {
         
         form.add(new Label("User ID:"), 0, 0);
         userId.setDisable(true);
-        form.add(userId, 1, 0);
+        form.add(userId, 1, 0, 2, 1);
         form.add(new Label("User Name:"), 0, 1);
-        form.add(userName, 1, 1);
+        form.add(userName, 1, 1, 2, 1);
         userName.setDisable(true);
         form.add(new Label("User Role:"), 0, 2);
-        form.add(userRole, 1, 2);
+        form.add(userRole, 1, 2, 2, 1);
         form.add(new Label("User Email:"), 0, 3);
-        form.add(userEmail, 1, 3);
+        form.add(userEmail, 1, 3, 2, 1);
         userEmail.setDisable(true);
         form.add(new Label("User Password:"), 0, 4);
-        form.add(userPassword, 1, 4);
+        form.add(userPassword, 1, 4, 2, 1);
         userPassword.setDisable(true);
         
         form.add(updateButton, 0, 5);
@@ -242,7 +248,8 @@ public class AdminPanel extends Stage {
         updateButton.setOnAction(e ->
         {
 			int id= Integer.parseInt(userId.getText());
-			String role = userRole.getText();
+			String role = userRole.getValue();
+//			String role = userRole.getText();
 			String name = userName.getText();
 			String email = userEmail.getText();
 			String password = userPassword.getText();
@@ -260,6 +267,13 @@ public class AdminPanel extends Stage {
 			showSuccessDialog("Delete Success");
 			loadUserData();
         });
+        
+        ColumnConstraints col1Constraints = new ColumnConstraints();
+        col1Constraints.setPercentWidth(5);
+        ColumnConstraints col2Constraints = new ColumnConstraints();
+        col2Constraints.setPercentWidth(5);
+        form.getColumnConstraints().addAll(col1Constraints, col2Constraints);
+
         
         contentArea.getChildren().add(form);
     }

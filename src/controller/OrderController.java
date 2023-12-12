@@ -18,14 +18,15 @@ public class OrderController
 	public static String createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
 		if(orderItems.size() == 0) return "Order Items Empty"; // Menu Item must be chosen
-		
-		
 		return "Success Create An Order";
 	}
 	
-	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
-	{
-		Order.updateOrder(orderId, orderItems, orderStatus);
+	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	{ 
+		String res = Order.updateOrder(orderId, orderItems, orderStatus);
+		if(res.equals("not exist")) return "Order doesn't exist";
+		else if(res.equals("success")) return "Success Update Order";
+		else return "Failed Update Order";
 	}
 	
 	public static ArrayList<Order> getOrderByCustomerId(int customerId)

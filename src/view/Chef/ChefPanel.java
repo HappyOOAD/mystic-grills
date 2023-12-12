@@ -177,25 +177,23 @@ public class ChefPanel extends Stage
         });
 	}
 	
-	//ini belom controller
-	//PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
     private TableView<Order> createOrderTableView() {
     	TableView<Order> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
-        TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("order ID");
+        TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         orderIdColumn.setPrefWidth(150);
     	    
-        TableColumn<Order, Integer> orderUserIdColumn = new TableColumn<>("order User Id");
+        TableColumn<Order, Integer> orderUserIdColumn = new TableColumn<>("Order User ID");
         orderUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderUserId"));
         orderUserIdColumn.setPrefWidth(150);
         
-        TableColumn<Order, String> orderStatusColumn = new TableColumn<>("order Status");
+        TableColumn<Order, String> orderStatusColumn = new TableColumn<>("Order Status");
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
         orderStatusColumn.setPrefWidth(150);
         
-        TableColumn<Order, Date> orderDateColumn = new TableColumn<>("order Date");
+        TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
         orderDateColumn.setPrefWidth(150);
         

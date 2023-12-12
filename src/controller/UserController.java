@@ -21,35 +21,36 @@ public class UserController
 	
 	public String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{	
-		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
+		// Create Account Sequence Diagram
+		// Return Success / Failed / Error Message
 		
-		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
-		if(User.emailIsExist(userEmail)) return "Email already taken"; // Email must be unique
+		// USERNAME
+		if(userName.isBlank()) return "Username cannot be empty";
 		
+		// EMAIL
+		if(userEmail.isBlank()) return "Email cannot be empty";
+		if(User.emailIsExist(userEmail)) return "Email already taken";
+		
+		// PASSWORD
 		if(userPassword.isBlank()) return "Password cannot be empty";
-		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long
+		if(userPassword.length() < 6) return "Password must at least be 6 characters long";
+		
+		//CONFIRM PASSWORD???
 		
 		String res = User.createUser(userRole, userName, userEmail, userPassword);
 		if(res.equals("success")) return "Success Create A New User";
 		else return "Failed create a new user";
 	}
 	
-	public static String updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
+	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
-		if(userName.isBlank()) return "Username cannot be empty"; // Username cannot be empty
-		
-		if(userEmail.isBlank()) return "Email cannot be empty"; // Email cannot be empty
-		
-		if(userPassword.isBlank()) return "Password cannot be empty";
-		if(userPassword.length() < 6) return "Password must at least be 6 characters long"; // Must at least be 6 characters long
-		
-		String res = User.updateUser(userId, userRole, userName, userEmail, userPassword);
-		if(res.equals("success")) return "Success Create A New User";
-		else return "Failed create a new user";
+		// Update Role | Sequence Diagram ga minta response to view
+		User.updateUser(userId, userRole, userName, userEmail, userPassword);
 	}
 	
 	public static void deleteUser(int userId)
 	{
+		// Delete user | Sequence Diagram ga minta response to view
 		User.deleteUser(userId);
 	}
 	
@@ -89,6 +90,8 @@ public class UserController
 	
 	public static ArrayList<User> getAllUsers()
 	{
+		// View User Sequence Diagram
+		// Return List<User>
 		return User.getAllUsers();
 	}
 	
