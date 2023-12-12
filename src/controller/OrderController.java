@@ -18,8 +18,6 @@ public class OrderController
 	public static String createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
 		if(orderItems.size() == 0) return "Order Items Empty"; // Menu Item must be chosen
-		
-		
 		return "Success Create An Order";
 	}
 	

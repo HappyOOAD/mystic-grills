@@ -1,12 +1,16 @@
 package main;
 
 
+import java.sql.Date;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Order;
+import model.Receipt;
 import view.Login;
 
 
@@ -30,8 +34,12 @@ public class Main extends Application
 //    	for (MenuItem temp : x) {
 //			System.out.println(temp.getMenuItemName());
 //		}
-    	
-//    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
+    	Date date = new Date(System.currentTimeMillis());
+        String receiptsPaymentType = "Debit";
+        Double receiptsPaymentAmount = 29.1;
+        Order o = Order.getOrderById(4);
+
+        Receipt.createReceipt(o, receiptsPaymentType, receiptsPaymentAmount, date);
     	
     	launch(args);
     }
