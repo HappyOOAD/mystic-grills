@@ -2,7 +2,6 @@ package main;
 
 
 import java.sql.Date;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
