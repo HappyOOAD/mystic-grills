@@ -179,24 +179,6 @@ public class Order
 //			e.printStackTrace();
 //		}
 		
-		String checkQuery = "SELECT 1 WHERE orderId = ?;";
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			PreparedStatement prep = connection.prepareStatement(checkQuery);
-			prep.setInt(1, orderId);
-			ResultSet resultSet = prep.executeQuery();
-
-			if(!resultSet.next())
-			{
-				return "not exist";
-			}
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return "failed";
-		}
-		
 		String updateQuery = "UPDATE orders SET orderStatus = ? WHERE orderId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
@@ -213,7 +195,7 @@ public class Order
 		}
 	}
 	
-	public static void deleteOrder(int orderId)
+	public static String deleteOrder(int orderId)
 	{
 		String query = "DELETE FROM orders WHERE orderId = ?";
 		  
@@ -222,10 +204,12 @@ public class Order
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, orderId);
 			prep.executeUpdate();
+			return "Success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "Failed";
 		}
 	}
 	

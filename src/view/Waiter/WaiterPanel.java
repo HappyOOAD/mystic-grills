@@ -117,19 +117,29 @@ public class WaiterPanel extends Stage
 			
 			Order x = OrderController.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            OrderController.updateOrder(id, orderItem, status);
-            
-            showSuccessDialog("Update Success");
-            loadOrdersData();
+			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+	            
+	            if ("Success Update Order".equals(updatingOrder)) {
+	                showSuccessDialog("Update success");
+	                loadOrdersData();
+	            } else {
+	                showErrorDialog(updatingOrder);
+	                loadOrdersData();
+	            }
         });
         
         deleteButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
-        	OrderController.deleteOrder(id);
+        	String deleteOrder = OrderController.deleteOrder(id);
         	
-        	showSuccessDialog("Delete Success");
-        	loadOrdersData();
+        	if ("Sucess Delete Order".equals(deleteOrder)) {
+                showSuccessDialog("Delete success");
+                loadOrdersData();
+            } else {
+                showErrorDialog(deleteOrder);
+                loadOrdersData();
+            }
         });
         
         serveButton.setOnAction(e ->
@@ -139,10 +149,15 @@ public class WaiterPanel extends Stage
 			
 			Order x = OrderController.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            OrderController.updateOrder(id, orderItem, status);
-            
-            showSuccessDialog("Update Success");
-            loadOrdersData();
+			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+	            
+	           if ("Success Update Order".equals(updatingOrder)) {
+	               showSuccessDialog("Update success");
+	               loadOrdersData();
+	           } else {
+	               showErrorDialog(updatingOrder);
+	               loadOrdersData();
+	           }
         });
         
         contentArea.getChildren().add(form);

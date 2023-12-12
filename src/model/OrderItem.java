@@ -29,12 +29,11 @@ public class OrderItem
 	
 	public static void createOrderitem(int orderId, MenuItems menuItem, int quantity)
 	{
-		String query = "INSERT INTO orderitems (orderItemId, orderId, menuItemId, quantity) VALUES (? ,? ,? ,? );";
+		String query = "INSERT INTO orderitems (orderId, menuItemId, quantity) VALUES (? ,? ,?)";
 		
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
-			prep.setInt(1, 0);
 			prep.setInt(1, orderId);
 			prep.setInt(2, menuItem.getMenuItemId());
 			prep.setInt(3, quantity);
