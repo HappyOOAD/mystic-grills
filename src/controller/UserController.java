@@ -20,7 +20,7 @@ public class UserController
 	
 	public String createUser(String userRole, String userName, String userEmail, String userPassword)
 	{	
-		// Create Account Sequence Diagram
+		// Create Account Sequence Diagram [GUEST]
 		// RULES: (From Sequence)
 		// - Return Validation Error
 		// - Return [Success / Failed / Error] Message
@@ -45,7 +45,7 @@ public class UserController
 	
 	public static void updateUser(int userId, String userRole, String userName, String userEmail, String userPassword)
 	{
-		// Update Role Sequence Diagram
+		// Update Role Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
@@ -55,7 +55,7 @@ public class UserController
 	
 	public static void deleteUser(int userId)
 	{
-		// Delete User Sequence Diagram
+		// Delete User Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
@@ -99,7 +99,7 @@ public class UserController
 	
 	public static ArrayList<User> getAllUsers()
 	{
-		// View User Sequence Diagram
+		// View User Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - Return List<User>
 		

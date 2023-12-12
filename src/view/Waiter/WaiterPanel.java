@@ -99,10 +99,13 @@ public class WaiterPanel extends Stage
         orderId.setDisable(true);
         form.add(orderId, 1, 0);
         form.add(new Label("User ID:"), 0, 1);
+        userId.setDisable(true);
         form.add(userId, 1, 1);
         form.add(new Label("Order Status:"), 0, 2);
+        orderStatus.setDisable(true);
         form.add(orderStatus, 1, 2);
         form.add(new Label("Order Date:"), 0, 3);
+        orderDate.setDisable(true);
         form.add(orderDate, 1, 3);
 
         
@@ -119,10 +122,13 @@ public class WaiterPanel extends Stage
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
 			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
 	            
-	            if ("Success Update Order".equals(updatingOrder)) {
+	            if (updatingOrder.contains("SUCCESS"))
+	            {
 	                showSuccessDialog("Update success");
 	                loadOrdersData();
-	            } else {
+	            }
+	            else
+	            {
 	                showErrorDialog(updatingOrder);
 	                loadOrdersData();
 	            }
@@ -133,10 +139,13 @@ public class WaiterPanel extends Stage
         	int id= Integer.parseInt(orderId.getText());
         	String deleteOrder = OrderController.deleteOrder(id);
         	
-        	if ("Sucess Delete Order".equals(deleteOrder)) {
+        	if (deleteOrder.contains("SUCCESS"))
+        	{
                 showSuccessDialog("Delete success");
                 loadOrdersData();
-            } else {
+            }
+        	else
+        	{
                 showErrorDialog(deleteOrder);
                 loadOrdersData();
             }
@@ -151,7 +160,7 @@ public class WaiterPanel extends Stage
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
 			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
 	            
-	           if ("Success Update Order".equals(updatingOrder)) {
+	           if (updatingOrder.contains("SUCCESS")) {
 	               showSuccessDialog("Update success");
 	               loadOrdersData();
 	           } else {

@@ -16,12 +16,17 @@ public class OrderItemController
 	
 	public String createOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		// Add Order Sequence Diagram
+		// Add Order Sequence Diagram [CUSTOMER]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
 		
-		// Update Order Sequence Diagram
+		// Update Order Sequence Diagram [KITCHEN]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - When Add New Order Item to Order
+		
+		// Update Ordered Menu Item Sequence Diagram [CUSTOMER]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - When Add New Order Item to Order
@@ -35,7 +40,12 @@ public class OrderItemController
 	
 	public String updateOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		// Update Order Sequence Diagram
+		// Update Order Sequence Diagram [KITCHEN]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - When Update Existing Order Item
+
+		// Update Ordered Sequence Diagram [CUSTOMER]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - When Update Existing Order Item
@@ -54,6 +64,11 @@ public class OrderItemController
 	
 	public ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
 	{
+		// View Ordered Menu Items Sequence Diagram [CUSTOMER]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Return List<OrderItem>
+		
 		return OrderItem.getAllOrderItemsByOrderId(orderId);
 	}
 }

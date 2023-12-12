@@ -204,12 +204,12 @@ public class Order
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, orderId);
 			prep.executeUpdate();
-			return "Success";
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return "Failed";
+			return "failed";
 		}
 	}
 	

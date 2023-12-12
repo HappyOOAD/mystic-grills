@@ -124,7 +124,8 @@ public class ChefPanel extends Stage
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
             String updatingOrder = OrderController.updateOrder(id, orderItem, status);
             
-            if ("Success Update Order".equals(updatingOrder)) {
+            if (updatingOrder.contains("SUCCESS"))
+            {
                 showSuccessDialog("Update success");
                 loadOrdersData();
             } else {
@@ -139,10 +140,13 @@ public class ChefPanel extends Stage
         	int id= Integer.parseInt(orderId.getText());
         	String deleteOrder = OrderController.deleteOrder(id);
         	
-        	if ("Sucess Delete Order".equals(deleteOrder)) {
+        	if (deleteOrder.contains("SUCCESS"))
+        	{
                 showSuccessDialog("Delete success");
                 loadOrdersData();
-            } else {
+            } 
+        	else 
+        	{
                 showErrorDialog(deleteOrder);
                 loadOrdersData();
             }
@@ -157,10 +161,13 @@ public class ChefPanel extends Stage
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
             String updatingOrder = OrderController.updateOrder(id, orderItem, status);
             
-            if ("Success Update Order".equals(updatingOrder)) {
+            if (updatingOrder.contains("SUCCESS"))
+            {
                 showSuccessDialog("Update success");
                 loadOrdersData();
-            } else {
+            } 
+            else 
+            {
                 showErrorDialog(updatingOrder);
                 loadOrdersData();
             }

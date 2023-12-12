@@ -17,7 +17,7 @@ public class OrderController
 	
 	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
-		// Add Order Sequence Diagram
+		// Add Order Sequence Diagram [CUSTOMER]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
@@ -27,12 +27,20 @@ public class OrderController
 	
 	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{ 
-		// Prepare Order Sequence Diagram
-		// Serve Order Sequence Diagram
-		// Process Order Payment Diagram
-		// RULES : [From Sequence]
+		// Prepare Order Sequence Sequence Diagram [CHEF]
+		// RULES: (From Sequence)
 		// - No Validation
-		// - Return Update [Success / Failed] Response
+		// - Display Updated Order Status / Display Error Message
+		
+		// Serve Order Sequence Sequence Diagram [WAITER]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Display Updated Order Status / Display Error Message
+				
+		// Process Order Payment Sequence Diagram [CASHIER]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Display Updated Order Status / Display Error Message
 		
 		String res = Order.updateOrder(orderId, orderItems, orderStatus);
 		if(res.equals("not exist")) return "ERROR: Order doesn't exist";
@@ -42,26 +50,43 @@ public class OrderController
 	
 	public static ArrayList<Order> getOrderByCustomerId(int customerId)
 	{
+		// Update Order Sequence Diagram [KITCHEN]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Return Order
+		
 		return Order.getOrdersByCustomerId(customerId);
 	}
 	
-	public static void deleteOrder(int orderId)
+	public static String deleteOrder(int orderId)
 	{
-		// Remove Order Sequence Diagram
+		// Remove Order Sequence Diagram [KITCHEN]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
 		
-		Order.deleteOrder(orderId);
+		String res = Order.deleteOrder(orderId);
+		if(res.equals("success")) return "SUCCESS: Delete Order";
+		else return "FAILED: Delete order";
 	}
 	
 	public static ArrayList<Order> getAllOrders()
 	{
+		// View Orders Sequence Diagram [KITCHEN, CASHIER]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Return Order
+		
 		return Order.getAllOrders();
 	}
 	
 	public static Order getOrderByOrderId(int orderId)
 	{
+		// View Order Details Sequence Diagram [KITCHEN]
+		// RULES: (From Sequence)
+		// - No Validation
+		// - Return Order
+		
 		return Order.getOrderById(orderId);
 	}
 

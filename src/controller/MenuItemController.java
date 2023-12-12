@@ -14,7 +14,7 @@ public class MenuItemController
 
 	public static String createMenuItem(String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
-		// Add Menu Item Sequence Diagram
+		// Add Menu Item Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - Return Validation Error
 		// - Return [Success / Failed] Message
@@ -34,7 +34,7 @@ public class MenuItemController
 	
 	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
-		// Update Menu Item Sequence Diagram
+		// Update Menu Item Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - Return Validation Error
 		// - Return [Success / Failed] Message
@@ -54,7 +54,7 @@ public class MenuItemController
 	
 	public static void deleteMenuItem(int menuItemId)
 	{
-		// Remove Menu Item Sequence Diagram
+		// Remove Menu Item Sequence Diagram [ADMIN]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
@@ -69,7 +69,7 @@ public class MenuItemController
 	
 	public static ArrayList<MenuItems> getAllMenuItem()
 	{
-		// View Menu Items Sequence Diagram
+		// View Menu Items Sequence Diagram [ADMIN, CUSTOMER]
 		// RULES: (From Sequence)
 		// - Return List<MenuItem>
 		
