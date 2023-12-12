@@ -41,7 +41,7 @@ public class Order
 			prep.setInt   (1, 0);
 			prep.setInt	  (2, orderUser.getUserId());
 			prep.setString(3, "Pending");
-			prep.setDate  (4, (java.sql.Date) orderDate);
+			prep.setDate  (4, orderDate);
 			prep.executeUpdate();
 		}
 		catch (SQLException e)

@@ -1,25 +1,18 @@
 package main;
 
-
-import java.util.Date;
-
-import controller.ReceiptController;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.Order;
-import model.Receipt;
 import view.Login;
-
+import view.Register;
 
 public class Main extends Application
 {
     public static void main(String[] args)
     {
-// 	Testing
+    	// --- Testing ---
 //    	Order o = Order.getOrderById(1);
 //    	System.out.println(o.getOrderTotal());
 //    	ArrayList<OrderItem> o = OrderItem.getAllOrderItemsByOrderId(1);
@@ -35,7 +28,7 @@ public class Main extends Application
 //    	for (MenuItem temp : x) {
 //			System.out.println(temp.getMenuItemName());
 //		}
-    	
+//
 //    	MenuItems.updateMenuItem(1, "bebek goreng ayam sedap", "rasa pedas dan gurih", 29.10);
       
     	launch(args);
@@ -48,7 +41,6 @@ public class Main extends Application
 
         VBox vbox = new VBox(10);
         vbox.setAlignment(javafx.geometry.Pos.CENTER);
-        vbox.setPadding(new Insets(20, 20, 20, 20));
 
         Button loginButton = new Button("Login");
         Button registerButton = new Button("Register");
@@ -61,13 +53,13 @@ public class Main extends Application
 
         registerButton.setOnAction(e ->
         {
-            new Login().show();
+            new Register().show();
             primaryStage.close();
         });
 
         vbox.getChildren().addAll(loginButton, registerButton);
 
-        Scene scene = new Scene(vbox, 300, 100);
+        Scene scene = new Scene(vbox, 300, 300);
         primaryStage.setScene(scene);
 
         primaryStage.show();

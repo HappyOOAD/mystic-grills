@@ -39,9 +39,11 @@ public class CashierPanel extends Stage
     private MenuBar menuBar;
     TableView<Order>menuItemTable;
     
-	public CashierPanel() {
+	public CashierPanel()
+	{
 		super(StageStyle.DECORATED);
 
+		setTitle("Mystic Grills - Cashier");
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
@@ -80,7 +82,8 @@ public class CashierPanel extends Stage
 	}
 
 	
-    private void showSuccessDialog(String successMessage) {
+    private void showSuccessDialog(String successMessage)
+    {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
@@ -89,7 +92,8 @@ public class CashierPanel extends Stage
     }
     
     
-    private void showErrorDialog(String errorMessage) {
+    private void showErrorDialog(String errorMessage)
+    {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);

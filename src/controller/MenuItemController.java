@@ -14,6 +14,11 @@ public class MenuItemController
 
 	public static String createMenuItem(String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
+		// Add Menu Item Sequence Diagram
+		// RULES: (From Sequence)
+		// - Return Validation Error
+		// - Return [Success / Failed] Message
+		
 		if(menuItemName.isBlank()) return "Menu Item Name Empty"; // CANNOT EMPTY
 		if(MenuItems.nameIsExist(menuItemName)) return "Menu Item Name Exist"; // MUST BE UNIQUE
 		
@@ -29,6 +34,11 @@ public class MenuItemController
 	
 	public static String updateMenuItem(int menuItemId, String menuItemName, String menuItemDescription, double menuItemPrice)
 	{
+		// Update Menu Item Sequence Diagram
+		// RULES: (From Sequence)
+		// - Return Validation Error
+		// - Return [Success / Failed] Message
+		
 		if(menuItemName.isBlank()) return "Menu Item Name Empty"; // CANNOT EMPTY
 		if(MenuItems.nameIsExist(menuItemName)) return "Menu Item Name Exist"; // MUST BE UNIQUE
 		
@@ -44,6 +54,11 @@ public class MenuItemController
 	
 	public static void deleteMenuItem(int menuItemId)
 	{
+		// Remove Menu Item Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - No Return Response
+		
 		MenuItems.deleteMenuItem(menuItemId);
 	}
 	
@@ -54,8 +69,10 @@ public class MenuItemController
 	
 	public static ArrayList<MenuItems> getAllMenuItem()
 	{
+		// View Menu Items Sequence Diagram
+		// RULES: (From Sequence)
+		// - Return List<MenuItem>
+		
 		return MenuItems.getAllMenuItems();
 	}
-	
-	
 }

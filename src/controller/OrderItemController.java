@@ -16,20 +16,35 @@ public class OrderItemController
 	
 	public String createOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		if(menuItem == null) return "Menu Item must be chosen";
-		if(quantity < 1) return "Quantity cannot below 1";
+		// Add Order Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - No Return Response
+		
+		// Update Order Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - When Add New Order Item to Order
+		
+		if(menuItem == null) return "ERROR: Menu Item must be chosen";
+		if(quantity < 1) return "ERROR: Quantity cannot below 1";
 		
 		OrderItem.createOrderitem(orderId, menuItem, quantity);
-		return "Successfully Create an Order Item";
+		return "SUCCESS: Successfully Create an Order Item";
 	}
 	
 	public String updateOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
-		if(menuItem == null) return "Menu Item must be chosen";
-		if(quantity < 1) return "Quantity cannot below 1";
+		// Update Order Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - When Update Existing Order Item
+
+		if(menuItem == null) return "ERROR: Menu Item must be chosen";
+		if(quantity < 1) return "ERROR: Quantity cannot below 1";
 		
 		OrderItem.updateOrderItem(orderId, menuItem, quantity);
-		return "Successfully Update an Order Item";
+		return "SUCCESS: Successfully Update an Order Item";
 	}
 	
 	public void deleteOrderItem(int orderId, MenuItems menuItem, int quantity)

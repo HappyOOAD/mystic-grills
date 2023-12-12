@@ -1,7 +1,6 @@
 package view;
 
 import controller.UserController;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +19,6 @@ public class Login extends Stage
 		setTitle("Mystic Grills - Login");
         GridPane grid = new GridPane();
         grid.setAlignment(javafx.geometry.Pos.CENTER);
-        grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
 
@@ -38,15 +36,16 @@ public class Login extends Stage
 
         // Login Button
         Button loginButton = new Button("Login");
-        grid.add(loginButton, 1, 2);
+        grid.add(loginButton, 0, 2);
 		
-        //Register Button
-        Button RegisterButton = new Button("Regiser");
-        grid.add(RegisterButton, 1, 4);
-        
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 1, 3);
+        grid.add(actionTarget, 0, 3, 2, 1);
+
+        //Register Button
+        Button RegisterButton = new Button("Go To Register Screen");
+        grid.add(RegisterButton, 0, 6, 2, 1);
+        
 
         loginButton.setOnAction(e ->
         {
@@ -54,16 +53,17 @@ public class Login extends Stage
             String password = passwordField.getText();
             
             String res = controller.authenticateUser(email, password);
-            if(res.equals("Login Success")) this.close();
+            if(res.contains("SUCCESS")) this.close();
             else actionTarget.setText(res);
         });
 
         RegisterButton.setOnAction(e ->
         {
             new Register().show();
+            this.close();
         });
 
-        Scene scene = new Scene(grid, 400, 200);
+        Scene scene = new Scene(grid, 300, 300);
         setScene(scene);
     }
 }

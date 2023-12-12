@@ -100,12 +100,14 @@ public class ChefPanel extends Stage
         orderId.setDisable(true);
         form.add(orderId, 1, 0);
         form.add(new Label("User ID:"), 0, 1);
+        userId.setDisable(true);
         form.add(userId, 1, 1);
         form.add(new Label("Order Status:"), 0, 2);
+        orderStatus.setDisable(true);
         form.add(orderStatus, 1, 2);
         form.add(new Label("Order Date:"), 0, 3);
+        orderDate.setDisable(true);
         form.add(orderDate, 1, 3);
-
         
         form.add(updateButton, 0, 5);
         form.add(deleteButton, 1, 5);

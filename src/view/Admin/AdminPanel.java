@@ -42,6 +42,7 @@ public class AdminPanel extends Stage {
     public AdminPanel() {
     	super(StageStyle.DECORATED);
 
+    	setTitle("Mystic Grills - Admin");
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
@@ -225,7 +226,6 @@ public class AdminPanel extends Stage {
 		
 		Button updateButton = new Button("Update");
         Button deleteButton = new Button("Delete");
-        
         
         form.add(new Label("User ID:"), 0, 0);
         userId.setDisable(true);

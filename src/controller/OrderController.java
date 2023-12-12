@@ -1,7 +1,7 @@
 package controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 
 import model.Order;
 import model.OrderItem;
@@ -15,18 +15,29 @@ public class OrderController
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static String createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
+	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
-		if(orderItems.size() == 0) return "Order Items Empty"; // Menu Item must be chosen
-		return "Success Create An Order";
+		// Add Order Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - No Return Response
+		
+		Order.createOrder(orderUser, orderItems, new Date(System.currentTimeMillis())); // Date Now
 	}
 	
 	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{ 
+		// Prepare Order Sequence Diagram
+		// Serve Order Sequence Diagram
+		// Process Order Payment Diagram
+		// RULES : [From Sequence]
+		// - No Validation
+		// - Return Update [Success / Failed] Response
+		
 		String res = Order.updateOrder(orderId, orderItems, orderStatus);
-		if(res.equals("not exist")) return "Order doesn't exist";
-		else if(res.equals("success")) return "Success Update Order";
-		else return "Failed Update Order";
+		if(res.equals("not exist")) return "ERROR: Order doesn't exist";
+		else if(res.equals("success")) return "SUCCESS: Success Update Order";
+		else return "FAILED: Failed Update Order";
 	}
 	
 	public static ArrayList<Order> getOrderByCustomerId(int customerId)
@@ -36,6 +47,11 @@ public class OrderController
 	
 	public static void deleteOrder(int orderId)
 	{
+		// Remove Order Sequence Diagram
+		// RULES: (From Sequence)
+		// - No Validation
+		// - No Return Response
+		
 		Order.deleteOrder(orderId);
 	}
 	

@@ -1,7 +1,6 @@
 package view;
 
 import controller.UserController;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +19,6 @@ public class Register extends Stage
         setTitle("Mystic Grills - Register");
         GridPane grid = new GridPane();
         grid.setAlignment(javafx.geometry.Pos.CENTER);
-        grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
 
@@ -50,15 +48,16 @@ public class Register extends Stage
 
         // Register Button
         Button registerButton = new Button("Register");
-        grid.add(registerButton, 1, 4);
+        grid.add(registerButton, 0, 4);
 		
-        //Login Button
-        Button loginButton = new Button("Login");
-        grid.add(loginButton, 1, 6);
-        
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 1, 5);
+        grid.add(actionTarget, 0, 5, 2, 1);
+        
+        //Login Button
+        Button loginButton = new Button("Go To Login Screen");
+        grid.add(loginButton, 0, 6, 2, 1);
+        
         registerButton.setOnAction(e ->
         {
             String username = usernameField.getText();
@@ -68,9 +67,15 @@ public class Register extends Stage
             if(password.equals(confirmPassword))
             {            	
             	String res = controller.createUser("Customer", username, email, password);  
-            	actionTarget.setText(res);
-            	new Login().show();
-            	this.close();
+            	if(res.contains("SUCCESS"))
+    			{
+            		new Login().show();
+            		this.close();
+    			}
+            	else 
+        		{
+        			actionTarget.setText(res);
+        		}
             }
             else
             {            	
@@ -82,9 +87,10 @@ public class Register extends Stage
         loginButton.setOnAction(e ->
         {
             new Login().show();
+            this.close();
         });
 
-        Scene scene = new Scene(grid, 400, 300);
+        Scene scene = new Scene(grid, 300, 300);
         setScene(scene);
     }
 }
