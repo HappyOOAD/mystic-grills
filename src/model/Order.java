@@ -148,49 +148,68 @@ public class Order
 		return order;
 	}
 	
-	public static void updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{
-		String deleteOrderItemsQuery = "DELETE FROM orderitems WHERE orderId = ?";
-		try (Connection connection = Connect.getInstance().getConnection())
-		{
-			PreparedStatement prep = connection.prepareStatement(deleteOrderItemsQuery);
-			prep.setInt(1, orderId);
-			prep.executeUpdate();
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+//		String deleteOrderItemsQuery = "DELETE FROM orderitems WHERE orderId = ?";
+//		try (Connection connection = Connect.getInstance().getConnection())
+//		{
+//			PreparedStatement prep = connection.prepareStatement(deleteOrderItemsQuery);
+//			prep.setInt(1, orderId);
+//			prep.executeUpdate();
+//		}
+//		catch (SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		
+//		String reinsertOrderItemsQuery = "INSERT INTO orderitems (orderId, menuItemId, quantity) VALUES (?, ?, ?);";
+//		try (Connection connection = Connect.getInstance().getConnection())
+//		{
+//			PreparedStatement prep = connection.prepareStatement(reinsertOrderItemsQuery);
+//			for (OrderItem orderItem : orderItems) {
+//				prep.setInt(1, orderId);
+//				prep.setInt(2, orderItem.getMenuItem().getMenuItemId());
+//				prep.setInt(3, orderItem.getQuantity());
+//				prep.executeUpdate();
+//				
+//			}
+//		}
+//		catch (SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
 		
-		String reinsertOrderItemsQuery = "INSERT INTO orderitems (orderId, menuItemId, quantity) VALUES (?, ?, ?);";
+		String checkQuery = "SELECT 1 WHERE orderId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(reinsertOrderItemsQuery);
-			for (OrderItem orderItem : orderItems) {
-				prep.setInt(1, orderId);
-				prep.setInt(2, orderItem.getMenuItem().getMenuItemId());
-				prep.setInt(3, orderItem.getQuantity());
-				prep.executeUpdate();
-				
+			PreparedStatement prep = connection.prepareStatement(checkQuery);
+			prep.setInt(1, orderId);
+			ResultSet resultSet = prep.executeQuery();
+
+			if(!resultSet.next())
+			{
+				return "not exist";
 			}
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "failed";
 		}
 		
-		
-		String statusQuery = "UPDATE orders SET orderStatus = ? WHERE orderId = ?;";
+		String updateQuery = "UPDATE orders SET orderStatus = ? WHERE orderId = ?;";
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(statusQuery);
+			PreparedStatement prep = connection.prepareStatement(updateQuery);
 			prep.setString(1, orderStatus);
 			prep.setInt(2, orderId);
 			prep.executeUpdate();
+			return "success";
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return "failed";
 		}
 	}
 	
@@ -209,6 +228,8 @@ public class Order
 			e.printStackTrace();
 		}
 	}
+	
+	// VALIDATION
 
 	public static double getTotalByOrderId(int orderId)
 	{
