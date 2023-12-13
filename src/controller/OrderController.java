@@ -75,7 +75,7 @@ public class OrderController
 		// View Orders Sequence Diagram [KITCHEN, CASHIER]
 		// RULES: (From Sequence)
 		// - No Validation
-		// - Return Order
+		// - Return List<Order>
 		
 		return Order.getAllOrders();
 	}
