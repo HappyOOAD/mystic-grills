@@ -95,9 +95,6 @@ public class CustomerPanel extends Stage
 		
 		// buat masukkin quantity item yang di-select
         GridPane form = createOrderform(MenuTable);
-        
-        
-        
         VBox.setMargin(form, new Insets(20));
         contentArea.getChildren().add(form);
 		
@@ -236,6 +233,7 @@ public class CustomerPanel extends Stage
 //	        		
 //	        	}	
 	        	orderId_temp = newSelection.getOrderId();
+	       
 	        	new UpdateOrderPanel(orderId_temp).show();
 	        }
 	    });
