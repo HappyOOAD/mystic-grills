@@ -127,7 +127,7 @@ public class Order
 		return orders;
 	}
 	
-	public static Order getOrderById(int orderId) // NEED JOIN??
+	public static Order getOrderById(int orderId) 
 	{
 		Order order = null;
 		String query = "SELECT * FROM orders WHERE orderId = ?;";

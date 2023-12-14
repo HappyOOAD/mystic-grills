@@ -40,6 +40,7 @@ public class CashierPanel extends Stage
     private MenuBar menuBar;
     TableView<Order>menuItemTable;
     TableView<Receipt>ReceiptTable;
+    private OrderController controller = new OrderController();
     
 	public CashierPanel()
 	{
@@ -191,7 +192,7 @@ public class CashierPanel extends Stage
                 showSuccessDialog("Add Receipt success");
                 
                 
-                String orderUpdating = OrderController.updateOrder(id, orderItem, status);
+                String orderUpdating = controller.updateOrder(id, orderItem, status);
                 
                 if ("Success Update Order".equals(orderUpdating)) {
                     showSuccessDialog("Update Order success");
@@ -213,7 +214,7 @@ public class CashierPanel extends Stage
 	}
 	
 	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = OrderController.getAllOrders();
+	    ArrayList<Order> allOrders = controller.getAllOrders();
 
 	    ArrayList<Order> prepareOrders = allOrders.stream()
 	            .filter(order -> "served".equalsIgnoreCase(order.getOrderStatus()))
@@ -243,7 +244,7 @@ public class CashierPanel extends Stage
         orderDateColumn.setPrefWidth(150);
         
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
-        tableView.setItems(FXCollections.observableArrayList(OrderController.getAllOrdersByOrderStatus("Served")));
+        tableView.setItems(FXCollections.observableArrayList(controller.getAllOrdersByOrderStatus("Served")));
         
         return tableView;
     }

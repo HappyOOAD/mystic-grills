@@ -35,10 +35,12 @@ public class WaiterPanel extends Stage
     private VBox contentArea;
     private MenuBar menuBar;
     TableView<Order>menuItemTable;
+    private OrderController controller = new OrderController();
     
 	public WaiterPanel() {
 		super(StageStyle.DECORATED);
 
+		setTitle("Mystic Grills - Waiter Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
@@ -67,7 +69,7 @@ public class WaiterPanel extends Stage
 	}
 	
 	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = OrderController.getAllOrders();
+	    ArrayList<Order> allOrders = controller.getAllOrders();
 
 	    ArrayList<Order> prepareOrders = allOrders.stream()
 	            .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
@@ -118,9 +120,9 @@ public class WaiterPanel extends Stage
 			int id= Integer.parseInt(orderId.getText());
 			String status = orderStatus.getText();
 			
-			Order x = OrderController.getOrderByOrderId(id);
+			Order x = controller.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+			String updatingOrder = controller.updateOrder(id, orderItem, status);
 	            
 	            if (updatingOrder.contains("SUCCESS"))
 	            {
@@ -137,7 +139,7 @@ public class WaiterPanel extends Stage
         deleteButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
-        	String deleteOrder = OrderController.deleteOrder(id);
+        	String deleteOrder = controller.deleteOrder(id);
         	
         	if (deleteOrder.contains("SUCCESS"))
         	{
@@ -156,9 +158,9 @@ public class WaiterPanel extends Stage
         	int id= Integer.parseInt(orderId.getText());
 			String status = "Served";
 			
-			Order x = OrderController.getOrderByOrderId(id);
+			Order x = controller.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-			String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+			String updatingOrder = controller.updateOrder(id, orderItem, status);
 	            
 	           if (updatingOrder.contains("SUCCESS")) {
 	               showSuccessDialog("Update success");
@@ -223,7 +225,7 @@ public class WaiterPanel extends Stage
         orderDateColumn.setPrefWidth(150);
         
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
-        tableView.setItems(FXCollections.observableArrayList(OrderController.getAllOrdersByOrderStatus("Prepared")));
+        tableView.setItems(FXCollections.observableArrayList(controller.getAllOrdersByOrderStatus("Prepared")));
         
         return tableView;
     }

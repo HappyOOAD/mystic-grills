@@ -36,10 +36,12 @@ public class ChefPanel extends Stage
     private VBox contentArea;
     private MenuBar menuBar;
     TableView<Order>menuItemTable;
+    private OrderController controller = new OrderController();
     
 	public ChefPanel() {
 		super(StageStyle.DECORATED);
 
+		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
@@ -68,7 +70,7 @@ public class ChefPanel extends Stage
 	}
 	
 	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = OrderController.getAllOrders();
+	    ArrayList<Order> allOrders = controller.getAllOrders();
 
 	    ArrayList<Order> prepareOrders = allOrders.stream()
 	            .filter(order -> "pending".equalsIgnoreCase(order.getOrderStatus()))
@@ -120,10 +122,10 @@ public class ChefPanel extends Stage
 			String status = orderStatus.getText();
 			
 			
-			Order x = OrderController.getOrderByOrderId(id);
+			Order x = controller.getOrderByOrderId(id);
 			
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+            String updatingOrder = controller.updateOrder(id, orderItem, status);
             
             if (updatingOrder.contains("SUCCESS"))
             {
@@ -139,7 +141,7 @@ public class ChefPanel extends Stage
         deleteButton.setOnAction(e ->
         {
         	int id= Integer.parseInt(orderId.getText());
-        	String deleteOrder = OrderController.deleteOrder(id);
+        	String deleteOrder = controller.deleteOrder(id);
         	
         	if (deleteOrder.contains("SUCCESS"))
         	{
@@ -160,7 +162,7 @@ public class ChefPanel extends Stage
 			
 			Order x = Order.getOrderById(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            String updatingOrder = OrderController.updateOrder(id, orderItem, status);
+            String updatingOrder = controller.updateOrder(id, orderItem, status);
             
             if (updatingOrder.contains("SUCCESS"))
             {
@@ -226,7 +228,7 @@ public class ChefPanel extends Stage
         orderDateColumn.setPrefWidth(150);
                
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
-        tableView.setItems(FXCollections.observableArrayList(OrderController.getAllOrdersByOrderStatus("Pending")));
+        tableView.setItems(FXCollections.observableArrayList(controller.getAllOrdersByOrderStatus("Pending")));
         
         return tableView;
     }
