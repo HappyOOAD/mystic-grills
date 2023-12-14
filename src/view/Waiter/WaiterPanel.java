@@ -222,14 +222,8 @@ public class WaiterPanel extends Stage
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
         orderDateColumn.setPrefWidth(150);
         
-        ObservableList<Order> pendingOrders = FXCollections.observableArrayList(
-                OrderController.getAllOrders().stream()
-                        .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
-                        .collect(Collectors.toList())
-        );
-        
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
-        tableView.setItems(pendingOrders);
+        tableView.setItems(FXCollections.observableArrayList(OrderController.getAllOrdersByOrderStatus("Prepared")));
         
         return tableView;
     }
