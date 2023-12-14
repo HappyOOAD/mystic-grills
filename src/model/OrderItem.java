@@ -66,7 +66,7 @@ public class OrderItem
 			
 			for (OrderItem orderItem : orderItems)
 			{
-				orderItem.setMenuItem(MenuItems.getMenuItemById(orderItem.getMenuItemId()));
+				orderItem.setMenuItem();
 			}
 		} 
 		catch (SQLException e)
@@ -138,9 +138,9 @@ public class OrderItem
 		return menuItem;
 	}
 
-	public void setMenuItem(MenuItems menuItem)
+	public void setMenuItem()
 	{
-		this.menuItem = menuItem;
+		this.menuItem =  MenuItems.getMenuItemById(menuItemId);
 	}
 
 	public int getQuantity()

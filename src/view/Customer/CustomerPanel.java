@@ -195,7 +195,14 @@ public class CustomerPanel extends Stage
 				MenuItems selectedMenuItem = getSelectedMenuItem();
 				if (selectedMenuItem != null && quantity_menu.equals("0")==false)
 				{
+					System.out.println("MENU ITEM ID DOWN HERE");
+					System.out.println(selectedMenuItem.getMenuItemId());
+					
 					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
+
+					System.out.println("MENU ITEM NAME DOWN HERE");
+					order.setMenuItem();
+					System.out.println(order.getMenuItem().getMenuItemName());
 					keranjang.add(order);
 	            }
 			}
@@ -245,15 +252,15 @@ public class CustomerPanel extends Stage
 		
 	}
 
-	private void setupTableSelectionListener() {
+	private void setupTableSelectionListener()
+	{
 		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-	        if (newSelection != null) {
-//	        	if(newSelection.getOrderStatus().equals("PENDING")) {
-//	        		
-//	        	}	
-//	        	orderId_temp = newSelection.getOrderId();
-//	       
-//	        	new UpdateOrderPanel(orderId_temp).show();
+	        if (newSelection != null)
+	        {
+	        	if(newSelection.getOrderStatus().equals("Pending")) {	        		
+	        		int orderIdToOpenDetails = newSelection.getOrderId();
+	        		new UpdateOrderPanel(orderIdToOpenDetails).show();
+	        	}	
 	        }
 	    });
 		
@@ -277,7 +284,7 @@ public class CustomerPanel extends Stage
        
         tableView.getColumns().addAll(orderID, orderStatus, orderDate);
         //get user id nya
-        tableView.setItems(FXCollections.observableArrayList(Order.getOrdersByCustomerId(4)));
+        tableView.setItems(FXCollections.observableArrayList(orderController.getOrderByCustomerId(customer.getUserId())));
         
         return tableView;
 	}
