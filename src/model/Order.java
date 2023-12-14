@@ -31,22 +31,31 @@ public class Order
 	
 	// CRUD
 	
-	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
+	public static int createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
+		String[] returnId = { "orderId" };
 		String query = "INSERT INTO orders (orderId, userId, orderStatus, orderDate) VALUES (? ,? ,? ,? );";
 		  
 		try (Connection connection = Connect.getInstance().getConnection())
 		{
-			PreparedStatement prep = connection.prepareStatement(query);
+			PreparedStatement prep = connection.prepareStatement(query, returnId);
 			prep.setInt   (1, 0);
 			prep.setInt	  (2, orderUser.getUserId());
 			prep.setString(3, "Pending");
 			prep.setDate  (4, orderDate);
 			prep.executeUpdate();
+			
+			ResultSet rs = prep.getGeneratedKeys();
+			if(rs.next())
+			{
+				return rs.getInt(1);
+			}
+			return 0;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
+			return 0;
 		}
 	}
 	

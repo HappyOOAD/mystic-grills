@@ -17,17 +17,20 @@ public class OrderController
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static void createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
+	public int createOrder(User orderUser, ArrayList<OrderItem> orderItems, Date orderDate)
 	{
 		// Add Order Sequence Diagram [CUSTOMER]
 		// RULES: (From Sequence)
 		// - No Validation
 		// - No Return Response
 		
-		Order.createOrder(orderUser, orderItems, new Date(System.currentTimeMillis())); // Date Now
+		// Additional Rules:
+		// - Need To Return OrderId
+		
+		return Order.createOrder(orderUser, orderItems, new Date(System.currentTimeMillis())); // Date Now
 	}
 	
-	public static String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
+	public String updateOrder(int orderId, ArrayList<OrderItem> orderItems, String orderStatus)
 	{ 
 		// Prepare Order Sequence Sequence Diagram [CHEF]
 		// RULES: (From Sequence)
@@ -50,7 +53,7 @@ public class OrderController
 		else return "FAILED: Failed Update Order";
 	}
 	
-	public static ArrayList<Order> getOrderByCustomerId(int customerId)
+	public ArrayList<Order> getOrderByCustomerId(int customerId)
 	{
 		// Update Order Sequence Diagram [KITCHEN]
 		// RULES: (From Sequence)
@@ -60,7 +63,7 @@ public class OrderController
 		return Order.getOrdersByCustomerId(customerId);
 	}
 	
-	public static String deleteOrder(int orderId)
+	public String deleteOrder(int orderId)
 	{
 		// Remove Order Sequence Diagram [KITCHEN]
 		// RULES: (From Sequence)
@@ -72,7 +75,7 @@ public class OrderController
 		else return "FAILED: Delete order";
 	}
 	
-	public static ArrayList<Order> getAllOrders()
+	public ArrayList<Order> getAllOrders()
 	{
 		// View Orders Sequence Diagram [KITCHEN, CASHIER]
 		// RULES: (From Sequence)
@@ -82,7 +85,7 @@ public class OrderController
 		return Order.getAllOrders();
 	}
 	
-	public static Order getOrderByOrderId(int orderId)
+	public Order getOrderByOrderId(int orderId)
 	{
 		// View Order Details Sequence Diagram [KITCHEN]
 		// RULES: (From Sequence)
@@ -95,7 +98,7 @@ public class OrderController
 	
 	// ADITIONAL
 	
-	public static ArrayList<Order> getAllOrdersByOrderStatus(String orderStatus)
+	public ArrayList<Order> getAllOrdersByOrderStatus(String orderStatus)
 	{
 		ArrayList<Order> allOrders = getAllOrders();
 		return (ArrayList<Order>) allOrders.stream()

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import controller.OrderController;
+import controller.OrderItemController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,11 +41,16 @@ public class CustomerPanel extends Stage
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
+    private OrderController orderController = new OrderController();
+    private OrderItemController orderItemController = new OrderItemController();
+    private User customer;
 
-	public CustomerPanel()
+	public CustomerPanel(User customer)
 	{
 		super(StageStyle.DECORATED);
 
+		setTitle("Mystic Grills - Customer Panel");
+		this.customer = customer;
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
@@ -144,7 +151,7 @@ public class CustomerPanel extends Stage
     private TextField itemPrice_menu;
     private TextField quantity_menu;
     
-    private ArrayList<OrderItem> keranjang;
+    private ArrayList<OrderItem> keranjang = new ArrayList<OrderItem>();
 	
 	private GridPane createOrderform(TableView<MenuItems> menuTable2) {
         GridPane form = new GridPane();
@@ -175,34 +182,48 @@ public class CustomerPanel extends Stage
         itemDesc_menu.setDisable(true);
         itemPrice_menu.setDisable(true);
         
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-
+        addButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+        	//
+        	// Jadi ADD BUTTON ini buat masukin order item ke keranjang doang pin, 
+        	// buat masukin ke databasenya abis finalize. soalnya orderItem kan butuh orderId buat foreign keynya.
+        	//
+        	
 			@Override
-			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
+			public void handle(ActionEvent event) 
+			{
 				MenuItems selectedMenuItem = getSelectedMenuItem();
-				if (selectedMenuItem != null && quantity_menu.equals("0")==false) {
-					// di sini masih gabisa masuk
+				if (selectedMenuItem != null && quantity_menu.equals("0")==false)
+				{
 					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
-					order.createOrderitem(0, selectedMenuItem, Integer.parseInt(quantity_menu.getText()));
 					keranjang.add(order);
 	            }
 			}
 		});
         
-        finalizeButton.setOnAction(new EventHandler<ActionEvent>() {
+        finalizeButton.setOnAction(new EventHandler<ActionEvent>()
+        {
 
 			@Override
-			public void handle(ActionEvent event) {
+			public void handle(ActionEvent event)
+			{
 				// TODO Auto-generated method stub
-				if(keranjang!=null) {
-					LocalDate currentDate = LocalDate.now();
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-					String formattedDate = currentDate.format(formatter);
-					Date sqlDate = Date.valueOf(formattedDate);
+				if(keranjang != null)
+				{
+//					LocalDate currentDate = LocalDate.now();
+//					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//					String formattedDate = currentDate.format(formatter);
+//					Date sqlDate = Date.valueOf(formattedDate);
+					Date date = new Date(System.currentTimeMillis());
+					int orderId = orderController.createOrder(customer, keranjang, date);
 					
-					Order.createOrder(User.getUserById(0), keranjang, sqlDate);
+					for (OrderItem orderItem : keranjang)
+					{
+						System.out.println(orderItem.getMenuItem().getMenuItemName());
+						orderItemController.createOrderItem(orderId, orderItem.getMenuItem(), orderItem.getQuantity());
+					}
 				}
+				keranjang.clear();
 			}
 		});
         
@@ -223,8 +244,6 @@ public class CustomerPanel extends Stage
 		setupTableSelectionListener();
 		
 	}
-	
-	int orderId_temp;
 
 	private void setupTableSelectionListener() {
 		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -232,9 +251,9 @@ public class CustomerPanel extends Stage
 //	        	if(newSelection.getOrderStatus().equals("PENDING")) {
 //	        		
 //	        	}	
-	        	orderId_temp = newSelection.getOrderId();
-	       
-	        	new UpdateOrderPanel(orderId_temp).show();
+//	        	orderId_temp = newSelection.getOrderId();
+//	       
+//	        	new UpdateOrderPanel(orderId_temp).show();
 	        }
 	    });
 		

@@ -86,7 +86,7 @@ public class UserController
 				case "Cashier": new CashierPanel().show(); break;
 				case "Chef": new ChefPanel().show(); break;
 				case "Waiter": new WaiterPanel().show(); break;
-				case "Customer": new CustomerPanel().show(); break;
+				case "Customer": new CustomerPanel(user).show(); break;
 				default: return "FAILED: Role Undefined";
 			}
 			return "SUCCESS: Login Success";

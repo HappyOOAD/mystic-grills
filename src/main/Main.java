@@ -36,7 +36,8 @@ public class Main extends Application
 //    	for (Receipt temp : x) {
 //			System.out.println(temp.getReceiptId());
 //		}
-    	Order x = OrderController.getOrderByOrderId(7);
+    	OrderController c = new OrderController();
+    	Order x = c.getOrderByOrderId(7);
 		System.out.println(x.getOrderId());
     	launch(args);
     }
