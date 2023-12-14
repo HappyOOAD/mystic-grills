@@ -24,6 +24,7 @@ import model.Order;
 import model.OrderItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -223,15 +224,9 @@ public class ChefPanel extends Stage
         TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
         orderDateColumn.setPrefWidth(150);
-        
-        ObservableList<Order> pendingOrders = FXCollections.observableArrayList(
-                OrderController.getAllOrders().stream()
-                        .filter(order -> "pending".equalsIgnoreCase(order.getOrderStatus()))
-                        .collect(Collectors.toList())
-        );
-        
+               
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
-        tableView.setItems(pendingOrders);
+        tableView.setItems(FXCollections.observableArrayList(OrderController.getAllOrdersByOrderStatus("Pending")));
         
         return tableView;
     }

@@ -2,6 +2,8 @@ package controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import model.Order;
 import model.OrderItem;
@@ -88,6 +90,22 @@ public class OrderController
 		// - Return Order
 		
 		return Order.getOrderById(orderId);
+	}
+	
+	
+	// ADITIONAL
+	
+	public static ArrayList<Order> getAllOrdersByOrderStatus(String orderStatus)
+	{
+		ArrayList<Order> allOrders = getAllOrders();
+		return (ArrayList<Order>) allOrders.stream()
+			.filter(order -> orderStatus.equalsIgnoreCase(order.getOrderStatus()))
+			.collect(Collectors.toList());
+	}
+
+	public static  getAllOrdersByOrderStatus(String orderStatus) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
