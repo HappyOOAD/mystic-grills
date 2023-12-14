@@ -29,6 +29,7 @@ import model.MenuItems;
 import model.Order;
 import model.OrderItem;
 import model.User;
+import view.UpdateOrder.UpdateOrderPanel;
 
 public class CustomerPanel extends Stage
 {
@@ -211,7 +212,7 @@ public class CustomerPanel extends Stage
         return form;
     }
 
-	TableView<MenuItems> OrderTable;
+	TableView<Order> OrderTable;
 	
 	private void history() {
 		// TODO Auto-generated method stub
@@ -224,29 +225,44 @@ public class CustomerPanel extends Stage
 		// biar item bisa di-select
 		setupTableSelectionListener();
 		
-		// buat masukkin quantity item yang di-select
-        GridPane form = createUpdateOrderform(OrderTable);
-        
-        
-        
-        VBox.setMargin(form, new Insets(20));
-        contentArea.getChildren().add(form);
-		
 	}
-
-	private GridPane createUpdateOrderform(TableView<Order, OrderItem> orderTable2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	int orderId_temp;
 
 	private void setupTableSelectionListener() {
-		// TODO Auto-generated method stub
+		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	        if (newSelection != null) {
+//	        	if(newSelection.getOrderStatus().equals("PENDING")) {
+//	        		
+//	        	}	
+	        	orderId_temp = newSelection.getOrderId();
+	        	new UpdateOrderPanel(orderId_temp).show();
+	        }
+	    });
 		
 	}
 
-	private TableView<MenuItems> createOrderItemTable() {
-		// TODO Auto-generated method stub
-		return null;
+	private TableView<Order> createOrderItemTable() {
+		TableView<Order> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	    
+        TableColumn<Order, Integer> orderID = new TableColumn<>("Order ID");
+        orderID.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        orderID.setPrefWidth(150);
+        
+        TableColumn<Order, String> orderStatus= new TableColumn<>("Status");
+        orderStatus.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
+        orderStatus.setPrefWidth(150);
+        
+        TableColumn<Order, Date> orderDate = new TableColumn<>("Date");
+        orderDate.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        orderDate.setPrefWidth(150);
+       
+        tableView.getColumns().addAll(orderID, orderStatus, orderDate);
+        //get user id nya
+        tableView.setItems(FXCollections.observableArrayList(Order.getOrdersByCustomerId(4)));
+        
+        return tableView;
 	}
 	
 	
