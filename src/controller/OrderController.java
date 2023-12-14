@@ -102,10 +102,4 @@ public class OrderController
 			.filter(order -> orderStatus.equalsIgnoreCase(order.getOrderStatus()))
 			.collect(Collectors.toList());
 	}
-
-	public static  getAllOrdersByOrderStatus(String orderStatus) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
