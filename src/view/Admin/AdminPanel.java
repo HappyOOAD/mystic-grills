@@ -39,7 +39,8 @@ public class AdminPanel extends Stage {
     TableView<MenuItems>menuItemTable;
     TableView<User>accountsTable;
     
-    public AdminPanel() {
+    public AdminPanel()
+    {
     	super(StageStyle.DECORATED);
 
     	setTitle("Mystic Grills - Admin");
@@ -63,10 +64,10 @@ public class AdminPanel extends Stage {
         root.setTop(menuBar);
         
         UserManagementItem.setOnAction(e -> {
-        	openNewPageAccount();
+        	openAccountPage();
         });
         MenuItemManagementItem.setOnAction(e -> {
-        	openNewPageMenuItem();
+        	openMenuItemPage();
         });
 
         contentArea = new VBox(20);
@@ -79,7 +80,9 @@ public class AdminPanel extends Stage {
         root.setCenter(contentDivide);
     }
     
-    private void openNewPageMenuItem() {
+    // MENU ITEM PAGE
+    private void openMenuItemPage()
+    {
     	TextField menuItemId = new TextField();
     	TextField menuItemName = new TextField();
     	TextField menuItemDescription = new TextField();
@@ -131,10 +134,10 @@ public class AdminPanel extends Stage {
             String result = MenuItemController.updateMenuItem(id, name, description, price);
             
             if ("Success Update A Menu Item".equals(result)) {
-                showSuccessDialog("Update success");
+                showDialog("Success","Update success");
                 loadMenuItemData();
             } else {
-                showErrorDialog(result);
+                showDialog("Failed",result);
                 loadMenuItemData();
             }
         });
@@ -144,7 +147,7 @@ public class AdminPanel extends Stage {
         	int id= Integer.parseInt(menuItemId.getText());
 			MenuItemController.deleteMenuItem(id);
 			
-			showSuccessDialog("Delete Success");
+			showDialog("Success","Delete Success");
 			loadMenuItemData();
         });
         
@@ -156,10 +159,10 @@ public class AdminPanel extends Stage {
 			String result = MenuItemController.createMenuItem(name, description, price);
 			
 			if ("Success Create A New Menu Item".equals(result)) {
-                showSuccessDialog("Add success");
+                showDialog("Success","Add success");
                 loadMenuItemData();
             } else {
-                showErrorDialog(result);
+                showDialog("Failed", result);
                 loadMenuItemData();
             }
         });
@@ -168,35 +171,43 @@ public class AdminPanel extends Stage {
 		
     }
     
-	private void loadUserData() {
-		ArrayList<User> users = UserController.getAllUsers();
-		accountsTable.getItems().setAll(users);
-	}
-	
-	private void loadMenuItemData() {
+	private void loadMenuItemData()
+	{
 		ArrayList<MenuItems> menuItems = MenuItemController.getAllMenuItem();
 		menuItemTable.getItems().setAll(menuItems);
 	}
-	
     
-    private void showSuccessDialog(String successMessage) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText(successMessage);
-        alert.showAndWait();
-    }
+    private TableView<MenuItems> createMenuItemTableView()
+    {
+    	TableView<MenuItems> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	
+        TableColumn<MenuItems, Integer> menuItemIdColumn = new TableColumn<>("ID");
+        menuItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemId"));
+        menuItemIdColumn.setPrefWidth(150);
+    	    
+        TableColumn<MenuItems, String> menuItemNameColumn = new TableColumn<>("Name");
+        menuItemNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
+        menuItemNameColumn.setPrefWidth(150);
+        
+        TableColumn<MenuItems, String> menuItemDescriptionColumn = new TableColumn<>("Description");
+        menuItemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
+        menuItemDescriptionColumn.setPrefWidth(150);
+        
+        TableColumn<MenuItems, Integer> menuItemPriceColumn = new TableColumn<>("Price");
+        menuItemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
+        menuItemPriceColumn.setPrefWidth(150);       
+        
+        tableView.getColumns().addAll(menuItemIdColumn, menuItemNameColumn, menuItemDescriptionColumn, menuItemPriceColumn);
+        tableView.setItems(FXCollections.observableArrayList(MenuItemController.getAllMenuItem()));
+        
+        return tableView;
+    }    
+		
     
-    
-    private void showErrorDialog(String errorMessage) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(errorMessage);
-        alert.showAndWait();
-    }
-    
-    private void openNewPageAccount() {
+    // ACCOUNT PAGE
+    private void openAccountPage()
+    {
     	TextField userId = new TextField();
     	TextField userName = new TextField();
     	ObservableList<String> options = FXCollections.observableArrayList("Admin", "Chef", "Waiter", "Cashier", "Customer");
@@ -249,13 +260,12 @@ public class AdminPanel extends Stage {
         {
 			int id= Integer.parseInt(userId.getText());
 			String role = userRole.getValue();
-//			String role = userRole.getText();
 			String name = userName.getText();
 			String email = userEmail.getText();
 			String password = userPassword.getText();
             UserController.updateUser(id, role, name, email, password);
             
-            showSuccessDialog("Update Success");
+            showDialog("Success","Update Success");
             loadUserData();
         });
         
@@ -264,7 +274,7 @@ public class AdminPanel extends Stage {
 			int id= Integer.parseInt(userId.getText());
 			UserController.deleteUser(id);
 			
-			showSuccessDialog("Delete Success");
+			showDialog("Success","Delete Success");
 			loadUserData();
         });
         
@@ -278,40 +288,20 @@ public class AdminPanel extends Stage {
         contentArea.getChildren().add(form);
     }
     
+	private void loadUserData()
+	{
+		ArrayList<User> users = UserController.getAllUsers();
+		accountsTable.getItems().setAll(users);
+	}
     
-    private TableView<MenuItems> createMenuItemTableView() {
-    	TableView<MenuItems> tableView = new TableView<>();
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    	
-        TableColumn<MenuItems, Integer> menuItemIdColumn = new TableColumn<>("ID");
-        menuItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemId"));
-        menuItemIdColumn.setPrefWidth(150);
-    	    
-        TableColumn<MenuItems, String> menuItemNameColumn = new TableColumn<>("Name");
-        menuItemNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
-        menuItemNameColumn.setPrefWidth(150);
-        
-        TableColumn<MenuItems, String> menuItemDescriptionColumn = new TableColumn<>("Description");
-        menuItemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
-        menuItemDescriptionColumn.setPrefWidth(150);
-        
-        TableColumn<MenuItems, Integer> menuItemPriceColumn = new TableColumn<>("Price");
-        menuItemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
-        menuItemPriceColumn.setPrefWidth(150);       
-        
-        tableView.getColumns().addAll(menuItemIdColumn, menuItemNameColumn, menuItemDescriptionColumn, menuItemPriceColumn);
-        tableView.setItems(FXCollections.observableArrayList(MenuItemController.getAllMenuItem()));
-        
-        return tableView;
-    }
-    
-    private TableView<User> createAccountsTableView() {
+    private TableView<User> createAccountsTableView()
+    {
     	TableView<User> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	    
         TableColumn<User, String> usernameColumn = new TableColumn<>("Username");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
-        usernameColumn.setPrefWidth(150);
+        usernameColumn.setPrefWidth(75);
         
         TableColumn<User, String> userroleColumn = new TableColumn<>("Role");
         userroleColumn.setCellValueFactory(new PropertyValueFactory<>("userRole"));
@@ -335,4 +325,15 @@ public class AdminPanel extends Stage {
         
         return tableView;
     }
+    
+    // DIALOGS
+    private void showDialog(String title, String successMessage)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(successMessage);
+        alert.showAndWait();
+    }
+
 }

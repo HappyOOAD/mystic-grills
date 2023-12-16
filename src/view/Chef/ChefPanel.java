@@ -38,7 +38,8 @@ public class ChefPanel extends Stage
     TableView<Order>menuItemTable;
     private OrderController controller = new OrderController();
     
-	public ChefPanel() {
+	public ChefPanel()
+	{
 		super(StageStyle.DECORATED);
 
 		setTitle("Mystic Grills - Chef Panel");
@@ -48,15 +49,14 @@ public class ChefPanel extends Stage
 
         menuBar = new MenuBar();
         Menu orderMenu = new Menu("Order");
-        MenuItem orderMenuItem= new MenuItem("Show");
 
-        orderMenu.getItems().addAll(orderMenuItem);
         menuBar.getMenus().addAll(orderMenu);
         
         root.setTop(menuBar);
         
-        orderMenuItem.setOnAction(e -> {
-        	openNewPageOrder();
+        orderMenu.setOnAction(e ->
+        {
+        	openOrderPage();
         });
 
         contentArea = new VBox(20);
@@ -64,22 +64,20 @@ public class ChefPanel extends Stage
         contentArea.setAlignment(Pos.CENTER);
         
         VBox contentDivide = new VBox(15);
+        openOrderPage();
         contentDivide.setAlignment(Pos.TOP_CENTER);
-        contentDivide.getChildren().addAll( contentArea);
+        contentDivide.getChildren().addAll(contentArea);
         root.setCenter(contentDivide);
 	}
 	
-	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = controller.getAllOrders();
-
-	    ArrayList<Order> prepareOrders = allOrders.stream()
-	            .filter(order -> "pending".equalsIgnoreCase(order.getOrderStatus()))
-	            .collect(Collectors.toCollection(ArrayList::new));
-
-	    menuItemTable.getItems().setAll(prepareOrders);
+	private void loadOrdersData() // Load Orders
+	{
+	    ArrayList<Order> preparedOrders = controller.getAllOrdersByOrderStatus("Pending");
+	    menuItemTable.getItems().setAll(preparedOrders);
 	}
-
-	private void openNewPageOrder() {
+	
+	private void openOrderPage()
+	{
     	TextField orderId = new TextField();
     	TextField userId = new TextField();
     	TextField orderStatus = new TextField();
@@ -179,7 +177,8 @@ public class ChefPanel extends Stage
         contentArea.getChildren().add(form);
 	}
 	
-    private void showSuccessDialog(String successMessage) {
+    private void showSuccessDialog(String successMessage)
+    {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
@@ -207,7 +206,8 @@ public class ChefPanel extends Stage
         });
 	}
 	
-    private TableView<Order> createOrderTableView() {
+    private TableView<Order> createOrderTableView()
+    {
     	TableView<Order> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
@@ -232,7 +232,4 @@ public class ChefPanel extends Stage
         
         return tableView;
     }
-	
-	
-
 }

@@ -63,6 +63,7 @@ public class OrderItem
 				int quantity = resultSet.getInt("quantity");
 				orderItems.add(new OrderItem(id, menuItemId, quantity));
 			}
+			resultSet.close();
 			
 			for (OrderItem orderItem : orderItems)
 			{

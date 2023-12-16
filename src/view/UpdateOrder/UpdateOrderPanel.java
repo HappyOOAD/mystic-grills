@@ -279,7 +279,8 @@ public class UpdateOrderPanel extends Stage{
 				OrderItem selectedOrderItem = getSelectedOrderItem();
 				if (selectedOrderItem != null) {
 					// edit quantity
-					if (quantity_menu.equals("0")){
+					if (quantity_menu.equals("0"))
+					{
 		            	// hapus menu
 		            	selectedOrderItem.deleteOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItemId());
 		            }

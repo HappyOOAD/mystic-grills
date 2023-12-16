@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -193,17 +194,15 @@ public class CustomerPanel extends Stage
 			public void handle(ActionEvent event) 
 			{
 				MenuItems selectedMenuItem = getSelectedMenuItem();
-				if (selectedMenuItem != null && quantity_menu.equals("0")==false)
+				if (selectedMenuItem != null && quantity_menu.equals("0") == false)
 				{
-					System.out.println("MENU ITEM ID DOWN HERE");
-					System.out.println(selectedMenuItem.getMenuItemId());
-					
 					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
 
-					System.out.println("MENU ITEM NAME DOWN HERE");
 					order.setMenuItem();
 					System.out.println(order.getMenuItem().getMenuItemName());
 					keranjang.add(order);
+					
+					OpenDialog("Success", "Added "+order.getQuantity()+" "+order.getMenuItem().getMenuItemName());
 	            }
 			}
 		});
@@ -217,10 +216,6 @@ public class CustomerPanel extends Stage
 				// TODO Auto-generated method stub
 				if(keranjang != null)
 				{
-//					LocalDate currentDate = LocalDate.now();
-//					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//					String formattedDate = currentDate.format(formatter);
-//					Date sqlDate = Date.valueOf(formattedDate);
 					Date date = new Date(System.currentTimeMillis());
 					int orderId = orderController.createOrder(customer, keranjang, date);
 					
@@ -231,6 +226,8 @@ public class CustomerPanel extends Stage
 					}
 				}
 				keranjang.clear();
+				
+				OpenDialog("Success", "Order has been finalized");
 			}
 		});
         
@@ -266,7 +263,8 @@ public class CustomerPanel extends Stage
 		
 	}
 
-	private TableView<Order> createOrderItemTable() {
+	private TableView<Order> createOrderItemTable()
+	{
 		TableView<Order> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	    
@@ -289,28 +287,14 @@ public class CustomerPanel extends Stage
         return tableView;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    private void OpenDialog(String title, String message)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 	
 
 }
