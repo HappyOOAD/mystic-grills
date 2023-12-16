@@ -185,11 +185,6 @@ public class CustomerPanel extends Stage
         
         addButton.setOnAction(new EventHandler<ActionEvent>()
         {
-        	//
-        	// Jadi ADD BUTTON ini buat masukin order item ke keranjang doang pin, 
-        	// buat masukin ke databasenya abis finalize. soalnya orderItem kan butuh orderId buat foreign keynya.
-        	//
-        	
 			@Override
 			public void handle(ActionEvent event) 
 			{

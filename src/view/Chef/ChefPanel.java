@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -38,7 +39,7 @@ public class ChefPanel extends Stage
     TableView<Order>menuItemTable;
     private OrderController controller = new OrderController();
     
-	public ChefPanel()
+	public ChefPanel() // Generate Panel
 	{
 		super(StageStyle.DECORATED);
 
@@ -62,12 +63,17 @@ public class ChefPanel extends Stage
         contentArea = new VBox(20);
         contentArea.setPadding(new Insets(20));
         contentArea.setAlignment(Pos.CENTER);
-        
-        VBox contentDivide = new VBox(15);
         openOrderPage();
-        contentDivide.setAlignment(Pos.TOP_CENTER);
-        contentDivide.getChildren().addAll(contentArea);
-        root.setCenter(contentDivide);
+        
+        VBox topSection = new VBox(15);;
+        topSection.setAlignment(Pos.CENTER);
+        topSection.getChildren().addAll(contentArea);
+        root.setTop(topSection);
+        HBox bottomSection = new HBox(15);
+        bottomSection.setAlignment(Pos.CENTER);
+        GridPane form = openOrderPage();
+        bottomSection.getChildren().addAll(form);
+        root.setBottom(bottomSection);
 	}
 	
 	private void loadOrdersData() // Load Orders
@@ -76,7 +82,7 @@ public class ChefPanel extends Stage
 	    menuItemTable.getItems().setAll(preparedOrders);
 	}
 	
-	private void openOrderPage()
+	private GridPane openOrderPage() // Open Orders Page
 	{
     	TextField orderId = new TextField();
     	TextField userId = new TextField();
@@ -127,10 +133,10 @@ public class ChefPanel extends Stage
             
             if (updatingOrder.contains("SUCCESS"))
             {
-                showSuccessDialog("Update success");
+                showDialog("Success","Update success");
                 loadOrdersData();
             } else {
-                showErrorDialog(updatingOrder);
+                showDialog("Failed",updatingOrder);
                 loadOrdersData();
             }
             
@@ -143,12 +149,12 @@ public class ChefPanel extends Stage
         	
         	if (deleteOrder.contains("SUCCESS"))
         	{
-                showSuccessDialog("Delete success");
+                showDialog("Success","Delete success");
                 loadOrdersData();
             } 
         	else 
         	{
-                showErrorDialog(deleteOrder);
+                showDialog("Failed",deleteOrder);
                 loadOrdersData();
             }
         });
@@ -164,36 +170,17 @@ public class ChefPanel extends Stage
             
             if (updatingOrder.contains("SUCCESS"))
             {
-                showSuccessDialog("Update success");
+                showDialog("Success","Update success");
                 loadOrdersData();
             } 
             else 
             {
-                showErrorDialog(updatingOrder);
+                showDialog("Failed",updatingOrder);
                 loadOrdersData();
             }
         });
-        
-        contentArea.getChildren().add(form);
+        return form;
 	}
-	
-    private void showSuccessDialog(String successMessage)
-    {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText(successMessage);
-        alert.showAndWait();
-    }
-    
-    
-    private void showErrorDialog(String errorMessage) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(errorMessage);
-        alert.showAndWait();
-    }
 	
 	private void Listener(TableView<Order>menuItemTable, TextField orderId, TextField userId, TextField orderStatus, TextField orderDate) {
 		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -231,5 +218,15 @@ public class ChefPanel extends Stage
         tableView.setItems(FXCollections.observableArrayList(controller.getAllOrdersByOrderStatus("Pending")));
         
         return tableView;
+    }
+    
+
+    private void showDialog(String title, String successMessage)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(successMessage);
+        alert.showAndWait();
     }
 }
