@@ -85,7 +85,7 @@ public class OrderItem
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, quantity);
 			prep.setInt(2, orderId);
-			prep.setInt(2, menuItem.getMenuItemId());
+			prep.setInt(3, menuItem.getMenuItemId());
 			prep.executeUpdate();
 		}
 		catch (SQLException e)
