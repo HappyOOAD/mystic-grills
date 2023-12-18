@@ -68,16 +68,14 @@ public class WaiterPanel extends Stage
         root.setCenter(contentDivide);
 	}
 	
-	private void loadOrdersData() {
-	    ArrayList<Order> allOrders = controller.getAllOrders();
-
-	    ArrayList<Order> prepareOrders = allOrders.stream()
-	            .filter(order -> "prepared".equalsIgnoreCase(order.getOrderStatus()))
-	            .collect(Collectors.toCollection(ArrayList::new));
-
+	private void loadOrdersData()
+	{
+	    ArrayList<Order> prepareOrders = controller.getAllOrdersByOrderStatus("Prepared");
 	    menuItemTable.getItems().setAll(prepareOrders);
 	}
-	private void openNewPageOrder() {
+	
+	private void openNewPageOrder()
+	{
     	TextField orderId = new TextField();
     	TextField userId = new TextField();
     	TextField orderStatus = new TextField();
@@ -110,48 +108,8 @@ public class WaiterPanel extends Stage
         orderDate.setDisable(true);
         form.add(orderDate, 1, 3);
 
-        
-        form.add(updateButton, 0, 5);
-        form.add(deleteButton, 1, 5);
         form.add(serveButton, 2, 5);
-        
-        updateButton.setOnAction(e ->
-        {
-			int id= Integer.parseInt(orderId.getText());
-			String status = orderStatus.getText();
-			
-			Order x = controller.getOrderByOrderId(id);
-			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-			String updatingOrder = controller.updateOrder(id, orderItem, status);
-	            
-	            if (updatingOrder.contains("SUCCESS"))
-	            {
-	                showSuccessDialog("Update success");
-	                loadOrdersData();
-	            }
-	            else
-	            {
-	                showErrorDialog(updatingOrder);
-	                loadOrdersData();
-	            }
-        });
-        
-        deleteButton.setOnAction(e ->
-        {
-        	int id= Integer.parseInt(orderId.getText());
-        	String deleteOrder = controller.deleteOrder(id);
-        	
-        	if (deleteOrder.contains("SUCCESS"))
-        	{
-                showSuccessDialog("Delete success");
-                loadOrdersData();
-            }
-        	else
-        	{
-                showErrorDialog(deleteOrder);
-                loadOrdersData();
-            }
-        });
+
         
         serveButton.setOnAction(e ->
         {
@@ -160,36 +118,21 @@ public class WaiterPanel extends Stage
 			
 			Order x = controller.getOrderByOrderId(id);
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-			String updatingOrder = controller.updateOrder(id, orderItem, status);
+			String res = controller.updateOrder(id, orderItem, status);
 	            
-	           if (updatingOrder.contains("SUCCESS")) {
-	               showSuccessDialog("Update success");
-	               loadOrdersData();
-	           } else {
-	               showErrorDialog(updatingOrder);
-	               loadOrdersData();
+	           if (res.contains("SUCCESS"))
+	           {
+	               showDialog("Success","Update success");
+	           } 
+	           else 
+	           {
+	               showDialog("Failed", res);
 	           }
+	           loadOrdersData();
         });
         
         contentArea.getChildren().add(form);
 	}
-	
-    private void showSuccessDialog(String successMessage) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText(successMessage);
-        alert.showAndWait();
-    }
-    
-    
-    private void showErrorDialog(String errorMessage) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(errorMessage);
-        alert.showAndWait();
-    }
 	
 	private void Listener(TableView<Order>menuItemTable, TextField orderId, TextField userId, TextField orderStatus, TextField orderDate) {
 		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -230,6 +173,14 @@ public class WaiterPanel extends Stage
         return tableView;
     }
 	
-	
+    // DIALOGS
+    private void showDialog(String title, String successMessage)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(successMessage);
+        alert.showAndWait();
+    }
 
 }

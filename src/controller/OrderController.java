@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
 import model.Order;
 import model.OrderItem;
 import model.User;
@@ -101,8 +100,9 @@ public class OrderController
 	public ArrayList<Order> getAllOrdersByOrderStatus(String orderStatus)
 	{
 		ArrayList<Order> allOrders = getAllOrders();
-		return (ArrayList<Order>) allOrders.stream()
-			.filter(order -> orderStatus.equalsIgnoreCase(order.getOrderStatus()))
-			.collect(Collectors.toList());
+		Collection<Order> filtered = allOrders.stream()
+				.filter(order -> orderStatus.equalsIgnoreCase(order.getOrderStatus()))
+				.collect(Collectors.toList());
+		return (ArrayList<Order>) filtered;
 	}
 }

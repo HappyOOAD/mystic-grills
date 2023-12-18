@@ -49,7 +49,7 @@ public class ChefPanel extends Stage
 		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1200, 800);
-        this.setScene(scene);
+        setScene(scene);
         
         // MENUBARS
         menuBar = new MenuBar();
@@ -202,8 +202,12 @@ public class ChefPanel extends Stage
         TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
     	    
-        TableColumn<Order, Integer> orderUserIdColumn = new TableColumn<>("Order User ID");
-        orderUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderUserId"));
+        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User ID");
+        orderUserIdColumn.setCellValueFactory(cellData ->
+        {
+            Order order = cellData.getValue();
+            return new SimpleStringProperty(order.getOrderUser().getUserName());
+        });
         
         TableColumn<Order, String> orderStatusColumn = new TableColumn<>("Order Status");
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
@@ -300,17 +304,11 @@ public class ChefPanel extends Stage
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
         TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item Name");
-        menuItemNameColumn.setCellValueFactory(cellData -> {
+        menuItemNameColumn.setCellValueFactory(cellData ->
+        {
             OrderItem orderItem = cellData.getValue();
-            if (orderItem != null)
-            {
-                MenuItems menuItem = orderItem.getMenuItem();
-                if (menuItem != null)
-                {
-                    return new SimpleStringProperty(menuItem.getMenuItemName());
-                }
-            }
-            return new SimpleStringProperty("");
+            MenuItems menuItem = orderItem.getMenuItem();
+            return new SimpleStringProperty(menuItem.getMenuItemName());
         });
         menuItemNameColumn.setPrefWidth(150);
     	    
@@ -318,14 +316,8 @@ public class ChefPanel extends Stage
 //        menuItemPriceColumn.setCellValueFactory(cellData ->
 //        {
 //            OrderItem orderItem = cellData.getValue();
-//            if (orderItem != null)
-//            {
-//                MenuItems menuItem = orderItem.getMenuItem();
-//                if (menuItem != null)
-//                {
-//                    return new SimpleDoubleProperty(menuItem.getMenuItemPrice());
-//                }
-//            }
+//            MenuItems menuItem = orderItem.getMenuItem();
+//            return new SimpleDoubleProperty(menuItem.getMenuItemPrice());
 //        });
 //        menuItemPriceColumn.setPrefWidth(150);
         

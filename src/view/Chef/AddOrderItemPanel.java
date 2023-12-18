@@ -38,9 +38,9 @@ public class AddOrderItemPanel extends Stage
 		this.orderId = orderId;
 		setTitle("Add New Menu Item");
 		
-		VBox page = getPage();
+		VBox panel = getPage();
 		
-		Scene scene = new Scene(page, 800, 600);
+		Scene scene = new Scene(panel, 800, 600);
         setScene(scene);
 	}
 	
