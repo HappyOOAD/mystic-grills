@@ -206,14 +206,15 @@ public class ChefPanel extends Stage
         return tableView;
     }
     
-	private void loadOrdersData() // Load Orders
+	public void loadOrdersData() // Load Orders
 	{
 	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
 	    menuItemTable.getItems().setAll(preparedOrders);
 	}
     
 	private void orderTableListener(TableView<Order>menuItemTable, TextField orderId, TextField userId, TextField orderStatus, TextField orderDate) {
-		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+		{
             if (newSelection != null)
             {
             	selectedOrderId = newSelection.getOrderId();
@@ -265,7 +266,8 @@ public class ChefPanel extends Stage
         addMenuButton.setOnAction(e ->
         {
         	// Add Menu Item Here
-        	
+        	new AddOrderItemPanel(this, selectedOrderId).show();
+        	loadOrderItemsData();
         });
         updateButton.setOnAction(e ->
         {
@@ -286,7 +288,7 @@ public class ChefPanel extends Stage
 	}
 	
 
-	private void loadOrderItemsData() 
+	public void loadOrderItemsData() 
 	{
 	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrderId);
 	    orderItemTable.getItems().setAll(orderItems);
