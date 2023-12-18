@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.MenuItemController;
 import controller.OrderItemController;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -39,7 +40,7 @@ public class AddOrderItemPanel extends Stage
 		
 		VBox page = getPage();
 		
-		Scene scene = new Scene(page, 1200, 600);
+		Scene scene = new Scene(page, 800, 600);
         setScene(scene);
 	}
 	
@@ -47,6 +48,7 @@ public class AddOrderItemPanel extends Stage
     private VBox getPage()
     {
     	VBox container = new VBox(15);
+    	container.setPadding(new Insets(20));
     	table = createMenuItemTableView();
 		
 		table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->

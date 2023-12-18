@@ -70,7 +70,7 @@ public class ChefPanel extends Stage
         topSection.getChildren().addAll(contentArea);
         root.setTop(topSection);
 
-        HBox bottomSection = new HBox(15);
+        HBox bottomSection = new HBox(40);
         bottomSection.setAlignment(Pos.CENTER);
         bottomSection.setPadding(new Insets(20));
         GridPane form = openOrderPage();
@@ -96,7 +96,7 @@ public class ChefPanel extends Stage
         form.setVgap(20);
         form.setHgap(10);
 		
-		Button updateButton = new Button("Update");
+		Button updateQuantityButton = new Button("Update");
         Button deleteButton = new Button("Delete");
         Button prepareButton = new Button("Prepare");
         
@@ -113,11 +113,11 @@ public class ChefPanel extends Stage
         orderDate.setDisable(true);
         form.add(orderDate, 1, 3);
         
-        form.add(updateButton, 0, 5);
+        form.add(updateQuantityButton, 0, 5);
         form.add(deleteButton, 1, 5);
         form.add(prepareButton, 2, 5);
         
-        updateButton.setOnAction(e ->
+        updateQuantityButton.setOnAction(e ->
         {
 			int id= Integer.parseInt(orderId.getText());
 			String status = orderStatus.getText();
@@ -186,19 +186,15 @@ public class ChefPanel extends Stage
     	
         TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-        orderIdColumn.setPrefWidth(150);
     	    
         TableColumn<Order, Integer> orderUserIdColumn = new TableColumn<>("Order User ID");
         orderUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderUserId"));
-        orderUserIdColumn.setPrefWidth(150);
         
         TableColumn<Order, String> orderStatusColumn = new TableColumn<>("Order Status");
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
-        orderStatusColumn.setPrefWidth(150);
         
         TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-        orderDateColumn.setPrefWidth(150);
                
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
         tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Pending")));
@@ -219,6 +215,10 @@ public class ChefPanel extends Stage
             {
             	selectedOrderId = newSelection.getOrderId();
             	loadOrderItemsData();
+            	addMenuButton.setDisable(false);
+            	updateQuantityButton.setDisable(true);
+            	quantityField.setDisable(true);
+            	
             	orderId.setText(newSelection.getOrderId()+"");
             	userId.setText(newSelection.getOrderUserId()+"");
             	orderStatus.setText(String.valueOf(newSelection.getOrderStatus()));
@@ -228,6 +228,8 @@ public class ChefPanel extends Stage
 	}
 	
 	private TableView<OrderItem> orderItemTable;
+	private Button addMenuButton, updateQuantityButton;
+	private TextField quantityField;
 	
 	private HBox openOrderItemPage() // Open Order Items Page
 	{
@@ -237,11 +239,13 @@ public class ChefPanel extends Stage
 
 		orderItemTable = createOrderDetailsTableView();
     	
-		TextField quantityField = new TextField();
+		quantityField = new TextField();
     	quantityField.setDisable(true);
     	
-    	Button addMenuButton= new Button("Add New Menu Item");
-    	Button updateButton = new Button("Update Quantity");
+    	addMenuButton = new Button("Add New Menu Item");
+    	addMenuButton.setDisable(true);
+    	updateQuantityButton = new Button("Update Quantity");
+    	updateQuantityButton.setDisable(true);
 	
     	// Select Listeners
     	orderItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
@@ -250,6 +254,7 @@ public class ChefPanel extends Stage
             {
             	quantityField.setText(String.valueOf(newSelection.getQuantity()));
             	quantityField.setDisable(false);
+            	updateQuantityButton.setDisable(false);
             	selected.set(newSelection.getMenuItem());
             }
         });
@@ -261,7 +266,7 @@ public class ChefPanel extends Stage
         form.add(addMenuButton, 0, 0);
         form.add(new Label("Quantity"), 0, 1);
         form.add(quantityField, 1, 1);
-        form.add(updateButton, 0, 2);
+        form.add(updateQuantityButton, 0, 2);
         
         addMenuButton.setOnAction(e ->
         {
@@ -269,7 +274,7 @@ public class ChefPanel extends Stage
         	new AddOrderItemPanel(this, selectedOrderId).show();
         	loadOrderItemsData();
         });
-        updateButton.setOnAction(e ->
+        updateQuantityButton.setOnAction(e ->
         {
         	System.out.println(selected.get().getMenuItemName());
 			String res = orderItemController.updateOrderItem(selectedOrderId, selected.get(), Integer.parseInt(quantityField.getText()) );
@@ -287,7 +292,6 @@ public class ChefPanel extends Stage
         return orderItemsSection;
 	}
 	
-
 	public void loadOrderItemsData() 
 	{
 	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrderId);
