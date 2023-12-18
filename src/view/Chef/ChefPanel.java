@@ -90,7 +90,22 @@ public class ChefPanel extends Stage
     	menuItemTable = createOrderTableView();
 		contentArea.getChildren().add(menuItemTable);
 	
-		orderTableListener(menuItemTable, orderId, userId, orderStatus, orderDate);
+		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+		{
+            if (newSelection != null)
+            {
+            	selectedOrderId = newSelection.getOrderId();
+            	loadOrderItemsData();
+            	addMenuButton.setDisable(false);
+            	updateQuantityButton.setDisable(true);
+            	quantityField.setDisable(true);
+            	
+            	orderId.setText(newSelection.getOrderId()+"");
+            	userId.setText(newSelection.getOrderUserId()+"");
+            	orderStatus.setText(String.valueOf(newSelection.getOrderStatus()));
+            	orderDate.setText(String.valueOf(newSelection.getOrderDate()));
+            }
+        });
 		
 		GridPane form = new GridPane();
         form.setVgap(20);
@@ -123,7 +138,7 @@ public class ChefPanel extends Stage
 			String status = orderStatus.getText();
 			
 			
-			Order x = orderController.getOrderByOrderId(id);
+			Order x = orderController.getOrderByOrderId(id); // --- getOrderByOrderId() ---
 			
 			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
             String updatingOrder = orderController.updateOrder(id, orderItem, status);
@@ -207,25 +222,6 @@ public class ChefPanel extends Stage
 	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
 	    menuItemTable.getItems().setAll(preparedOrders);
 	}
-    
-	private void orderTableListener(TableView<Order>menuItemTable, TextField orderId, TextField userId, TextField orderStatus, TextField orderDate) {
-		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-		{
-            if (newSelection != null)
-            {
-            	selectedOrderId = newSelection.getOrderId();
-            	loadOrderItemsData();
-            	addMenuButton.setDisable(false);
-            	updateQuantityButton.setDisable(true);
-            	quantityField.setDisable(true);
-            	
-            	orderId.setText(newSelection.getOrderId()+"");
-            	userId.setText(newSelection.getOrderUserId()+"");
-            	orderStatus.setText(String.valueOf(newSelection.getOrderStatus()));
-            	orderDate.setText(String.valueOf(newSelection.getOrderDate()));
-            }
-        });
-	}
 	
 	private TableView<OrderItem> orderItemTable;
 	private Button addMenuButton, updateQuantityButton;
@@ -268,7 +264,7 @@ public class ChefPanel extends Stage
         form.add(quantityField, 1, 1);
         form.add(updateQuantityButton, 0, 2);
         
-        addMenuButton.setOnAction(e ->
+        addMenuButton.setOnAction(e -> // --- createOrderItem() ---
         {
         	// Add Menu Item Here
         	new AddOrderItemPanel(this, selectedOrderId).show();
@@ -277,7 +273,7 @@ public class ChefPanel extends Stage
         updateQuantityButton.setOnAction(e ->
         {
         	System.out.println(selected.get().getMenuItemName());
-			String res = orderItemController.updateOrderItem(selectedOrderId, selected.get(), Integer.parseInt(quantityField.getText()) );
+			String res = orderItemController.updateOrderItem(selectedOrderId, selected.get(), Integer.parseInt(quantityField.getText()) ); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
             {
                 showDialog("Success","Update success");
