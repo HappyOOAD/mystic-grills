@@ -39,9 +39,6 @@ import view.UpdateOrder.UpdateOrderPanel;
 
 public class CustomerPanel extends Stage
 {
-	// bisa view menu dan add order
-	// bisa view menu yang uda di-order dan bisa update menu yang uda di-order
-	
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
@@ -96,32 +93,32 @@ public class CustomerPanel extends Stage
 	TableView<OrderItem> keranjangTB;
 
 	private void addItem() {
-		// TODO Auto-generated method stub
 		contentArea.getChildren().clear();
     	
-		// buat bikin table
-    	MenuTable = createMMenuItemTable();
+		//Creating MenuItem TableView
+    	MenuTable = createMenuItemTable();
 		contentArea.getChildren().add(MenuTable);
 		
-		// biar item bisa di-select
+		//Listener
 		setupTableSelectionListener1();
 		
-		// buat masukkin quantity item yang di-select
         GridPane form = createOrderform(MenuTable);
         VBox.setMargin(form, new Insets(20));
         
+        //Creating OrderItem TableView
         keranjangTB = createkeranjangtable();
         
-     // Create an HBox to arrange forms horizontally
-        HBox formsContainer = new HBox(20); // Set spacing between forms
+        HBox formsContainer = new HBox(20);
         formsContainer.getChildren().addAll(form, keranjangTB);
         
+        //Listener
         setupTableSelectionkeranjangTB();
 
         contentArea.getChildren().add(formsContainer);
 		
 	}
 	
+	//Listener
 	private void setupTableSelectionkeranjangTB() {
 	    keranjangTB.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
@@ -135,7 +132,8 @@ public class CustomerPanel extends Stage
 	        }
 	    });
 	}
-
+	
+	//Creating A Table View for OrderItems
 	private TableView<OrderItem> createkeranjangtable() {
 		TableView<OrderItem> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -156,8 +154,9 @@ public class CustomerPanel extends Stage
         
         return tableView;
 	}
-
-	private TableView<MenuItems> createMMenuItemTable() {
+	
+	//Creating A Table View for MenuItem
+	private TableView<MenuItems> createMenuItemTable() {
     	TableView<MenuItems> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	    
@@ -179,6 +178,7 @@ public class CustomerPanel extends Stage
         return tableView;
     }
 	
+	//Listener
 	private void setupTableSelectionListener1() {
 	    MenuTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
@@ -191,16 +191,18 @@ public class CustomerPanel extends Stage
 	    });
 	}
 	
+	//Getting selected MenuItem
 	private MenuItems getSelectedMenuItem() {
 	    return MenuTable.getSelectionModel().getSelectedItem();
 	}
 	
+	//Getting selected OrderItem
 	private OrderItem getSelectedKeranjangMenuItem() {
 	    return keranjangTB.getSelectionModel().getSelectedItem();
 	}
 	
+	//Refresh the OrderItem TableView to get the Updated TableView
 	private void refreshTable() {
-		// TODO Auto-generated method stub
 		keranjangTB.getItems().setAll(keranjang);
 	}
 	
@@ -212,17 +214,18 @@ public class CustomerPanel extends Stage
     
     private ArrayList<OrderItem> keranjang = new ArrayList<OrderItem>();
 	
+    //Creating Order Form
 	private GridPane createOrderform(TableView<MenuItems> menuTable2) {
         GridPane form = new GridPane();
         form.setVgap(20);
         form.setHgap(10);
         
+        //Creating TextField
         idInput_menu = new TextField();
         nameInput_menu = new TextField();
         itemDesc_menu = new TextField();
         itemPrice_menu = new TextField();
         quantity_menu = new TextField();
-        
         
         Button addButton = new Button("Add");
         Button finalizeButton = new Button("Finalize");
@@ -245,10 +248,14 @@ public class CustomerPanel extends Stage
         
         addButton.setOnAction(new EventHandler<ActionEvent>()
         {
+        	//Adding Menu Item
 			@Override
 			public void handle(ActionEvent event) 
 			{
+				//Get Selected MenuItem
 				MenuItems selectedMenuItem = getSelectedMenuItem();
+				
+				//Validation
 				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0)
 				{
 					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
@@ -279,9 +286,11 @@ public class CustomerPanel extends Stage
         
         editButton.setOnAction(new EventHandler<ActionEvent>()
         {
+        	//Edit Menu Item
 			@Override
 			public void handle(ActionEvent event) 
 			{
+				//Getting selected OrderItem & Selected Menu Item
 				OrderItem selectedMenuItem = getSelectedKeranjangMenuItem();
 				selectedMenuItem.setMenuItem();
 				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0){
@@ -307,13 +316,14 @@ public class CustomerPanel extends Stage
         
         finalizeButton.setOnAction(new EventHandler<ActionEvent>()
         {
-
+        	//Finalize the customer Order
 			@Override
 			public void handle(ActionEvent event)
 			{
-				// TODO Auto-generated method stub
 				if(keranjang != null){
 					Date date = new Date(System.currentTimeMillis());
+					
+					//Creating new Order
 					int orderId = orderController.createOrder(customer, keranjang, date);
 					
 					for (OrderItem orderItem : keranjang)
@@ -334,19 +344,19 @@ public class CustomerPanel extends Stage
 
 	TableView<Order> OrderTable;
 	
+	//Creating History panel
 	private void history(User user) {
-		// TODO Auto-generated method stub
 		contentArea.getChildren().clear();
     	
-		// buat bikin table
+		//Creating Order TableView
     	OrderTable = createOrderItemTable();
 		contentArea.getChildren().add(OrderTable);
 		
-		// biar item bisa di-select
+		//Listener
 		setupTableSelectionListener(user);
-		
 	}
 
+	//Listener
 	private void setupTableSelectionListener(User user)
 	{
 		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -360,7 +370,8 @@ public class CustomerPanel extends Stage
 	    });
 		
 	}
-
+	
+	//Creating A Table View for Order 
 	private TableView<Order> createOrderItemTable()
 	{
 		TableView<Order> tableView = new TableView<>();
@@ -379,12 +390,12 @@ public class CustomerPanel extends Stage
         orderDate.setPrefWidth(150);
        
         tableView.getColumns().addAll(orderID, orderStatus, orderDate);
-        //get user id nya
         tableView.setItems(FXCollections.observableArrayList(orderController.getOrderByCustomerId(customer.getUserId())));
         
         return tableView;
 	}
 	
+	// ALERT DIALOG
     private void OpenDialog(String title, String message)
     {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
