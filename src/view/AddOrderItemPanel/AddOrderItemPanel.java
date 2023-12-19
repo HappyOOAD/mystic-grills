@@ -1,7 +1,5 @@
 package view.AddOrderItemPanel;
 
-import java.util.ArrayList;
-
 import controller.MenuItemController;
 import controller.OrderItemController;
 import javafx.collections.FXCollections;
@@ -21,7 +19,7 @@ import view.Chef.ChefPanel;
 
 public class AddOrderItemPanel extends Stage
 {
-	ChefPanel parent;
+	IAddOrderItemParentPanel parent;
 	OrderItemController orderItemController = new OrderItemController();
 	TableView<MenuItems> table;
 	int orderId;
@@ -76,6 +74,7 @@ public class AddOrderItemPanel extends Stage
 			int quantity = Integer.parseInt(quantityField.getText());
 			String result = orderItemController.createOrderItem(orderId, selected, quantity);
 			parent.loadOrderItemsData();
+			parent.loadOrdersData();
 			this.close();
         });
         

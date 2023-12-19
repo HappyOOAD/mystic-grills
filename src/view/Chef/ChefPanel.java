@@ -36,13 +36,20 @@ import controller.OrderItemController;
 
 public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 {
+	// CONTROLLERS
+	private OrderController orderController = new OrderController();
+	private OrderItemController orderItemController = new OrderItemController();
+	
+	// SCENES
 	private BorderPane root;
     private VBox contentArea;
     private MenuBar menuBar;
+    
+    // TABLES
     TableView<Order>menuItemTable;
-    private OrderController orderController = new OrderController();
-    private OrderItemController orderItemController = new OrderItemController();
-    private int selectedOrderId = 0;
+    
+    // GLOBAL DATA
+    private Order selectedOrder = null;
     
 	public ChefPanel()
 	{
@@ -50,7 +57,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 		super(StageStyle.DECORATED);
 		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
         
         // MENUBARS
@@ -81,31 +88,32 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         root.setBottom(bottomSection);
 	}
 	
-	private GridPane openOrderPage() // Open Orders Page
+	private GridPane openOrderPage()
 	{
-    	TextField orderId = new TextField();
-    	TextField userId = new TextField();
-    	TextField orderStatus = new TextField();
-    	TextField orderDate = new TextField();
+    	TextField orderIdField = new TextField();
+    	TextField orderUserNameField = new TextField();
+    	TextField orderDateField = new TextField();
+    	TextField orderTotalField = new TextField();
 		
     	contentArea.getChildren().clear();
     	menuItemTable = createOrderTableView();
 		contentArea.getChildren().add(menuItemTable);
 	
-		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+		menuItemTable.getSelectionModel().selectedItemProperty()
+		.addListener((obs, oldSelection, newSelection) ->
 		{
             if (newSelection != null)
             {
-            	selectedOrderId = newSelection.getOrderId();
+            	selectedOrder = newSelection;
             	loadOrderItemsData();
             	addMenuButton.setDisable(false);
             	updateQuantityButton.setDisable(true);
             	quantityField.setDisable(true);
             	
-            	orderId.setText(newSelection.getOrderId()+"");
-            	userId.setText(newSelection.getOrderUserId()+"");
-            	orderStatus.setText(String.valueOf(newSelection.getOrderStatus()));
-            	orderDate.setText(String.valueOf(newSelection.getOrderDate()));
+            	orderIdField.setText(String.valueOf(selectedOrder.getOrderId()));
+            	orderUserNameField.setText(selectedOrder.getOrderUser().getUserName());
+            	orderDateField.setText(String.valueOf(newSelection.getOrderDate()));
+            	orderTotalField.setText(String.valueOf(newSelection.getOrderTotal()));
             }
         });
 		
@@ -113,86 +121,45 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         form.setVgap(20);
         form.setHgap(10);
 		
-		Button updateQuantityButton = new Button("Update");
-        Button deleteButton = new Button("Delete");
-        Button prepareButton = new Button("Prepare");
+        Button prepareButton = new Button("Prepare Order");
+        Button deleteButton = new Button("Delete Order");
         
         form.add(new Label("Order ID:"), 0, 0);
-        orderId.setDisable(true);
-        form.add(orderId, 1, 0);
-        form.add(new Label("User ID:"), 0, 1);
-        userId.setDisable(true);
-        form.add(userId, 1, 1);
-        form.add(new Label("Order Status:"), 0, 2);
-        orderStatus.setDisable(true);
-        form.add(orderStatus, 1, 2);
+        orderIdField.setDisable(true);
+        form.add(orderIdField, 1, 0);
+        form.add(new Label("Customer Name:"), 0, 1);
+        orderUserNameField.setDisable(true);
+        form.add(orderUserNameField, 1, 1);
         form.add(new Label("Order Date:"), 0, 3);
-        orderDate.setDisable(true);
-        form.add(orderDate, 1, 3);
+        orderDateField.setDisable(true);
+        form.add(orderDateField, 1, 2);
+        form.add(new Label("Order Total:"), 0, 2);
+        orderTotalField.setDisable(true);
+        form.add(orderTotalField, 1, 3);
         
-        form.add(updateQuantityButton, 0, 5);
+        form.add(prepareButton, 0, 5);
         form.add(deleteButton, 1, 5);
-        form.add(prepareButton, 2, 5);
-        
-        updateQuantityButton.setOnAction(e ->
-        {
-			int id= Integer.parseInt(orderId.getText());
-			String status = orderStatus.getText();
-			
-			
-			Order x = orderController.getOrderByOrderId(id); // --- getOrderByOrderId() ---
-			
-			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            String updatingOrder = orderController.updateOrder(id, orderItem, status);
-            
-            if (updatingOrder.contains("SUCCESS"))
-            {
-                showDialog("Success","Update success");
-                loadOrdersData();
-            } else {
-                showDialog("Failed",updatingOrder);
-                loadOrdersData();
-            }
-            
-        });
         
         deleteButton.setOnAction(e ->
         {
-        	int id= Integer.parseInt(orderId.getText());
-        	String deleteOrder = orderController.deleteOrder(id);
+        	String res = orderController.deleteOrder(selectedOrder.getOrderId());
         	
-        	if (deleteOrder.contains("SUCCESS"))
-        	{
-                showDialog("Success","Delete success");
-                loadOrdersData();
-            } 
-        	else 
-        	{
-                showDialog("Failed",deleteOrder);
-                loadOrdersData();
-            }
+        	if (res.contains("SUCCESS")) showDialog("Success", "Delete success");
+            else showDialog("Failed", res);
+        	loadOrdersData();
         });
         
         prepareButton.setOnAction(e ->
         {
-        	int id= Integer.parseInt(orderId.getText());
-			String status = "Prepared";
-			
-			Order x = Order.getOrderById(id);
-			ArrayList<OrderItem> orderItem = x.getOrderItems(); 
-            String updatingOrder = orderController.updateOrder(id, orderItem, status);
+			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
+         
+			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Prepared");
             
-            if (updatingOrder.contains("SUCCESS"))
-            {
-                showDialog("Success","Update success");
-                loadOrdersData();
-            } 
-            else 
-            {
-                showDialog("Failed",updatingOrder);
-                loadOrdersData();
-            }
+            if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
+            else  showDialog("Failed", res);
+            loadOrdersData();
         });
+        
         return form;
 	}
 	
@@ -211,19 +178,20 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
             return new SimpleStringProperty(order.getOrderUser().getUserName());
         });
         
-        TableColumn<Order, String> orderStatusColumn = new TableColumn<>("Order Status");
-        orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
-        
         TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-               
-        tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderStatusColumn, orderDateColumn);
+
+        TableColumn<Order, Double> orderTotalColumn = new TableColumn<>("Order Total");
+        orderTotalColumn.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
+        
+        tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderDateColumn, orderTotalColumn);
         tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Pending")));
         
         return tableView;
     }
     
-	public void loadOrdersData() // Load Orders
+    @Override
+	public void loadOrdersData()
 	{
 	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
 	    menuItemTable.getItems().setAll(preparedOrders);
@@ -273,21 +241,22 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         addMenuButton.setOnAction(e -> // --- createOrderItem() ---
         {
         	// Add Menu Item Here
-        	new AddOrderItemPanel(this, selectedOrderId).show();
+        	new AddOrderItemPanel(this, selectedOrder.getOrderId()).show();
         	loadOrderItemsData();
+        	loadOrdersData();
         });
         updateQuantityButton.setOnAction(e ->
         {
-        	System.out.println(selected.get().getMenuItemName());
-			String res = orderItemController.updateOrderItem(selectedOrderId, selected.get(), Integer.parseInt(quantityField.getText()) ); // --- updateOrderItem() ---
+        	int quantity = Integer.parseInt(quantityField.getText());
+			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selected.get(), quantity); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
             {
-                showDialog("Success","Update success");
+                showDialog("Success","Update Quantity success");
             } else {
                 showDialog("Failed", res);
             }
             loadOrderItemsData();
-            
+            loadOrdersData();
         });
         
         orderItemsSection.getChildren().addAll(orderItemTable, form);
@@ -297,7 +266,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	@Override
 	public void loadOrderItemsData() 
 	{
-	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrderId);
+	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
 	    orderItemTable.getItems().setAll(orderItems);
 	}
 	
@@ -314,22 +283,20 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
             return new SimpleStringProperty(menuItem.getMenuItemName());
         });
         menuItemNameColumn.setPrefWidth(150);
-    	    
-//        TableColumn<OrderItem, Double> menuItemPriceColumn = new TableColumn<>("Price");
-//        menuItemPriceColumn.setCellValueFactory(cellData ->
-//        {
-//            OrderItem orderItem = cellData.getValue();
-//            MenuItems menuItem = orderItem.getMenuItem();
-//            return new SimpleDoubleProperty(menuItem.getMenuItemPrice());
-//        });
-//        menuItemPriceColumn.setPrefWidth(150);
         
         TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantityColumn.setPrefWidth(150);
                
         tableView.getColumns().addAll(menuItemNameColumn, quantityColumn);
-        tableView.setItems(FXCollections.observableArrayList(orderItemController.getAllOrderItemsByOrderId(selectedOrderId)));
+        if(selectedOrder == null)
+        {
+        	tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));        	        	
+        }
+        else
+        {
+        	tableView.setItems(FXCollections.observableArrayList(orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId())));        	        	
+        }
         
         return tableView;
 	}
