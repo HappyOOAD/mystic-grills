@@ -1,7 +1,6 @@
 package view.Admin;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import controller.MenuItemController;
 import controller.UserController;
@@ -23,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.User;
 import model.MenuItems;
-import model.Order;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;

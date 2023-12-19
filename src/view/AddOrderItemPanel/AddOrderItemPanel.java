@@ -81,7 +81,7 @@ public class AddOrderItemPanel extends Stage
 			int quantity = Integer.parseInt(quantityField.getText());
 			
 			//Creating a new OrderItem
-			String result = orderItemController.createOrderItem(orderId, selected, quantity);
+			orderItemController.createOrderItem(orderId, selected, quantity);
 			parent.loadOrderItemsTableData();
 			parent.loadOrdersTableData();
 			this.close();
@@ -101,16 +101,18 @@ public class AddOrderItemPanel extends Stage
         TableColumn<MenuItems, String> menuItemNameColumn = new TableColumn<>("Name");
         menuItemNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
         menuItemNameColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemNameColumn);
         
         TableColumn<MenuItems, String> menuItemDescriptionColumn = new TableColumn<>("Description");
         menuItemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
         menuItemDescriptionColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemDescriptionColumn);
         
         TableColumn<MenuItems, Integer> menuItemPriceColumn = new TableColumn<>("Price");
         menuItemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
-        menuItemPriceColumn.setPrefWidth(150);       
+        menuItemPriceColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemPriceColumn);
         
-        tableView.getColumns().addAll(menuItemNameColumn, menuItemDescriptionColumn, menuItemPriceColumn);
         tableView.setItems(FXCollections.observableArrayList(MenuItemController.getAllMenuItem()));
         
         return tableView;
