@@ -49,8 +49,11 @@ public class AddOrderItemPanel extends Stage
     {
     	VBox container = new VBox(15);
     	container.setPadding(new Insets(20));
+    	
+    	//Creating a TableView for MenuItem
     	table = createMenuItemTableView();
 		
+    	//Adding Listner for MenuItem TableView
 		table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
 		{
 			setSelected(newSelection);
@@ -74,7 +77,10 @@ public class AddOrderItemPanel extends Stage
         
         addButton.setOnAction(e ->
         {
+        	//Getting the value
 			int quantity = Integer.parseInt(quantityField.getText());
+			
+			//Creating a new OrderItem
 			String result = orderItemController.createOrderItem(orderId, selected, quantity);
 			parent.loadOrderItemsData();
 			parent.loadOrdersData();
@@ -86,6 +92,7 @@ public class AddOrderItemPanel extends Stage
 		return container;
     }
     
+    //Creating A Table View for MenuItem
     private TableView<MenuItems> createMenuItemTableView()
     {
     	TableView<MenuItems> tableView = new TableView<>();

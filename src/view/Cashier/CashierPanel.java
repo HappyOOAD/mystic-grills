@@ -75,7 +75,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         contentArea = new VBox(20);
         contentArea.setPadding(new Insets(20));
         contentArea.setAlignment(Pos.CENTER);
-        openOrderPage();
+        
         topSection.setAlignment(Pos.CENTER);
         topSection.getChildren().addAll(contentArea);
         root.setCenter(topSection);

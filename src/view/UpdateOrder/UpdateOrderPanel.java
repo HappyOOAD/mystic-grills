@@ -46,7 +46,7 @@ public class UpdateOrderPanel extends Stage{
 	public UpdateOrderPanel(int orderId, User user) {
 		super(StageStyle.DECORATED);
 		root = new BorderPane();
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1280, 720);
         this.setScene(scene);
         
         // buat back to customer panel

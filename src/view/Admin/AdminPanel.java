@@ -45,7 +45,7 @@ public class AdminPanel extends Stage {
 
     	setTitle("Mystic Grills - Admin");
         root = new BorderPane();
-        Scene scene = new Scene(root,  1580, 900);
+        Scene scene = new Scene(root,  1280, 720);
         this.setScene(scene);
 
         menuBar = new MenuBar();
@@ -83,15 +83,18 @@ public class AdminPanel extends Stage {
     // MENU ITEM PAGE
     private void openMenuItemPage()
     {
+    	//Creating a TextField
     	TextField menuItemId = new TextField();
     	TextField menuItemName = new TextField();
     	TextField menuItemDescription = new TextField();
     	TextField menuItemPrice = new TextField();
     	
+    	//Creating a TableView for MenuItem
     	contentArea.getChildren().clear();
     	menuItemTable = createMenuItemTableView();
 		contentArea.getChildren().add(menuItemTable);
 		
+		//Adding Listener for TextField
 		menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
             	menuItemId.setText(newSelection.getMenuItemId()+"");
@@ -125,12 +128,13 @@ public class AdminPanel extends Stage {
         
         updateButton.setOnAction(e ->
         {
+        	//Getting all the value
         	int id= Integer.parseInt(menuItemId.getText());
 			String name = menuItemName.getText();
 			String description = menuItemDescription.getText();
 			double price = Double.parseDouble(menuItemPrice.getText());
             
-            
+            //Accessing MenuItemController to update an MenuItem
             String result = MenuItemController.updateMenuItem(id, name, description, price);
             
             if ("Success Update A Menu Item".equals(result)) {
@@ -144,7 +148,10 @@ public class AdminPanel extends Stage {
         
         deleteButton.setOnAction(e ->
         {
+        	//Getting all the value
         	int id= Integer.parseInt(menuItemId.getText());
+        	
+        	//Call MenuItemControlller to delete MenuItem with a specific ID
 			MenuItemController.deleteMenuItem(id);
 			
 			showDialog("Success","Delete Success");
@@ -153,9 +160,12 @@ public class AdminPanel extends Stage {
         
         addButton.setOnAction(e ->
         {
+        	//Getting all the value
 			String name = menuItemName.getText();
 			String description = menuItemDescription.getText();
 			double price = Double.parseDouble(menuItemPrice.getText());
+			
+			//Creating a MenuItem with MenuItemController
 			String result = MenuItemController.createMenuItem(name, description, price);
 			
 			if ("Success Create A New Menu Item".equals(result)) {
@@ -171,12 +181,14 @@ public class AdminPanel extends Stage {
 		
     }
     
+    //Refresh the MenuItem TableView to get the Updated TableView
 	private void loadMenuItemData()
 	{
 		ArrayList<MenuItems> menuItems = MenuItemController.getAllMenuItem();
 		menuItemTable.getItems().setAll(menuItems);
 	}
-    
+	
+	//Creating A Table View for MenuItem
     private TableView<MenuItems> createMenuItemTableView()
     {
     	TableView<MenuItems> tableView = new TableView<>();
@@ -208,6 +220,7 @@ public class AdminPanel extends Stage {
     // ACCOUNT PAGE
     private void openAccountPage()
     {
+    	//Creating a TextField
     	TextField userId = new TextField();
     	TextField userName = new TextField();
     	ObservableList<String> options = FXCollections.observableArrayList("Admin", "Chef", "Waiter", "Cashier", "Customer");
@@ -215,16 +228,17 @@ public class AdminPanel extends Stage {
     	TextField userEmail = new TextField();
     	TextField userPassword = new TextField();
     	
+    	//Creating a TableView for Account
     	contentArea.getChildren().clear();
     	accountsTable = createAccountsTableView();
 		contentArea.getChildren().add(accountsTable); 
 		
+		//Adding Listener for TextField
 		accountsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
             	userId.setText(newSelection.getUserId()+"");
             	userName.setText(newSelection.getUserName());
             	userRole.setValue(String.valueOf(newSelection.getUserRole()));
-//            	userRole.setText(String.valueOf(newSelection.getUserRole()));
             	userEmail.setText(String.valueOf(newSelection.getUserEmail()));
             	userPassword.setText(String.valueOf(newSelection.getUserPassword()));
             }
@@ -257,11 +271,14 @@ public class AdminPanel extends Stage {
         
         updateButton.setOnAction(e ->
         {
+        	//Getting All the value TextField
 			int id= Integer.parseInt(userId.getText());
 			String role = userRole.getValue();
 			String name = userName.getText();
 			String email = userEmail.getText();
 			String password = userPassword.getText();
+			
+			//Updating a user by UserController
             UserController.updateUser(id, role, name, email, password);
             
             showDialog("Success","Update Success");
@@ -270,7 +287,10 @@ public class AdminPanel extends Stage {
         
         deleteButton.setOnAction(e ->
         {
+        	//Getting All the value TextField
 			int id= Integer.parseInt(userId.getText());
+			
+			//Deleting user by UserID
 			UserController.deleteUser(id);
 			
 			showDialog("Success","Delete Success");
@@ -287,12 +307,14 @@ public class AdminPanel extends Stage {
         contentArea.getChildren().add(form);
     }
     
+    //Refresh the User TableView to get the Updated TableView
 	private void loadUserData()
 	{
 		ArrayList<User> users = UserController.getAllUsers();
 		accountsTable.getItems().setAll(users);
 	}
     
+	//Creating A Table View for User
     private TableView<User> createAccountsTableView()
     {
     	TableView<User> tableView = new TableView<>();

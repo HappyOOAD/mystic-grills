@@ -57,7 +57,7 @@ public class CustomerPanel extends Stage
 		setTitle("Mystic Grills - Customer Panel");
 		this.customer = customer;
         root = new BorderPane();
-        Scene scene = new Scene(root, 1580, 900);
+        Scene scene = new Scene(root, 1280, 720);
         this.setScene(scene);
 
         menuBar = new MenuBar();
@@ -174,7 +174,7 @@ public class CustomerPanel extends Stage
         menuItemPrice.setPrefWidth(150);
        
         tableView.getColumns().addAll(menuItemName, menuItemDescription, menuItemPrice);
-        tableView.setItems(FXCollections.observableArrayList(menuItemController.getAllMenuItem())); /// MODEL DISINI
+        tableView.setItems(FXCollections.observableArrayList(menuItemController.getAllMenuItem()));
         
         return tableView;
     }

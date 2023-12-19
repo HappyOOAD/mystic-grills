@@ -52,6 +52,7 @@ public class Login extends Stage
             String email = emailField.getText();
             String password = passwordField.getText();
             
+            //Checking to UserController
             String res = controller.authenticateUser(email, password);
             if(res.contains("SUCCESS")) this.close();
             else actionTarget.setText(res);
