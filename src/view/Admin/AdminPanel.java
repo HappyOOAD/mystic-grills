@@ -195,20 +195,23 @@ public class AdminPanel extends Stage {
         TableColumn<MenuItems, Integer> menuItemIdColumn = new TableColumn<>("ID");
         menuItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemId"));
         menuItemIdColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemIdColumn);
     	    
         TableColumn<MenuItems, String> menuItemNameColumn = new TableColumn<>("Name");
         menuItemNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemName"));
         menuItemNameColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemNameColumn);
         
         TableColumn<MenuItems, String> menuItemDescriptionColumn = new TableColumn<>("Description");
         menuItemDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemDescription"));
         menuItemDescriptionColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemDescriptionColumn);
         
         TableColumn<MenuItems, Integer> menuItemPriceColumn = new TableColumn<>("Price");
         menuItemPriceColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemPrice"));
-        menuItemPriceColumn.setPrefWidth(150);       
+        menuItemPriceColumn.setPrefWidth(150);
+        tableView.getColumns().add(menuItemPriceColumn);
         
-        tableView.getColumns().addAll(menuItemIdColumn, menuItemNameColumn, menuItemDescriptionColumn, menuItemPriceColumn);
         tableView.setItems(FXCollections.observableArrayList(MenuItemController.getAllMenuItem()));
         
         return tableView;
@@ -321,25 +324,28 @@ public class AdminPanel extends Stage {
         TableColumn<User, String> usernameColumn = new TableColumn<>("Username");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
         usernameColumn.setPrefWidth(75);
+        tableView.getColumns().add(usernameColumn);
         
         TableColumn<User, String> userroleColumn = new TableColumn<>("Role");
         userroleColumn.setCellValueFactory(new PropertyValueFactory<>("userRole"));
         userroleColumn.setPrefWidth(150);
+        tableView.getColumns().add(userroleColumn);
         
         TableColumn<User, Integer> userId = new TableColumn<>("ID");
         userId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         userId.setPrefWidth(150);
+        tableView.getColumns().add(userId);
         
         TableColumn<User, String> userEmailColumn = new TableColumn<>("Email");
         userEmailColumn.setCellValueFactory(new PropertyValueFactory<>("userEmail"));
         userEmailColumn.setPrefWidth(150);
+        tableView.getColumns().add(userEmailColumn);
         
         TableColumn<User, String> userPasswordColumn = new TableColumn<>("Password");
         userPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("userPassword"));
         userPasswordColumn.setPrefWidth(150);
+        tableView.getColumns().add(userPasswordColumn);
             
-        
-        tableView.getColumns().addAll(usernameColumn, userroleColumn, userId, userEmailColumn, userPasswordColumn);
         tableView.setItems(FXCollections.observableArrayList(UserController.getAllUsers()));
         
         return tableView;
