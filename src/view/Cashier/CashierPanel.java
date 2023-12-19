@@ -48,7 +48,7 @@ public class CashierPanel extends Stage
 
 		setTitle("Mystic Grills - Cashier");
         root = new BorderPane();
-        Scene scene = new Scene(root,  1580, 900);
+        Scene scene = new Scene(root,  1580, 720);
         this.setScene(scene);
 
         menuBar = new MenuBar();

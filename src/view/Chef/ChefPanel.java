@@ -57,7 +57,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 		super(StageStyle.DECORATED);
 		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
-        Scene scene = new Scene(root, 1580, 900);
+        Scene scene = new Scene(root, 1580, 720);
         setScene(scene);
         
         // MENUBARS

@@ -132,7 +132,7 @@ public class OrderItem
 			}
 			resultSet.close();
 			
-			orderItem.setMenuItem();
+			if(orderItem != null) orderItem.setMenuItem();
 		} 
 		catch (SQLException e)
 		{

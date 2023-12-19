@@ -15,7 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.MenuItems;
-import view.Chef.ChefPanel;
 
 public class AddOrderItemPanel extends Stage
 {
@@ -24,6 +23,8 @@ public class AddOrderItemPanel extends Stage
 	TableView<MenuItems> table;
 	int orderId;
 	MenuItems selected;
+	TextField quantityField;
+	Button addButton;
 	
 	
 	public void setSelected(MenuItems menuItem)
@@ -53,20 +54,22 @@ public class AddOrderItemPanel extends Stage
 		table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
 		{
 			setSelected(newSelection);
+			quantityField.setDisable(false);
+			addButton.setDisable(false);
         });
 		
 		GridPane form = new GridPane();
         form.setVgap(20);
         form.setHgap(10);
 		
-        TextField quantityField = new TextField();
+        quantityField = new TextField();
         
-		Button updateButton = new Button("Update");
-        Button deleteButton = new Button("Delete");
-        Button addButton = new Button("Add");
+        addButton = new Button("Add");
         
         form.add(new Label("Quantity:"), 0, 0);
+        quantityField.setDisable(true);
         form.add(quantityField, 1, 0);
+        addButton.setDisable(true);
         form.add(addButton, 0, 1);
         
         addButton.setOnAction(e ->
