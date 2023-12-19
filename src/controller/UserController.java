@@ -65,12 +65,14 @@ public class UserController
 	
 	public User getUserById(int userId)
 	{
+		//Get User by ID
+		
 		return User.getUserById(userId);
 	}
 	
 	public String authenticateUser(String userEmail, String userPassword)
 	{
-		if(userEmail.equalsIgnoreCase("")) return "ERROR: Email cannot be mpty";
+		if(userEmail.equalsIgnoreCase("")) return "ERROR: Email cannot be empty";
 		if(User.emailIsExist(userEmail) == false) return "ERROR: Email not found";
 		
 		if(userPassword.equalsIgnoreCase("")) return "ERROR: Password cannot be empty";
@@ -82,11 +84,11 @@ public class UserController
 			currentUser = user;
 			switch (role)
 			{
-				case "Admin": new AdminPanel().show(); break;
-				case "Cashier": new CashierPanel().show(); break;
-				case "Chef": new ChefPanel().show(); break;
-				case "Waiter": new WaiterPanel().show(); break;
-				case "Customer": new CustomerPanel(user).show(); break;
+				case "Admin": new AdminPanel().show(); break; //If user Role is Admin, go to admin Panel
+				case "Cashier": new CashierPanel().show(); break; //If user Role is Cashier, go to Cashier Panel
+				case "Chef": new ChefPanel().show(); break; //If user Role is Chef, go to Chef Panel
+				case "Waiter": new WaiterPanel().show(); break; //If user Role is Waiter, go to Waiter Panel
+				case "Customer": new CustomerPanel(user).show(); break; //If user Role is Customer, go to Customer Panel
 				default: return "FAILED: Role Undefined";
 			}
 			return "SUCCESS: Login Success";

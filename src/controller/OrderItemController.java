@@ -70,6 +70,8 @@ public class OrderItemController
 	
 	public void deleteOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
+		//Delete OrderItem
+		
 		OrderItem.deleteOrderItem(orderId, quantity);
 	}
 	

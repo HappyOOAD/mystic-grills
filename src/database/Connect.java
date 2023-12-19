@@ -16,6 +16,7 @@ public class Connect
 
     private void connectToDatabase()
     {
+    	//Connecting to database
         try
         {
             String url = "jdbc:mysql://localhost:3306/mysticgrills";

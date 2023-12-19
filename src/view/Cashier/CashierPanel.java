@@ -1,8 +1,6 @@
 package view.Cashier;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -73,6 +71,7 @@ public class CashierPanel extends Stage
 		root.setCenter(orderView);
 	}
 	
+	//Creating A MenuBar
 	private MenuBar createMenuBar()
 	{
 		menus = new MenuBar();
@@ -157,6 +156,7 @@ public class CashierPanel extends Stage
 	{
     	ObservableList<String> options = FXCollections.observableArrayList("Cash", "Debit", "Credit");
     	paymentTypeField = new ComboBox<String>(options);
+    	paymentTypeField.setValue("Cash");
     
 		GridPane actionGrid = new GridPane();
         actionGrid.setVgap(10);
@@ -181,6 +181,8 @@ public class CashierPanel extends Stage
         	if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
         	else  showDialog("Failed", res);
         	loadOrdersTableData();
+        	selectedOrder = null;
+        	loadOrderItemsTableData();
         	paymentTypeField.setDisable(true);
         	processPaymentOrderButton.setDisable(true);
         });
@@ -238,7 +240,7 @@ public class CashierPanel extends Stage
     // Method to reload Order Table data
 	public void loadOrdersTableData()
 	{
-	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Prepared");
+	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Served");
 	    ordersTable.getItems().setAll(preparedOrders);
 	}
 	
@@ -326,7 +328,7 @@ public class CashierPanel extends Stage
 
 		// Generate Horizontal Bottom Container
 		HBox bottomContainer = new HBox(10);
-		bottomContainer.getChildren().addAll(orderItemsTable);
+		bottomContainer.getChildren().addAll(receiptItemsTable);
         
         // Assign to Root Container
         VBox rootContainer = new VBox(10);

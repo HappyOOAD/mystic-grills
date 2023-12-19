@@ -64,8 +64,12 @@ public class Register extends Stage
             String email = emailField.getText();
             String password = passwordField.getText();
             String confirmPassword = confirmPasswordField.getText();
+            
+            //Checking password equals to confirmPassword
             if(password.equals(confirmPassword))
             {            	
+            	
+            	//Checking to UserController
             	String res = controller.createUser("Customer", username, email, password);  
             	if(res.contains("SUCCESS"))
     			{

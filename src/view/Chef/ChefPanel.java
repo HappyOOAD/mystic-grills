@@ -119,7 +119,9 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         	
         	if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
         	else  showDialog("Failed", res);
+        	selectedOrder = null;
         	loadOrdersTableData();
+        	loadOrderItemsTableData();
         	prepareOrderButton.setDisable(true);
         	deleteOrderButton.setDisable(true);
         	addMenuButton.setDisable(true);
@@ -129,11 +131,14 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 
         deleteOrderButton.setOnAction(e ->
         {
+        	//Delete Order by Chosen OrderID
         	String res = orderController.deleteOrder(selectedOrder.getOrderId());
         	
         	if (res.contains("SUCCESS")) showDialog("Success", "Delete success");
             else showDialog("Failed", res);
+        	selectedOrder = null;
         	loadOrdersTableData();
+        	loadOrderItemsTableData();
         	prepareOrderButton.setDisable(true);
         	deleteOrderButton.setDisable(true);
         	addMenuButton.setDisable(true);
@@ -235,6 +240,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         
         updateQuantityButton.setOnAction(e ->
         {
+        	//Get the value quantity
         	int quantity = Integer.parseInt(quantityField.getText());
 			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selectedMenuItem.getMenuItem(), quantity); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
