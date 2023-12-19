@@ -25,6 +25,8 @@ import javafx.stage.StageStyle;
 import model.MenuItems;
 import model.Order;
 import model.OrderItem;
+import view.AddOrderItemPanel.AddOrderItemPanel;
+import view.AddOrderItemPanel.IAddOrderItemParentPanel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +34,7 @@ import java.util.Date;
 import controller.OrderController;
 import controller.OrderItemController;
 
-public class ChefPanel extends Stage
+public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 {
 	private BorderPane root;
     private VBox contentArea;
@@ -292,6 +294,7 @@ public class ChefPanel extends Stage
         return orderItemsSection;
 	}
 	
+	@Override
 	public void loadOrderItemsData() 
 	{
 	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrderId);

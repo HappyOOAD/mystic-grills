@@ -1,4 +1,4 @@
-package view.Chef;
+package view.AddOrderItemPanel;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.MenuItems;
+import view.Chef.ChefPanel;
 
 public class AddOrderItemPanel extends Stage
 {
