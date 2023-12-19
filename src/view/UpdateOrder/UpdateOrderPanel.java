@@ -49,7 +49,7 @@ public class UpdateOrderPanel extends Stage{
         Scene scene = new Scene(root, 1280, 720);
         this.setScene(scene);
         
-        // buat back to customer panel
+        // Back to customer Panel
         Button backButton = new Button("Back");
         contentArea.getChildren().add(backButton);
         backButton.setOnAction(event -> {
@@ -57,12 +57,12 @@ public class UpdateOrderPanel extends Stage{
         	new CustomerPanel(user).show();
         });
         
-        // buat nambahin item, ngarah ke panel baru
+        //Adding new Menu Item
         Button addButton = new Button("Add New Item");
         contentArea.getChildren().add(addButton);
         addButton.setOnAction(event -> showAddNewItemForm(orderId, user));
 
-        // show tabel isinya ordered item
+        //Creating OrderItem TableView
 		OrderDetailTable = createEditOrderItemTable(orderId);
 		contentArea.getChildren().add(OrderDetailTable);
 		
@@ -85,7 +85,7 @@ public class UpdateOrderPanel extends Stage{
 		contentArea.getChildren().clear();
     	
 		// buat bikin table
-    	MenuTable = createMMenuItemTable();
+    	MenuTable = createMenuItemTable();
 		contentArea.getChildren().add(MenuTable);
 		
 		// biar item bisa di-select
@@ -95,10 +95,9 @@ public class UpdateOrderPanel extends Stage{
         GridPane form = createOrderform(MenuTable, orderId, user);
         VBox.setMargin(form, new Insets(20));
         contentArea.getChildren().add(form);
-        
-        
     }
 	
+	//listener
 	private void setupAddNewItemTableSelectionListener() {
 	    MenuTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
@@ -111,6 +110,7 @@ public class UpdateOrderPanel extends Stage{
 	    });
 	}
 	
+	//Creating Order Form
 	private GridPane createOrderform(TableView<MenuItems> menuTable2, int orderId, User user) {
         GridPane form = new GridPane();
         form.setVgap(20);
@@ -141,11 +141,9 @@ public class UpdateOrderPanel extends Stage{
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				MenuItems selectedMenuItem = getSelectedMenuItem();
 				if (selectedMenuItem != null && quantity_menu.equals("0")==false) {
 					orderItemController.createOrderItem(orderId, selectedMenuItem, Integer.parseInt(quantity_menu.getText()));
-//					addItemStage.close();
 					OpenDialog("Success", "Added "+Integer.parseInt(quantity_menu.getText())+" "+selectedMenuItem.getMenuItemName());
 	            }
 				new UpdateOrderPanel(orderId, user).show();
@@ -155,11 +153,13 @@ public class UpdateOrderPanel extends Stage{
         return form;
     }
 	
+	//Getting selected MenuItem
 	private MenuItems getSelectedMenuItem()  {
 	    return MenuTable.getSelectionModel().getSelectedItem();
 	}
 	
-	private TableView<MenuItems> createMMenuItemTable() {
+	//Creating A Table View for MenuItem
+	private TableView<MenuItems> createMenuItemTable() {
     	TableView<MenuItems> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	    
@@ -181,6 +181,7 @@ public class UpdateOrderPanel extends Stage{
         return tableView;
     }
 	
+	//Form to Add Item
 	private GridPane createAddItemForm(int orderId) {
         GridPane form = new GridPane();
         form.setVgap(20);
@@ -215,7 +216,8 @@ public class UpdateOrderPanel extends Stage{
 
         return form;
     }
-
+	
+	//Creating A Table View for OrderItem
 	private TableView<OrderItem> createEditOrderItemTable(int orderId) {
 		TableView<OrderItem> tableView = new TableView<>();
         
@@ -245,6 +247,7 @@ public class UpdateOrderPanel extends Stage{
     private TextField itemPrice_menu;
     private TextField quantity_menu;
 	
+    //Listener
 	private void setupEditItemTableSelectionListener() {
 		OrderDetailTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
@@ -260,6 +263,7 @@ public class UpdateOrderPanel extends Stage{
 	    });
 	}
 	
+	//Edit Order Form
 	private GridPane editOrderform(TableView<OrderItem> menuTable2, int orderId) {
         GridPane form = new GridPane();
         form.setVgap(20);
@@ -291,17 +295,16 @@ public class UpdateOrderPanel extends Stage{
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				OrderItem selectedOrderItem = getSelectedOrderItem();
 				if (selectedOrderItem != null) {
-					// edit quantity
+					//Edit Quantity
 					if (Integer.parseInt(quantity_menu.getText())==0)
 					{
-		            	// hapus menu
+		            	//Delete Menu
 		            	selectedOrderItem.deleteOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItemId());
 		            	OpenDialog("Success delete ", "Success delete "+selectedOrderItem.getMenuItem().getMenuItemName());
 		            }else {
-		            	//edit quantity
+		            	//Edit Quantity
 		            	OpenDialog("Success edit ", "Success Edit" + selectedOrderItem.getMenuItem().getMenuItemName()+" quantity!");
 						selectedOrderItem.updateOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItem(), Integer.parseInt(quantity_menu.getText()));
 		            }
@@ -314,16 +317,18 @@ public class UpdateOrderPanel extends Stage{
         return form;
     }
 	
+	//Getting OrderItem selected Item
 	private OrderItem getSelectedOrderItem() {
 	    return OrderDetailTable.getSelectionModel().getSelectedItem();
 	}
 	
+	//Refresh the OrderItem by orderID TableView to get the Updated TableView
 	private void refreshTable(int orderId) {
-		// TODO Auto-generated method stub
 		ArrayList<OrderItem> orderItem = orderItemController.getAllOrderItemsByOrderId(orderId);
 		OrderDetailTable.getItems().setAll(orderItem);
 	}
 	
+	// ALERT DIALOG
 	private void OpenDialog(String title, String message)
     {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
