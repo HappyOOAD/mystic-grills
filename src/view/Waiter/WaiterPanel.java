@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -59,16 +58,6 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         root = new BorderPane();
         Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
-        
-        // MENUBARS
-        menuBar = new MenuBar();
-        Menu orderMenu = new Menu("Order");
-        menuBar.getMenus().addAll(orderMenu);
-        root.setTop(menuBar);
-        orderMenu.setOnAction(e ->
-        {
-        	openOrderPage();
-        });
 
         contentArea = new VBox(20);
         contentArea.setPadding(new Insets(20));
@@ -155,7 +144,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
          
 			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Served");
             
-            if (res.contains("SUCCESS")) showDialog("Success", "Served success");
+            if (res.contains("SUCCESS")) showDialog("Success", "Serve success");
             else  showDialog("Failed", res);
             loadOrdersData();
         });

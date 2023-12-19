@@ -212,7 +212,6 @@ public class AdminPanel extends Stage {
     	TextField userName = new TextField();
     	ObservableList<String> options = FXCollections.observableArrayList("Admin", "Chef", "Waiter", "Cashier", "Customer");
     	ComboBox<String> userRole= new ComboBox<String>(options);
-//    	TextField userRole = new TextField();
     	TextField userEmail = new TextField();
     	TextField userPassword = new TextField();
     	

@@ -14,7 +14,7 @@ public class ReceiptController
 		// TODO Auto-generated constructor stub
 	}
 
-	public static String createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
+	public String createReceipt(Order order, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		// Process Order Payment Sequence Diagram [CASHIER]
 		// RULES: (From Sequence)
@@ -29,7 +29,7 @@ public class ReceiptController
 		return "Create Receipt Success";
 	}
 	
-	public static void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
+	public void updateReceipt(int orderId, String receiptPaymentType, double receiptPaymentAmount, Date receiptPaymentDate)
 	{
 		if(orderId <= 0) return;
 		if(receiptPaymentType.isBlank()) return;
@@ -38,18 +38,18 @@ public class ReceiptController
 		Receipt.updateReceipt(orderId, receiptPaymentType, receiptPaymentAmount, receiptPaymentDate);
 	}
 	
-	public static void deleteReceipt(int orderId)
+	public void deleteReceipt(int orderId)
 	{
 		if(orderId <= 0) return;
 		Receipt.deleteReceipt(orderId);
 	}
 	
-	public static Receipt getReceiptById(int receiptId)
+	public Receipt getReceiptById(int receiptId)
 	{
 		return Receipt.getReceiptById(receiptId);
 	}
 	
-	public static ArrayList<Receipt> getAllReceipts()
+	public ArrayList<Receipt> getAllReceipts()
 	{
 		// View Receipt Sequence Diagram [CASHIER]
 		// Rules: (From Sequence)

@@ -2,22 +2,22 @@ package view.Cashier;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -32,7 +32,7 @@ import model.Receipt;
 import view.AddOrderItemPanel.IAddOrderItemParentPanel;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import controller.OrderController;
 import controller.OrderItemController;
@@ -43,6 +43,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	// CONTROLLERS
 	private OrderController orderController = new OrderController();
 	private OrderItemController orderItemController = new OrderItemController();
+	private ReceiptController receiptController = new ReceiptController();
 	
 	// SCENES
 	private BorderPane root;
@@ -128,6 +129,9 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	
 	private GridPane OrderForm()
 	{
+    	ObservableList<String> options = FXCollections.observableArrayList("Cash", "Debit", "Credit");
+    	ComboBox<String> paymentTypeField = new ComboBox<String>(options);
+    	
 		ordersTable.getSelectionModel().selectedItemProperty()
 		.addListener((obs, oldSelection, newSelection) ->
 		{
@@ -136,6 +140,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
             	selectedOrder = newSelection;
             	loadOrderItemsData();
             	processButton.setDisable(false);
+            	paymentTypeField.setDisable(false);
             }
         });
 		
@@ -145,15 +150,20 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 		
         processButton = new Button("Process Order Payment");
         processButton.setDisable(true);
-        form.add(processButton, 0, 0);
+        form.add(processButton, 0, 1);
+        form.add(new Label("Payment Type: "), 0, 0);
+        paymentTypeField.setDisable(true);
+        form.add(paymentTypeField, 1, 0);
         
         processButton.setOnAction(e ->
         {
 			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
          
-			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Prepared");
+			Date date = new Date(System.currentTimeMillis());
+			orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Paid");
+			String res = receiptController.createReceipt(selectedOrder, paymentTypeField.getValue(), selectedOrder.getOrderTotal(), date);
             
-            if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
+            if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
             else  showDialog("Failed", res);
             loadOrdersData();
         });
@@ -183,7 +193,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         orderTotalColumn.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
         
         tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderDateColumn, orderTotalColumn);
-        tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Pending")));
+        tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Served")));
         
         return tableView;
     }
@@ -191,7 +201,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
     @Override
 	public void loadOrdersData()
 	{
-	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
+	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Served");
 	    ordersTable.getItems().setAll(preparedOrders);
 	}
 	
@@ -316,7 +326,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         });
         
         tableView.getColumns().addAll(receiptIdColumn, receiptUserNameColumn, receiptDateColumn, paymentTypeColumn, receiptTotalColumn);
-        tableView.setItems(FXCollections.observableArrayList(ReceiptController.getAllReceipts()));
+        tableView.setItems(FXCollections.observableArrayList(receiptController.getAllReceipts()));
         
         return tableView;
     }
