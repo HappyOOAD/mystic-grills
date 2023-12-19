@@ -131,6 +131,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         
         deleteButton.setOnAction(e ->
         {
+        	//Delete Order by Chosen OrderID
         	String res = orderController.deleteOrder(selectedOrder.getOrderId());
         	
         	if (res.contains("SUCCESS")) showDialog("Success", "Delete success");
@@ -140,8 +141,10 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         
         serveButton.setOnAction(e ->
         {
+        	//Getting all orderItems by orderID
 			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
-         
+			
+			//Updating order status into prepared
 			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Served");
             
             if (res.contains("SUCCESS")) showDialog("Success", "Serve success");
@@ -152,6 +155,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         return form;
 	}
 	
+	//Creating A Table View for Order
     private TableView<Order> createOrderTableView()
     {
     	TableView<Order> tableView = new TableView<>();
@@ -179,6 +183,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         return tableView;
     }
     
+    //Refresh the Order TableView to get the Updated TableView
     @Override
 	public void loadOrdersData()
 	{
@@ -190,12 +195,14 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
 	private Button addMenuButton, updateQuantityButton;
 	private TextField quantityField;
 	
-	private HBox openOrderItemPage() // Open Order Items Page
+	// Open Order Items Page
+	private HBox openOrderItemPage()
 	{
 		HBox orderItemsSection = new HBox(15);
 
 		ObjectProperty<MenuItems> selected = new SimpleObjectProperty<>(null);
-
+		
+		//Creating Order Details TableView
 		orderItemTable = createOrderDetailsTableView();
     	
 		quantityField = new TextField();
@@ -236,7 +243,10 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         });
         updateQuantityButton.setOnAction(e ->
         {
+        	//Get the value quantity
         	int quantity = Integer.parseInt(quantityField.getText());
+        	
+        	//Updating quantity
 			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selected.get(), quantity); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
             {
@@ -252,6 +262,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         return orderItemsSection;
 	}
 	
+	//Refresh the Order Items by orderID TableView to get the Updated TableView
 	@Override
 	public void loadOrderItemsData() 
 	{
@@ -259,6 +270,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
 	    orderItemTable.getItems().setAll(orderItems);
 	}
 	
+	//Creating A Table View for Order Details
 	private TableView<OrderItem> createOrderDetailsTableView()
 	{
 		TableView<OrderItem> tableView = new TableView<>();
