@@ -110,6 +110,36 @@ public class OrderItem
 			e.printStackTrace();
 		}
 	}
+	
+	// ADDITIONAL METHODS
+	
+	public static OrderItem getOrderItemByOrderIdAndMenuItemId(int orderId, int menuItemId)
+	{
+		OrderItem orderItem = null;
+		String query = "SELECT * FROM orderitems WHERE orderId = ? AND menuItemId = ?;";
+		
+		try (Connection connection = Connect.getInstance().getConnection())
+		{
+			PreparedStatement prep = connection.prepareStatement(query);
+			prep.setInt(1, orderId);
+			prep.setInt(1, menuItemId);
+			ResultSet resultSet = prep.executeQuery();
+			
+			if(resultSet.next()) 
+			{
+				int quantity = resultSet.getInt("quantity");
+				orderItem = new OrderItem(orderId, menuItemId, quantity);
+			}
+			resultSet.close();
+			
+			orderItem.setMenuItem();
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		} 
+		return orderItem;
+	}
 
 	
 	// GETTERS & SETTERS

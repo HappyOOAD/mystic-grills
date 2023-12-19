@@ -46,7 +46,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
     private MenuBar menuBar;
     
     // TABLES
-    TableView<Order>menuItemTable;
+    TableView<Order> ordersTable;
     
     // GLOBAL DATA
     private Order selectedOrder = null;
@@ -96,10 +96,10 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
     	TextField orderTotalField = new TextField();
 		
     	contentArea.getChildren().clear();
-    	menuItemTable = createOrderTableView();
-		contentArea.getChildren().add(menuItemTable);
+    	ordersTable = createOrderTableView();
+		contentArea.getChildren().add(ordersTable);
 	
-		menuItemTable.getSelectionModel().selectedItemProperty()
+		ordersTable.getSelectionModel().selectedItemProperty()
 		.addListener((obs, oldSelection, newSelection) ->
 		{
             if (newSelection != null)
@@ -194,7 +194,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	public void loadOrdersData()
 	{
 	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
-	    menuItemTable.getItems().setAll(preparedOrders);
+	    ordersTable.getItems().setAll(preparedOrders);
 	}
 	
 	private TableView<OrderItem> orderItemTable;

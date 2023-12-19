@@ -34,8 +34,19 @@ public class OrderItemController
 		if(menuItem == null) return "ERROR: Menu Item must be chosen";
 		if(quantity < 1) return "ERROR: Quantity cannot below 1";
 		
-		OrderItem.createOrderitem(orderId, menuItem, quantity);
-		return "SUCCESS: Successfully Create an Order Item";
+		
+		OrderItem existing = OrderItem.getOrderItemByOrderIdAndMenuItemId(orderId, menuItem.getMenuItemId());
+		if(existing == null)
+		{
+			OrderItem.createOrderitem(orderId, menuItem, quantity);
+			return "SUCCESS: Successfully Create an Order Item";			
+		}
+		else
+		{
+			OrderItem.updateOrderItem(orderId, menuItem, quantity + existing.getQuantity());
+			return "SUCCESS: Successfully Add Quantity to the Order Item";
+		}
+		
 	}
 	
 	public String updateOrderItem(int orderId, MenuItems menuItem, int quantity)
