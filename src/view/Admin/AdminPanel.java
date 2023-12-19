@@ -45,7 +45,7 @@ public class AdminPanel extends Stage {
 
     	setTitle("Mystic Grills - Admin");
         root = new BorderPane();
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root,  1580, 900);
         this.setScene(scene);
 
         menuBar = new MenuBar();

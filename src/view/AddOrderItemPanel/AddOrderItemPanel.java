@@ -31,7 +31,7 @@ public class AddOrderItemPanel extends Stage
 		this.selected = menuItem;
 	}
 	
-	public AddOrderItemPanel(ChefPanel parent, int orderId)
+	public AddOrderItemPanel(IAddOrderItemParentPanel parent, int orderId)
 	{
 		this.parent = parent;
 		this.orderId = orderId;
