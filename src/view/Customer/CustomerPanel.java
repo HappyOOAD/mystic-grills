@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import controller.MenuItemController;
 import controller.OrderController;
 import controller.OrderItemController;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -44,6 +47,7 @@ public class CustomerPanel extends Stage
     private MenuBar menuBar;
     private OrderController orderController = new OrderController();
     private OrderItemController orderItemController = new OrderItemController();
+    private MenuItemController menuItemController = new MenuItemController();
     private User customer;
 
 	public CustomerPanel(User customer)
@@ -75,7 +79,7 @@ public class CustomerPanel extends Stage
         	addItem();
         });
         historyMenuItem.setOnAction(e -> {        
-        	history();
+        	history(customer);
         });
         
         contentArea = new VBox(20);
@@ -89,6 +93,7 @@ public class CustomerPanel extends Stage
 	}
 	
 	TableView<MenuItems> MenuTable;
+	TableView<OrderItem> keranjangTB;
 
 	private void addItem() {
 		// TODO Auto-generated method stub
@@ -104,10 +109,52 @@ public class CustomerPanel extends Stage
 		// buat masukkin quantity item yang di-select
         GridPane form = createOrderform(MenuTable);
         VBox.setMargin(form, new Insets(20));
-        contentArea.getChildren().add(form);
+        
+        keranjangTB = createkeranjangtable();
+        
+     // Create an HBox to arrange forms horizontally
+        HBox formsContainer = new HBox(20); // Set spacing between forms
+        formsContainer.getChildren().addAll(form, keranjangTB);
+        
+        setupTableSelectionkeranjangTB();
+
+        contentArea.getChildren().add(formsContainer);
 		
 	}
 	
+	private void setupTableSelectionkeranjangTB() {
+		keranjangTB.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	        if (newSelection != null) {
+	            idInput_menu.setText(newSelection.getMenuItemId() + "");
+	            nameInput_menu.setText(newSelection.getMenuItem().getMenuItemName());
+	            itemDesc_menu.setText(newSelection.getMenuItem().getMenuItemDescription());
+	            itemPrice_menu.setText(String.valueOf(newSelection.getMenuItem().getMenuItemPrice()));
+	            quantity_menu.setText(String.valueOf(newSelection.getQuantity()));
+	        }
+	    });
+	}
+
+	private TableView<OrderItem> createkeranjangtable() {
+		TableView<OrderItem> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        
+        TableColumn<OrderItem, String> menuItemName = new TableColumn<>("Name");
+        menuItemName.setCellValueFactory(cellData ->
+        {
+        	OrderItem name = cellData.getValue();
+            return new SimpleStringProperty(name.getMenuItem().getMenuItemName());
+        });
+        
+        TableColumn<OrderItem, Integer> menuItemQtty = new TableColumn<>("Quantity");
+        menuItemQtty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        menuItemQtty.setPrefWidth(150);
+       
+        tableView.getColumns().addAll(menuItemName, menuItemQtty);
+        tableView.setItems(FXCollections.observableArrayList(keranjang));
+        
+        return tableView;
+	}
+
 	private TableView<MenuItems> createMMenuItemTable() {
     	TableView<MenuItems> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -125,7 +172,7 @@ public class CustomerPanel extends Stage
         menuItemPrice.setPrefWidth(150);
        
         tableView.getColumns().addAll(menuItemName, menuItemDescription, menuItemPrice);
-        tableView.setItems(FXCollections.observableArrayList(MenuItems.getAllMenuItems()));
+        tableView.setItems(FXCollections.observableArrayList(menuItemController.getAllMenuItem())); /// MODEL DISINI
         
         return tableView;
     }
@@ -144,6 +191,11 @@ public class CustomerPanel extends Stage
 	
 	private MenuItems getSelectedMenuItem() {
 	    return MenuTable.getSelectionModel().getSelectedItem();
+	}
+	
+	private void refreshTable() {
+		// TODO Auto-generated method stub
+		keranjangTB.getItems().setAll(keranjang);
 	}
 	
 	private TextField idInput_menu;
@@ -189,15 +241,30 @@ public class CustomerPanel extends Stage
 			public void handle(ActionEvent event) 
 			{
 				MenuItems selectedMenuItem = getSelectedMenuItem();
-				if (selectedMenuItem != null && quantity_menu.equals("0") == false)
+				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0)
 				{
 					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
 
 					order.setMenuItem();
 					System.out.println(order.getMenuItem().getMenuItemName());
-					keranjang.add(order);
 					
-					OpenDialog("Success", "Added "+order.getQuantity()+" "+order.getMenuItem().getMenuItemName());
+					int flag=0;
+					for(OrderItem o : keranjang) {
+						if(o.getMenuItemId()==selectedMenuItem.getMenuItemId() ){
+							o.setQuantity(o.getQuantity()+Integer.parseInt(quantity_menu.getText()));
+							flag=1;
+						}
+					}
+					if(flag==0) {
+						keranjang.add(order);						
+					}
+					refreshTable();
+					
+					OpenDialog("Success", "Added "+Integer.parseInt(quantity_menu.getText())+" "+order.getMenuItem().getMenuItemName());
+	            }else if (selectedMenuItem == null) {
+	            	OpenDialog("Error", "Please select menu item");
+	            }else if(Integer.parseInt(quantity_menu.getText())==0) {
+	            	OpenDialog("Error", "Please input quantity");
 	            }
 			}
 		});
@@ -209,8 +276,7 @@ public class CustomerPanel extends Stage
 			public void handle(ActionEvent event)
 			{
 				// TODO Auto-generated method stub
-				if(keranjang != null)
-				{
+				if(keranjang != null){
 					Date date = new Date(System.currentTimeMillis());
 					int orderId = orderController.createOrder(customer, keranjang, date);
 					
@@ -218,11 +284,12 @@ public class CustomerPanel extends Stage
 					{
 						System.out.println(orderItem.getMenuItem().getMenuItemName());
 						orderItemController.createOrderItem(orderId, orderItem.getMenuItem(), orderItem.getQuantity());
+						OpenDialog("Success", "Order has been finalized");
 					}
+				}else if(keranjang==null){
+					OpenDialog("Error", "Please input the order!");
 				}
 				keranjang.clear();
-				
-				OpenDialog("Success", "Order has been finalized");
 			}
 		});
         
@@ -231,7 +298,7 @@ public class CustomerPanel extends Stage
 
 	TableView<Order> OrderTable;
 	
-	private void history() {
+	private void history(User user) {
 		// TODO Auto-generated method stub
 		contentArea.getChildren().clear();
     	
@@ -240,18 +307,18 @@ public class CustomerPanel extends Stage
 		contentArea.getChildren().add(OrderTable);
 		
 		// biar item bisa di-select
-		setupTableSelectionListener();
+		setupTableSelectionListener(user);
 		
 	}
 
-	private void setupTableSelectionListener()
+	private void setupTableSelectionListener(User user)
 	{
 		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null)
 	        {
 	        	if(newSelection.getOrderStatus().equals("Pending")) {	        		
 	        		int orderIdToOpenDetails = newSelection.getOrderId();
-	        		new UpdateOrderPanel(orderIdToOpenDetails).show();
+	        		new UpdateOrderPanel(orderIdToOpenDetails, user).show();
 	        	}	
 	        }
 	    });

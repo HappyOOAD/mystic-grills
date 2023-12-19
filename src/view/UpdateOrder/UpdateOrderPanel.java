@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import controller.MenuItemController;
 import controller.OrderItemController;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,11 +16,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,7 +29,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.MenuItems;
-import model.Order;
 import model.OrderItem;
 import model.User;
 import view.Customer.CustomerPanel;
@@ -40,20 +39,29 @@ public class UpdateOrderPanel extends Stage{
 	private BorderPane root;
     private VBox contentArea = new VBox();
     private OrderItemController orderItemController = new OrderItemController();
+    private MenuItemController menuItemController = new MenuItemController();
     
     Stage addItemStage;
 	
-	public UpdateOrderPanel(int orderId) {
+	public UpdateOrderPanel(int orderId, User user) {
 		super(StageStyle.DECORATED);
 		root = new BorderPane();
         Scene scene = new Scene(root, 1200, 600);
         this.setScene(scene);
         
+        // buat back to customer panel
+        Button backButton = new Button("Back");
+        contentArea.getChildren().add(backButton);
+        backButton.setOnAction(event -> {
+        	close();
+        	new CustomerPanel(user).show();
+        });
+        
         // buat nambahin item, ngarah ke panel baru
         Button addButton = new Button("Add New Item");
         contentArea.getChildren().add(addButton);
-        addButton.setOnAction(event -> showAddNewItemForm(orderId));
-		
+        addButton.setOnAction(event -> showAddNewItemForm(orderId, user));
+
         // show tabel isinya ordered item
 		OrderDetailTable = createEditOrderItemTable(orderId);
 		contentArea.getChildren().add(OrderDetailTable);
@@ -72,7 +80,7 @@ public class UpdateOrderPanel extends Stage{
 	
 	TableView<MenuItems> MenuTable;
 	
-	private void showAddNewItemForm(int orderId) {
+	private void showAddNewItemForm(int orderId, User user) {
         // Create a new stage for the form
 		contentArea.getChildren().clear();
     	
@@ -84,9 +92,11 @@ public class UpdateOrderPanel extends Stage{
 		setupAddNewItemTableSelectionListener();
 		
 		// buat masukkin quantity item yang di-select
-        GridPane form = createOrderform(MenuTable, orderId);
+        GridPane form = createOrderform(MenuTable, orderId, user);
         VBox.setMargin(form, new Insets(20));
         contentArea.getChildren().add(form);
+        
+        
     }
 	
 	private void setupAddNewItemTableSelectionListener() {
@@ -101,7 +111,7 @@ public class UpdateOrderPanel extends Stage{
 	    });
 	}
 	
-	private GridPane createOrderform(TableView<MenuItems> menuTable2, int orderId) {
+	private GridPane createOrderform(TableView<MenuItems> menuTable2, int orderId, User user) {
         GridPane form = new GridPane();
         form.setVgap(20);
         form.setHgap(10);
@@ -135,8 +145,10 @@ public class UpdateOrderPanel extends Stage{
 				MenuItems selectedMenuItem = getSelectedMenuItem();
 				if (selectedMenuItem != null && quantity_menu.equals("0")==false) {
 					orderItemController.createOrderItem(orderId, selectedMenuItem, Integer.parseInt(quantity_menu.getText()));
+//					addItemStage.close();
+					OpenDialog("Success", "Added "+Integer.parseInt(quantity_menu.getText())+" "+selectedMenuItem.getMenuItemName());
 	            }
-				new UpdateOrderPanel(orderId).show();
+				new UpdateOrderPanel(orderId, user).show();
 			}
 		});
         
@@ -164,7 +176,7 @@ public class UpdateOrderPanel extends Stage{
         menuItemPrice.setPrefWidth(150);
        
         tableView.getColumns().addAll(menuItemName, menuItemDescription, menuItemPrice);
-        tableView.setItems(FXCollections.observableArrayList(MenuItems.getAllMenuItems()));
+        tableView.setItems(FXCollections.observableArrayList(menuItemController.getAllMenuItem()));
         
         return tableView;
     }
@@ -206,16 +218,20 @@ public class UpdateOrderPanel extends Stage{
 
 	private TableView<OrderItem> createEditOrderItemTable(int orderId) {
 		TableView<OrderItem> tableView = new TableView<>();
-        TableColumn<OrderItem, Integer> menuItemIdColumn = new TableColumn<>("Menu Item ID");
-        TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");       
+        
+        TableColumn<OrderItem, String> menuItemName = new TableColumn<>("Name");
+        menuItemName.setCellValueFactory(cellData ->
+        {
+        	OrderItem name = cellData.getValue();
+            return new SimpleStringProperty(name.getMenuItem().getMenuItemName());
+        });
 
-        // Set cell value factories to extract data from OrderItem properties
-        menuItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("menuItemId"));
+        TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");  
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        tableView.getColumns().addAll(menuItemIdColumn, quantityColumn);
+        tableView.getColumns().addAll(menuItemName, quantityColumn);
 
-        ObservableList<OrderItem> orderItems = FXCollections.observableArrayList(OrderItem.getAllOrderItemsByOrderId(orderId));
+        ObservableList<OrderItem> orderItems = FXCollections.observableArrayList(orderItemController.getAllOrderItemsByOrderId(orderId));
         tableView.setItems(orderItems);
         
         return tableView;
@@ -235,7 +251,7 @@ public class UpdateOrderPanel extends Stage{
 	        	OrderItem selectedOrderItem = (OrderItem) newSelection;
 	        	int menuItemId = selectedOrderItem.getMenuItemId();
 	        	
-	        	MenuItems menuSelected = MenuItems.getMenuItemById(menuItemId);
+	        	MenuItems menuSelected = menuItemController.getMenuItemById(menuItemId);
 	            idInput_menu.setText(menuSelected.getMenuItemId() + "");
 	            nameInput_menu.setText(menuSelected.getMenuItemName());
 	            itemDesc_menu.setText(menuSelected.getMenuItemDescription());
@@ -283,8 +299,10 @@ public class UpdateOrderPanel extends Stage{
 					{
 		            	// hapus menu
 		            	selectedOrderItem.deleteOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItemId());
+		            	OpenDialog("Success delete ", "Success delete "+selectedOrderItem.getMenuItem().getMenuItemName());
 		            }else {
 		            	//edit quantity
+		            	OpenDialog("Success edit ", "Success Edit" + selectedOrderItem.getMenuItem().getMenuItemName()+" quantity!");
 						selectedOrderItem.updateOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItem(), Integer.parseInt(quantity_menu.getText()));
 		            }
 				}
@@ -302,8 +320,16 @@ public class UpdateOrderPanel extends Stage{
 	
 	private void refreshTable(int orderId) {
 		// TODO Auto-generated method stub
-		ArrayList<OrderItem> orderItem = OrderItem.getAllOrderItemsByOrderId(orderId);
+		ArrayList<OrderItem> orderItem = orderItemController.getAllOrderItemsByOrderId(orderId);
 		OrderDetailTable.getItems().setAll(orderItem);
 	}
 	
+	private void OpenDialog(String title, String message)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
