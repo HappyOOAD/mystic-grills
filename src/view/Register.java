@@ -90,7 +90,7 @@ public class Register extends Stage
             this.close();
         });
 
-        Scene scene = new Scene(grid, 300, 300);
+        Scene scene = new Scene(grid, 576, 324);
         setScene(scene);
     }
 }

@@ -124,7 +124,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         GridPane form = OrderForm();
         bottomSection.getChildren().addAll(form, orderItemSection);
     	selectedReceipt = null;
-    	loadOrderItemsData();
+    	loadOrderItemsTableData();
 	}
 	
 	private GridPane OrderForm()
@@ -138,7 +138,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
             if (newSelection != null)
             {
             	selectedOrder = newSelection;
-            	loadOrderItemsData();
+            	loadOrderItemsTableData();
             	processButton.setDisable(false);
             	paymentTypeField.setDisable(false);
             }
@@ -165,7 +165,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
             
             if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
             else  showDialog("Failed", res);
-            loadOrdersData();
+            loadOrdersTableData();
         });
         
         return form;
@@ -199,7 +199,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
     }
     
     @Override
-	public void loadOrdersData()
+	public void loadOrdersTableData()
 	{
 	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Served");
 	    ordersTable.getItems().setAll(preparedOrders);
@@ -221,7 +221,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	}
 	
 	@Override
-	public void loadOrderItemsData() 
+	public void loadOrderItemsTableData() 
 	{
 		ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
 		if(selectedOrder != null)

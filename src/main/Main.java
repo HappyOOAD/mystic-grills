@@ -40,7 +40,7 @@ public class Main extends Application
 
         vbox.getChildren().addAll(loginButton, registerButton);
 
-        Scene scene = new Scene(vbox, 300, 300);
+        Scene scene = new Scene(vbox, 324, 182);
         primaryStage.setScene(scene);
 
         primaryStage.show();

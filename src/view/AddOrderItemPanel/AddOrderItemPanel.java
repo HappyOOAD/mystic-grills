@@ -76,8 +76,8 @@ public class AddOrderItemPanel extends Stage
         {
 			int quantity = Integer.parseInt(quantityField.getText());
 			String result = orderItemController.createOrderItem(orderId, selected, quantity);
-			parent.loadOrderItemsData();
-			parent.loadOrdersData();
+			parent.loadOrderItemsTableData();
+			parent.loadOrdersTableData();
 			this.close();
         });
         

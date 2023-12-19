@@ -1,18 +1,12 @@
 package view.Chef;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -26,6 +20,7 @@ import javafx.stage.StageStyle;
 import model.MenuItems;
 import model.Order;
 import model.OrderItem;
+import model.User;
 import view.AddOrderItemPanel.AddOrderItemPanel;
 import view.AddOrderItemPanel.IAddOrderItemParentPanel;
 
@@ -41,187 +36,179 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	private OrderController orderController = new OrderController();
 	private OrderItemController orderItemController = new OrderItemController();
 	
-	// SCENES
+	// GLOBAL DATA
+	private Order selectedOrder = null;
+	private OrderItem selectedMenuItem = null;
+
+	// GUI COMPONENTS
 	private BorderPane root;
-    private VBox contentArea;
-    private MenuBar menuBar;
-    
-    // TABLES
-    TableView<Order> ordersTable;
-    
-    // GLOBAL DATA
-    private Order selectedOrder = null;
+    private TableView<Order> ordersTable;
+    private TableView<OrderItem> orderItemsTable;
+    private Button prepareOrderButton, deleteOrderButton, addMenuButton, updateQuantityButton;
+    private TextField quantityField;
     
 	public ChefPanel()
 	{
-		// GENERALS
+		// Setup Scene
 		super(StageStyle.DECORATED);
 		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
-        
-        contentArea = new VBox(20);
-        contentArea.setPadding(new Insets(20));
-        contentArea.setAlignment(Pos.CENTER);
-        openOrderPage();
-        VBox topSection = new VBox(15);;
-        topSection.setAlignment(Pos.CENTER);
-        topSection.getChildren().addAll(contentArea);
-        root.setCenter(topSection);
-
-        HBox bottomSection = new HBox(40);
-        bottomSection.setAlignment(Pos.CENTER);
-        bottomSection.setPadding(new Insets(20));
-        GridPane form = openOrderPage();
-        HBox orderItemSection = openOrderItemPage();
-        bottomSection.getChildren().addAll(form, orderItemSection);
-        root.setBottom(bottomSection);
+        initializeOrderPage();
 	}
 	
-	
-	// MENU BAR
-	private MenuBar createMenuBar()
+	// Method to initialize page
+	public void initializeOrderPage()
 	{
-        MenuBar menuBar = new MenuBar();
-
-        // Add menus and menu items as needed
-        Menu fileMenu = new Menu("File");
-        MenuItem exitMenuItem = new MenuItem("Exit");
-        exitMenuItem.setOnAction(e -> System.exit(0)); // You can customize this action
-        fileMenu.getItems().add(exitMenuItem);
-
-        // Add more menus and menu items as needed
-
-        menuBar.getMenus().addAll(fileMenu);
-
-        return menuBar;
-    }
-
-	// FORM
-	private GridPane openOrderPage()
-	{
-    	TextField orderIdField = new TextField();
-    	TextField orderUserNameField = new TextField();
-    	TextField orderDateField = new TextField();
-    	TextField orderTotalField = new TextField();
-		
-    	contentArea.getChildren().clear();
+		// Generate Orders Table
     	ordersTable = createOrderTableView();
-		contentArea.getChildren().add(ordersTable);
+    	loadOrdersTableData();
+        
+    	// Generate Order Item Table
+    	orderItemsTable = createOrderItemsTableView();
+    	loadOrderItemsTableData();
+
+    	// Generate Action Grid
+        GridPane orderActionGrid = createOrderActionGrid();
+		GridPane orderItemActionGrid = createOrderItemActionGrid();
+
+		// Combine Action Grid
+		VBox actionGrid = new VBox(30);
+		actionGrid.getChildren().addAll(orderActionGrid, orderItemActionGrid);
+
+		// Generate Horizontal Bottom Container
+		HBox bottomContainer = new HBox(10);
+		bottomContainer.getChildren().addAll(orderItemsTable, actionGrid);
+        
+        // Assign to Root Container
+        VBox rootContainer = new VBox(10);
+        rootContainer.setPadding(new Insets(20));
+        rootContainer.getChildren().addAll(ordersTable, bottomContainer);
+        root.setCenter(rootContainer);
+	}
 	
-		ordersTable.getSelectionModel().selectedItemProperty()
-		.addListener((obs, oldSelection, newSelection) ->
-		{
-            if (newSelection != null)
-            {
-            	selectedOrder = newSelection;
-            	loadOrderItemsData();
-            	addMenuButton.setDisable(false);
-            	updateQuantityButton.setDisable(true);
-            	quantityField.setDisable(true);
-            	
-            	orderIdField.setText(String.valueOf(selectedOrder.getOrderId()));
-            	orderUserNameField.setText(selectedOrder.getOrderUser().getUserName());
-            	orderDateField.setText(String.valueOf(newSelection.getOrderDate()));
-            	orderTotalField.setText(String.valueOf(newSelection.getOrderTotal()));
-            }
+	// Method to refresh all data
+	public void reloadPageData()
+	{
+		loadOrdersTableData();
+		loadOrderItemsTableData();
+	}
+
+	// Method to generate Order Action Grid
+	private GridPane createOrderActionGrid()
+	{
+		GridPane actionGrid = new GridPane();
+        actionGrid.setVgap(10);
+        actionGrid.setHgap(10);
+		
+        prepareOrderButton = new Button("Prepare Order");
+        prepareOrderButton.setDisable(true);
+        deleteOrderButton = new Button("Delete Order");
+        deleteOrderButton.setDisable(true);
+        
+        
+        actionGrid.add(prepareOrderButton, 0, 0);
+        actionGrid.add(deleteOrderButton, 1, 0);
+        
+        prepareOrderButton.setOnAction(e ->
+        {
+        	ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
+        	
+        	String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Prepared");
+        	
+        	if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
+        	else  showDialog("Failed", res);
+        	loadOrdersTableData();
+        	prepareOrderButton.setDisable(true);
+        	deleteOrderButton.setDisable(true);
+        	addMenuButton.setDisable(true);
+        	updateQuantityButton.setDisable(true);
+        	quantityField.setDisable(true);
         });
-		
-		GridPane form = new GridPane();
-        form.setVgap(20);
-        form.setHgap(10);
-		
-        Button prepareButton = new Button("Prepare Order");
-        Button deleteButton = new Button("Delete Order");
-        
-        form.add(new Label("Order ID:"), 0, 0);
-        orderIdField.setDisable(true);
-        form.add(orderIdField, 1, 0);
-        form.add(new Label("Customer Name:"), 0, 1);
-        orderUserNameField.setDisable(true);
-        form.add(orderUserNameField, 1, 1);
-        form.add(new Label("Order Date:"), 0, 3);
-        orderDateField.setDisable(true);
-        form.add(orderDateField, 1, 2);
-        form.add(new Label("Order Total:"), 0, 2);
-        orderTotalField.setDisable(true);
-        form.add(orderTotalField, 1, 3);
-        
-        form.add(prepareButton, 0, 5);
-        form.add(deleteButton, 1, 5);
-        
-        deleteButton.setOnAction(e ->
+
+        deleteOrderButton.setOnAction(e ->
         {
         	String res = orderController.deleteOrder(selectedOrder.getOrderId());
         	
         	if (res.contains("SUCCESS")) showDialog("Success", "Delete success");
             else showDialog("Failed", res);
-        	loadOrdersData();
+        	loadOrdersTableData();
+        	prepareOrderButton.setDisable(true);
+        	deleteOrderButton.setDisable(true);
+        	addMenuButton.setDisable(true);
+        	updateQuantityButton.setDisable(true);
+        	quantityField.setDisable(true);
         });
         
-        prepareButton.setOnAction(e ->
-        {
-			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
-         
-			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Prepared");
-            
-            if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
-            else  showDialog("Failed", res);
-            loadOrdersData();
-        });
-        
-        return form;
+        return actionGrid;
 	}
 	
-	// ORDER TABLE VIEW
+	// Method to generate Order Table
     private TableView<Order> createOrderTableView()
     {
     	TableView<Order> tableView = new TableView<>();
     	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
+    	// Order ID Column
         TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        tableView.getColumns().add(orderIdColumn);
     	    
-        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User Name");
-        orderUserIdColumn.setCellValueFactory(cellData ->
+        // Order Customer Name Column
+        TableColumn<Order, String> customerNameColumn = new TableColumn<>("Customer Name");
+        customerNameColumn.setCellValueFactory(cellData ->
         {
             Order order = cellData.getValue();
-            return new SimpleStringProperty(order.getOrderUser().getUserName());
+            User orderUser = order.getOrderUser();
+            return Bindings.createObjectBinding(() -> orderUser.getUserName());
         });
+        tableView.getColumns().add(customerNameColumn);
         
+        // Order Date Column
         TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-
+        tableView.getColumns().add(orderDateColumn);
+        
+        // Order Total Price Column
         TableColumn<Order, Double> orderTotalColumn = new TableColumn<>("Order Total");
         orderTotalColumn.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
+        tableView.getColumns().add(orderTotalColumn);
         
-        tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderDateColumn, orderTotalColumn);
-        tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Pending")));
+        // Set On Click Listeners
+        tableView.getSelectionModel().selectedItemProperty()
+		.addListener((obs, oldSelection, newSelection) ->
+		{
+            if (newSelection != null)
+            {
+            	selectedOrder = newSelection;
+            	loadOrderItemsTableData();
+            	prepareOrderButton.setDisable(false);
+            	deleteOrderButton.setDisable(false);
+            	addMenuButton.setDisable(false);
+            }
+        });
         
         return tableView;
     }
     
-    // Load Order Data
+    // Method to reload Order Table data
     @Override
-	public void loadOrdersData()
+	public void loadOrdersTableData()
 	{
-	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Pending");
-	    ordersTable.getItems().setAll(preparedOrders);
+	    ArrayList<Order> pendingOrders = orderController.getAllOrdersByOrderStatus("Pending");
+	    ordersTable.getItems().setAll(pendingOrders);
 	}
 	
-	private TableView<OrderItem> orderItemTable;
-	private Button addMenuButton, updateQuantityButton;
-	private TextField quantityField;
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
+	//																																				//
+	// ORDER ITEM SECTION																															//
+	//																																				//
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
 	
-	private HBox openOrderItemPage() // Open Order Items Page
+    // Method to generate Order Items Action Grid
+    private GridPane createOrderItemActionGrid()
 	{
-		HBox orderItemsSection = new HBox(15);
-
-		ObjectProperty<MenuItems> selected = new SimpleObjectProperty<>(null);
-
-		orderItemTable = createOrderDetailsTableView();
-    	
 		quantityField = new TextField();
     	quantityField.setDisable(true);
     	
@@ -229,89 +216,108 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
     	addMenuButton.setDisable(true);
     	updateQuantityButton = new Button("Update Quantity");
     	updateQuantityButton.setDisable(true);
-	
-    	// Select Listeners
-    	orderItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-		{
-            if (newSelection != null)
-            {
-            	quantityField.setText(String.valueOf(newSelection.getQuantity()));
-            	quantityField.setDisable(false);
-            	updateQuantityButton.setDisable(false);
-            	selected.set(newSelection.getMenuItem());
-            }
-        });
     	
-		GridPane form = new GridPane();
-        form.setVgap(20);
-        form.setHgap(10);
+		GridPane actionGrid = new GridPane();
+        actionGrid.setVgap(10);
+        actionGrid.setHgap(10);
         
-        form.add(addMenuButton, 0, 0);
-        form.add(new Label("Quantity"), 0, 1);
-        form.add(quantityField, 1, 1);
-        form.add(updateQuantityButton, 0, 2);
+        actionGrid.add(addMenuButton, 0, 0);
+        actionGrid.add(new Label("Quantity"), 0, 1);
+        actionGrid.add(quantityField, 1, 1);
+        actionGrid.add(updateQuantityButton, 0, 2);
         
         addMenuButton.setOnAction(e -> // --- createOrderItem() ---
         {
         	// Add Menu Item Here
         	new AddOrderItemPanel(this, selectedOrder.getOrderId()).show();
-        	loadOrderItemsData();
-        	loadOrdersData();
+        	reloadPageData();
         });
+        
         updateQuantityButton.setOnAction(e ->
         {
         	int quantity = Integer.parseInt(quantityField.getText());
-			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selected.get(), quantity); // --- updateOrderItem() ---
+			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selectedMenuItem.getMenuItem(), quantity); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
             {
                 showDialog("Success","Update Quantity success");
             } else {
                 showDialog("Failed", res);
             }
-            loadOrderItemsData();
-            loadOrdersData();
+            reloadPageData();
         });
         
-        orderItemsSection.getChildren().addAll(orderItemTable, form);
-        return orderItemsSection;
+        return actionGrid;
 	}
-	
-	@Override
-	public void loadOrderItemsData() 
-	{
-	    ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
-	    orderItemTable.getItems().setAll(orderItems);
-	}
-	
-	private TableView<OrderItem> createOrderDetailsTableView()
+
+    // Method to generate Order Items Table
+	private TableView<OrderItem> createOrderItemsTableView()
 	{
 		TableView<OrderItem> tableView = new TableView<>();
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
-        TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item Name");
+    	// Menu Item NameColumn
+        TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item");
         menuItemNameColumn.setCellValueFactory(cellData ->
         {
             OrderItem orderItem = cellData.getValue();
             MenuItems menuItem = orderItem.getMenuItem();
             return new SimpleStringProperty(menuItem.getMenuItemName());
         });
-        menuItemNameColumn.setPrefWidth(150);
+        menuItemNameColumn.setPrefWidth(180);
+        tableView.getColumns().add(menuItemNameColumn);
         
+        // Quantity Column
         TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quantityColumn.setPrefWidth(150);
-               
-        tableView.getColumns().addAll(menuItemNameColumn, quantityColumn);
-        if(selectedOrder == null)
-        {
-        	tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));        	        	
-        }
-        else
-        {
-        	tableView.setItems(FXCollections.observableArrayList(orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId())));        	        	
-        }
+        quantityColumn.setPrefWidth(120);
+        tableView.getColumns().add(quantityColumn);
         
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> menuItemPriceColumn = new TableColumn<>("Price");
+        menuItemPriceColumn.setCellValueFactory(cellData ->
+        {
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice());
+        });
+        menuItemPriceColumn.setPrefWidth(120);
+        tableView.getColumns().add(menuItemPriceColumn);
+        
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> totalColumn = new TableColumn<>("Total");
+        totalColumn.setCellValueFactory(cellData ->
+        {
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice() * order.getQuantity());
+        });
+        totalColumn.setPrefWidth(120);
+        tableView.getColumns().add(totalColumn);
+        
+        // Set On Click Listeners
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+		{
+            if (newSelection != null)
+            {
+            	selectedMenuItem = newSelection;
+            	quantityField.setText(String.valueOf(newSelection.getQuantity()));
+            	quantityField.setDisable(false);
+            	updateQuantityButton.setDisable(false);
+            }
+        });
+    	
         return tableView;
+	}
+
+    // Method to reload Order Items Table data
+	@Override
+	public void loadOrderItemsTableData() 
+	{
+		ArrayList<OrderItem> orderItems = new ArrayList<>();
+		if(selectedOrder != null)
+		{
+			orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
+		}
+		orderItemsTable.getItems().setAll(orderItems);
 	}
 	
 	// ALERT DIALOG
