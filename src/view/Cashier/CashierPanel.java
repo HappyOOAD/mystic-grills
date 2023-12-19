@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -29,7 +29,7 @@ import model.MenuItems;
 import model.Order;
 import model.OrderItem;
 import model.Receipt;
-import view.AddOrderItemPanel.IAddOrderItemParentPanel;
+import model.User;
 
 import java.util.ArrayList;
 import java.sql.Date;
@@ -38,7 +38,7 @@ import controller.OrderController;
 import controller.OrderItemController;
 import controller.ReceiptController;
 
-public class CashierPanel extends Stage implements IAddOrderItemParentPanel
+public class CashierPanel extends Stage
 {
 	// CONTROLLERS
 	private OrderController orderController = new OrderController();
@@ -47,14 +47,10 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	
 	// SCENES
 	private BorderPane root;
-    private VBox contentArea;
-    private MenuBar menuBar;
-    VBox topSection = new VBox(15);;
-    HBox bottomSection = new HBox(40);
-    HBox orderItemSection = openOrderItemPage();
+    private MenuBar menus;
+    Node orderView, receiptView;
     
     // NODES
-    TableView<Order> ordersTable;
     Button processButton;
     
     // GLOBAL DATA
@@ -62,34 +58,24 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
     
 	public CashierPanel()
 	{
-		// GENERALS
+		// Setup Scene
 		super(StageStyle.DECORATED);
-		setTitle("Mystic Grills - Cashier Panel");
+		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
-
-        menuBar = createMenuBar();
-        root.setTop(menuBar);
-        
-        contentArea = new VBox(20);
-        contentArea.setPadding(new Insets(20));
-        contentArea.setAlignment(Pos.CENTER);
-        openOrderPage();
-        topSection.setAlignment(Pos.CENTER);
-        topSection.getChildren().addAll(contentArea);
-        root.setCenter(topSection);
-
-        bottomSection.setAlignment(Pos.CENTER);
-        bottomSection.setPadding(new Insets(20));
-        root.setBottom(bottomSection);
-        
-        openOrderPage();
+        initializeCashierPanel();
+	}
+	
+	private void initializeCashierPanel()
+	{
+		createMenuBar();
+		root.setCenter(orderView);
 	}
 	
 	private MenuBar createMenuBar()
 	{
-		 menuBar = new MenuBar();
+		menus = new MenuBar();
         Menu orderMenu = new Menu("Order");
         MenuItem orderMenuItem= new MenuItem("Show");
         
@@ -97,250 +83,372 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         MenuItem ReceiptMenuItem= new MenuItem("Show");
 
         orderMenu.getItems().addAll(orderMenuItem);
-        menuBar.getMenus().addAll(orderMenu);
+        menus.getMenus().addAll(orderMenu);
         
         ReceiptMenu.getItems().addAll(ReceiptMenuItem);
-        menuBar.getMenus().addAll(ReceiptMenu);
+        menus.getMenus().addAll(ReceiptMenu);
         
-        root.setTop(menuBar);
+        root.setTop(menus);
         
         orderMenuItem.setOnAction(e -> {
-        	openOrderPage();
+        	selectedOrder = null;
+        	initializeOrderPage();
         });
         
         ReceiptMenuItem.setOnAction(e -> {
-        	openReceiptPage();
+        	selectedReceipt = null;
+        	initializeReceiptPage();
         });
 
-        return menuBar;
+        return menus;
     }
 
-	public void openOrderPage()
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
+	//																																				//
+	// CASHIER - ORDER VIEW																															//
+	//																																				//
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+	// GUI COMPONENTS
+    private TableView<Order> ordersTable;
+    private TableView<OrderItem> orderItemsTable;
+    private Button processPaymentOrderButton;
+    private ComboBox<String> paymentTypeField;
+	
+	// Method to initialize page
+	public void initializeOrderPage()
 	{
-    	contentArea.getChildren().clear();
+		// Generate Orders Table
     	ordersTable = createOrderTableView();
-		contentArea.getChildren().add(ordersTable);
-		bottomSection.getChildren().clear();
-        GridPane form = OrderForm();
-        bottomSection.getChildren().addAll(form, orderItemSection);
-    	selectedReceipt = null;
+    	loadOrdersTableData();
+        
+    	// Generate Order Item Table
+    	orderItemsTable = createOrderItemsTableView();
     	loadOrderItemsTableData();
+
+    	// Generate Action Grid
+        GridPane orderActionGrid = createOrderActionGrid();
+
+		// Combine Action Grid
+		VBox actionGrid = new VBox(30);
+		actionGrid.getChildren().addAll(orderActionGrid);
+
+		// Generate Horizontal Bottom Container
+		HBox bottomContainer = new HBox(10);
+		bottomContainer.getChildren().addAll(orderItemsTable, actionGrid);
+        
+        // Assign to Root Container
+        VBox rootContainer = new VBox(10);
+        rootContainer.setPadding(new Insets(20));
+        rootContainer.getChildren().addAll(ordersTable, bottomContainer);
+        root.setCenter(rootContainer);
 	}
 	
-	private GridPane OrderForm()
+	// Method to refresh all data
+	public void reloadPageData()
+	{
+		loadOrdersTableData();
+		loadOrderItemsTableData();
+	}
+
+	// Method to generate Order Action Grid
+	private GridPane createOrderActionGrid()
 	{
     	ObservableList<String> options = FXCollections.observableArrayList("Cash", "Debit", "Credit");
-    	ComboBox<String> paymentTypeField = new ComboBox<String>(options);
+    	paymentTypeField = new ComboBox<String>(options);
+    
+		GridPane actionGrid = new GridPane();
+        actionGrid.setVgap(10);
+        actionGrid.setHgap(10);
+		
+        processPaymentOrderButton = new Button("Serve Order");
+        processPaymentOrderButton.setDisable(true);
+        
+        actionGrid.add(new Label("Payment Type: "), 0, 0);
+        paymentTypeField.setDisable(true);
+        actionGrid.add(paymentTypeField, 1, 0);
+        actionGrid.add(processPaymentOrderButton, 0, 1);
+        
+        processPaymentOrderButton.setOnAction(e ->
+        {
+        	ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
+        	
+        	orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Paid");
+        	
+        	Date date = new Date(System.currentTimeMillis());
+        	String res = receiptController.createReceipt(selectedOrder, paymentTypeField.getValue(), selectedOrder.getOrderTotal(), date);
+        	if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
+        	else  showDialog("Failed", res);
+        	loadOrdersTableData();
+        	paymentTypeField.setDisable(true);
+        	processPaymentOrderButton.setDisable(true);
+        });
+        
+        return actionGrid;
+	}
+	
+	// Method to generate Order Table
+    private TableView<Order> createOrderTableView()
+    {
+    	TableView<Order> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
-		ordersTable.getSelectionModel().selectedItemProperty()
+    	// Order ID Column
+        TableColumn<Order, Integer> receiptIdColumn = new TableColumn<>("Order ID");
+        receiptIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        tableView.getColumns().add(receiptIdColumn);
+    	    
+        // Order Customer Name Column
+        TableColumn<Order, String> customerNameColumn = new TableColumn<>("Customer Name");
+        customerNameColumn.setCellValueFactory(cellData ->
+        {
+            Order order = cellData.getValue();
+            User orderUser = order.getOrderUser();
+            return Bindings.createObjectBinding(() -> orderUser.getUserName());
+        });
+        tableView.getColumns().add(customerNameColumn);
+        
+        // Order Date Column
+        TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
+        orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        tableView.getColumns().add(orderDateColumn);
+        
+        // Order Total Price Column
+        TableColumn<Order, Double> orderTotalColumn = new TableColumn<>("Order Total");
+        orderTotalColumn.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
+        tableView.getColumns().add(orderTotalColumn);
+        
+        // Set On Click Listeners
+        tableView.getSelectionModel().selectedItemProperty()
 		.addListener((obs, oldSelection, newSelection) ->
 		{
             if (newSelection != null)
             {
             	selectedOrder = newSelection;
             	loadOrderItemsTableData();
-            	processButton.setDisable(false);
             	paymentTypeField.setDisable(false);
+            	processPaymentOrderButton.setDisable(false);
             }
         });
-		
-		GridPane form = new GridPane();
-        form.setVgap(20);
-        form.setHgap(10);
-		
-        processButton = new Button("Process Order Payment");
-        processButton.setDisable(true);
-        form.add(processButton, 0, 1);
-        form.add(new Label("Payment Type: "), 0, 0);
-        paymentTypeField.setDisable(true);
-        form.add(paymentTypeField, 1, 0);
-        
-        processButton.setOnAction(e ->
-        {
-			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
-         
-			Date date = new Date(System.currentTimeMillis());
-			orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Paid");
-			String res = receiptController.createReceipt(selectedOrder, paymentTypeField.getValue(), selectedOrder.getOrderTotal(), date);
-            
-            if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
-            else  showDialog("Failed", res);
-            loadOrdersTableData();
-        });
-        
-        return form;
-	}
-	
-    private TableView<Order> createOrderTableView()
-    {
-    	TableView<Order> tableView = new TableView<>();
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    	
-        TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
-        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-    	    
-        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User ID");
-        orderUserIdColumn.setCellValueFactory(cellData ->
-        {
-            Order order = cellData.getValue();
-            return new SimpleStringProperty(order.getOrderUser().getUserName());
-        });
-        
-        TableColumn<Order, Date> orderDateColumn = new TableColumn<>("Order Date");
-        orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-
-        TableColumn<Order, Double> orderTotalColumn = new TableColumn<>("Order Total");
-        orderTotalColumn.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
-        
-        tableView.getColumns().addAll(orderIdColumn, orderUserIdColumn, orderDateColumn, orderTotalColumn);
-        tableView.setItems(FXCollections.observableArrayList(orderController.getAllOrdersByOrderStatus("Served")));
         
         return tableView;
     }
     
-    @Override
+    // Method to reload Order Table data
 	public void loadOrdersTableData()
 	{
-	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Served");
+	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Prepared");
 	    ordersTable.getItems().setAll(preparedOrders);
 	}
 	
-	private TableView<OrderItem> orderItemTable;
-	
-	private HBox openOrderItemPage() // Open Order Items Page
-	{
-		HBox orderItemsSection = new HBox(15);
-
-		ObjectProperty<MenuItems> selected = new SimpleObjectProperty<>(null);
-
-		orderItemTable = createOrderDetailsTableView();
-    	
-		
-        orderItemsSection.getChildren().addAll(orderItemTable);
-        return orderItemsSection;
-	}
-	
-	@Override
-	public void loadOrderItemsTableData() 
-	{
-		ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
-		if(selectedOrder != null)
-		{
-			orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());			
-		}
-	    orderItemTable.getItems().setAll(orderItems);
-	}
-	
-	private TableView<OrderItem> createOrderDetailsTableView()
+    // Method to generate Order Items Table
+	private TableView<OrderItem> createOrderItemsTableView()
 	{
 		TableView<OrderItem> tableView = new TableView<>();
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	
-        TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item Name");
+    	// Menu Item NameColumn
+        TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item");
         menuItemNameColumn.setCellValueFactory(cellData ->
         {
             OrderItem orderItem = cellData.getValue();
             MenuItems menuItem = orderItem.getMenuItem();
             return new SimpleStringProperty(menuItem.getMenuItemName());
         });
-        menuItemNameColumn.setPrefWidth(150);
+        menuItemNameColumn.setPrefWidth(180);
+        tableView.getColumns().add(menuItemNameColumn);
         
+        // Quantity Column
         TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quantityColumn.setPrefWidth(150);
-               
-        tableView.getColumns().addAll(menuItemNameColumn, quantityColumn);
-        if(selectedOrder == null)
+        quantityColumn.setPrefWidth(120);
+        tableView.getColumns().add(quantityColumn);
+        
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> menuItemPriceColumn = new TableColumn<>("Price");
+        menuItemPriceColumn.setCellValueFactory(cellData ->
         {
-        	tableView.setItems(FXCollections.observableArrayList(new ArrayList<>()));        	        	
-        }
-        else
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice());
+        });
+        menuItemPriceColumn.setPrefWidth(120);
+        tableView.getColumns().add(menuItemPriceColumn);
+        
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> totalColumn = new TableColumn<>("Total");
+        totalColumn.setCellValueFactory(cellData ->
         {
-        	tableView.setItems(FXCollections.observableArrayList(orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId())));        	        	
-        }
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice() * (double) order.getQuantity());
+        });
+        totalColumn.setPrefWidth(120);
+        tableView.getColumns().add(totalColumn);
         
         return tableView;
 	}
-	
-	// --------------------------------------------------------------------------------------------------------------------------------------------
-	//
-	//  RECEIPT SECTION
-	//
-	// --------------------------------------------------------------------------------------------------------------------------------------------
-	
-	private Receipt selectedReceipt = null;
-	private TableView<Receipt> receiptTable;
-	
-	public void openReceiptPage()
+
+    // Method to reload Order Items Table data
+	public void loadOrderItemsTableData() 
 	{
-    	contentArea.getChildren().clear();
-    	receiptTable = createReceiptTableView();
-		contentArea.getChildren().add(receiptTable);
-		ReceiptForm();
-		bottomSection.getChildren().clear();
-        bottomSection.getChildren().addAll(orderItemSection);
-    	selectedOrder = null;
-    	loadReceiptItemsData();
+		ArrayList<OrderItem> orderItems = new ArrayList<>();
+		if(selectedOrder != null)
+		{
+			orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
+		}
+		orderItemsTable.getItems().setAll(orderItems);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
+	//																																				//
+	// CASHIER - RECEIPT VIEW																															//
+	//																																				//
+	// ---------------------------------------------------------------------------------------------------------------------------------------------//
+	
+	// GLOBAL DATA
+	private Receipt selectedReceipt = null;
+
+	// GUI COMPONENTS
+    private TableView<Receipt> receiptsTable;
+    private TableView<OrderItem> receiptItemsTable;
+    
+	// Method to initialize page
+	public void initializeReceiptPage()
+	{
+		// Generate Orders Table
+    	receiptsTable = createReceiptsTableView();
+    	loadReceiptsTableData();
+        
+    	// Generate Order Item Table
+    	receiptItemsTable = createReceiptItemsTableView();
+    	loadReceiptItemsTableData();
+
+		// Generate Horizontal Bottom Container
+		HBox bottomContainer = new HBox(10);
+		bottomContainer.getChildren().addAll(orderItemsTable);
+        
+        // Assign to Root Container
+        VBox rootContainer = new VBox(10);
+        rootContainer.setPadding(new Insets(20));
+        rootContainer.getChildren().addAll(receiptsTable, bottomContainer);
+        root.setCenter(rootContainer);
 	}
 	
-	private void ReceiptForm()
-	{
-		receiptTable.getSelectionModel().selectedItemProperty()
+	// Method to generate Receipt Table
+    private TableView<Receipt> createReceiptsTableView()
+    {
+    	TableView<Receipt> tableView = new TableView<>();
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	
+    	// Order ID Column
+        TableColumn<Receipt, Integer> receiptIdColumn = new TableColumn<>("Receipt ID");
+        receiptIdColumn.setCellValueFactory(new PropertyValueFactory<>("receiptId"));
+        tableView.getColumns().add(receiptIdColumn);
+    	    
+        // Order Customer Name Column
+        TableColumn<Receipt, String> customerNameColumn = new TableColumn<>("Customer Name");
+        customerNameColumn.setCellValueFactory(cellData ->
+        {
+            Receipt receipt = cellData.getValue();
+            User orderUser = receipt.getReceiptOrder().getOrderUser();
+            return Bindings.createObjectBinding(() -> orderUser.getUserName());
+        });
+        tableView.getColumns().add(customerNameColumn);
+        
+        // Order Date Column
+        TableColumn<Receipt, Date> receiptDateColumn = new TableColumn<>("Receipt Date");
+        receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentDate"));
+        tableView.getColumns().add(receiptDateColumn);
+        
+        // Order Total Price Column
+        TableColumn<Receipt, Double> receiptTotalColumn = new TableColumn<>("Receipt Total");
+        receiptTotalColumn.setCellValueFactory(cellData ->
+        {
+            Receipt receipt = cellData.getValue();
+            return Bindings.createObjectBinding(() -> receipt.getReceiptOrder().getOrderTotal());
+        });
+        tableView.getColumns().add(receiptTotalColumn);
+        
+        // Set On Click Listeners
+        tableView.getSelectionModel().selectedItemProperty()
 		.addListener((obs, oldSelection, newSelection) ->
 		{
             if (newSelection != null)
             {
             	selectedReceipt = newSelection;
-            	loadReceiptItemsData();
+            	loadReceiptItemsTableData();
             }
         });
-	}
-	
-    private TableView<Receipt> createReceiptTableView()
-    {
-    	TableView<Receipt> tableView = new TableView<>();
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    	
-        TableColumn<Receipt, Integer> receiptIdColumn = new TableColumn<>("Receipt ID");
-        receiptIdColumn.setCellValueFactory(new PropertyValueFactory<>("receiptId"));
-    	    
-        TableColumn<Receipt, String> receiptUserNameColumn = new TableColumn<>("Receipt User Name");
-        receiptUserNameColumn.setCellValueFactory(cellData ->
-        {
-            Receipt receipt = cellData.getValue();
-            return new SimpleStringProperty(receipt.getReceiptOrder().getOrderUser().getUserName());
-        });
-        
-        TableColumn<Receipt, Date> receiptDateColumn = new TableColumn<>("Receipt Date");
-        receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentDate"));
-
-        TableColumn<Receipt, Date> paymentTypeColumn = new TableColumn<>("Payment Type");
-        paymentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("receiptPaymentType"));
-
-        TableColumn<Receipt, Double> receiptTotalColumn = new TableColumn<>("Receipt Total");
-        receiptTotalColumn.setCellValueFactory(cellData ->
-        {
-            Receipt receipt = cellData.getValue();
-            Double orderTotal = receipt.getReceiptOrder().getOrderTotal();
-            return Bindings.createObjectBinding(() -> orderTotal);
-        });
-        
-        tableView.getColumns().addAll(receiptIdColumn, receiptUserNameColumn, receiptDateColumn, paymentTypeColumn, receiptTotalColumn);
-        tableView.setItems(FXCollections.observableArrayList(receiptController.getAllReceipts()));
         
         return tableView;
     }
-	
-	public void loadReceiptItemsData() 
+    
+    // Method to reload Receipt Table data
+	public void loadReceiptsTableData()
 	{
-		ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
+	    ArrayList<Receipt> receipts = receiptController.getAllReceipts();
+	    receiptsTable.getItems().setAll(receipts);
+	}
+
+	// Method to generate Receipt Items Table
+	private TableView<OrderItem> createReceiptItemsTableView()
+	{
+		TableView<OrderItem> tableView = new TableView<>();
+    	
+    	// Menu Item NameColumn
+        TableColumn<OrderItem, String> menuItemNameColumn = new TableColumn<>("Menu Item");
+        menuItemNameColumn.setCellValueFactory(cellData ->
+        {
+            OrderItem orderItem = cellData.getValue();
+            MenuItems menuItem = orderItem.getMenuItem();
+            return new SimpleStringProperty(menuItem.getMenuItemName());
+        });
+        menuItemNameColumn.setPrefWidth(180);
+        tableView.getColumns().add(menuItemNameColumn);
+        
+        // Quantity Column
+        TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantityColumn.setPrefWidth(120);
+        tableView.getColumns().add(quantityColumn);
+        
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> menuItemPriceColumn = new TableColumn<>("Price");
+        menuItemPriceColumn.setCellValueFactory(cellData ->
+        {
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice());
+        });
+        menuItemPriceColumn.setPrefWidth(120);
+        tableView.getColumns().add(menuItemPriceColumn);
+        
+        // Menu Item Price Column
+        TableColumn<OrderItem, Double> totalColumn = new TableColumn<>("Total");
+        totalColumn.setCellValueFactory(cellData ->
+        {
+        	OrderItem order = cellData.getValue();
+        	MenuItems menuItem = order.getMenuItem();
+        	return Bindings.createObjectBinding(() -> menuItem.getMenuItemPrice() * (double) order.getQuantity());
+        });
+        totalColumn.setPrefWidth(120);
+        tableView.getColumns().add(totalColumn);
+    	
+        return tableView;
+	}
+
+    // Method to reload Receipt Items Table data
+	public void loadReceiptItemsTableData() 
+	{
+		ArrayList<OrderItem> receiptItems = new ArrayList<>();
 		if(selectedReceipt != null)
 		{
-			orderItems = orderItemController.getAllOrderItemsByOrderId(selectedReceipt.getReceiptOrder().getOrderId());						
+			receiptItems = orderItemController.getAllOrderItemsByOrderId(selectedReceipt.getReceiptOrderId());
 		}
-		
-	    orderItemTable.getItems().setAll(orderItems);
+		receiptItemsTable.getItems().setAll(receiptItems);
 	}
+
 	
 	// ALERT DIALOG
     private void showDialog(String title, String successMessage)
