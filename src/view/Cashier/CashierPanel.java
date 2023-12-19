@@ -87,9 +87,10 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         openOrderPage();
 	}
 	
+	//Creating A MenuBar
 	private MenuBar createMenuBar()
 	{
-		 menuBar = new MenuBar();
+		menuBar = new MenuBar();
         Menu orderMenu = new Menu("Order");
         MenuItem orderMenuItem= new MenuItem("Show");
         
@@ -115,9 +116,12 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         return menuBar;
     }
 
+	//Opening OderPage
 	public void openOrderPage()
 	{
     	contentArea.getChildren().clear();
+    	
+    	//Creating Order Table View
     	ordersTable = createOrderTableView();
 		contentArea.getChildren().add(ordersTable);
 		bottomSection.getChildren().clear();
@@ -127,6 +131,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
     	loadOrderItemsData();
 	}
 	
+	//Creating A Order Form
 	private GridPane OrderForm()
 	{
     	ObservableList<String> options = FXCollections.observableArrayList("Cash", "Debit", "Credit");
@@ -157,10 +162,17 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         
         processButton.setOnAction(e ->
         {
+        	//Cashier Process Button
+        	
+        	//Getting orderItembyOrder ID
 			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
          
 			Date date = new Date(System.currentTimeMillis());
+			
+			//Updating status Order into PAID after Cashier process the order
 			orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Paid");
+			
+			//Creating Receipt
 			String res = receiptController.createReceipt(selectedOrder, paymentTypeField.getValue(), selectedOrder.getOrderTotal(), date);
             
             if (res.contains("SUCCESS")) showDialog("Success", "Process Payment success");
@@ -171,6 +183,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         return form;
 	}
 	
+	//Creating A Table View for Order
     private TableView<Order> createOrderTableView()
     {
     	TableView<Order> tableView = new TableView<>();
@@ -198,6 +211,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         return tableView;
     }
     
+    //Refresh the Order TableView to get the Updated TableView
     @Override
 	public void loadOrdersData()
 	{
@@ -207,12 +221,13 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	
 	private TableView<OrderItem> orderItemTable;
 	
-	private HBox openOrderItemPage() // Open Order Items Page
+	// Open Order Items Page
+	private HBox openOrderItemPage()
 	{
 		HBox orderItemsSection = new HBox(15);
 
 		ObjectProperty<MenuItems> selected = new SimpleObjectProperty<>(null);
-
+		
 		orderItemTable = createOrderDetailsTableView();
     	
 		
@@ -220,6 +235,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         return orderItemsSection;
 	}
 	
+	//Refresh the OrderItemsByOrderId TableView to get the Updated TableView
 	@Override
 	public void loadOrderItemsData() 
 	{
@@ -231,6 +247,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	    orderItemTable.getItems().setAll(orderItems);
 	}
 	
+	//Creating A Table View for OrderDetails
 	private TableView<OrderItem> createOrderDetailsTableView()
 	{
 		TableView<OrderItem> tableView = new TableView<>();
@@ -271,6 +288,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
 	private Receipt selectedReceipt = null;
 	private TableView<Receipt> receiptTable;
 	
+	//Open Receipt Page
 	public void openReceiptPage()
 	{
     	contentArea.getChildren().clear();
@@ -283,6 +301,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
     	loadReceiptItemsData();
 	}
 	
+	//Receipt form
 	private void ReceiptForm()
 	{
 		receiptTable.getSelectionModel().selectedItemProperty()
@@ -296,6 +315,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         });
 	}
 	
+	//Creating A Table View for Receipt
     private TableView<Receipt> createReceiptTableView()
     {
     	TableView<Receipt> tableView = new TableView<>();
@@ -331,6 +351,7 @@ public class CashierPanel extends Stage implements IAddOrderItemParentPanel
         return tableView;
     }
 	
+    //Refresh the OrderItemsByorderId TableView to get the Updated TableView
 	public void loadReceiptItemsData() 
 	{
 		ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
