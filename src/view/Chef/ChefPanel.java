@@ -79,7 +79,10 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         root.setBottom(bottomSection);
 	}
 	
-	private MenuBar createMenuBar() {
+	
+	// MENU BAR
+	private MenuBar createMenuBar()
+	{
         MenuBar menuBar = new MenuBar();
 
         // Add menus and menu items as needed
@@ -95,7 +98,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return menuBar;
     }
 
-	
+	// FORM
 	private GridPane openOrderPage()
 	{
     	TextField orderIdField = new TextField();
@@ -171,6 +174,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return form;
 	}
 	
+	// ORDER TABLE VIEW
     private TableView<Order> createOrderTableView()
     {
     	TableView<Order> tableView = new TableView<>();
@@ -198,6 +202,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return tableView;
     }
     
+    // Load Order Data
     @Override
 	public void loadOrdersData()
 	{

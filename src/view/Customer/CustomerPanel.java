@@ -1,13 +1,13 @@
 package view.Customer;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import controller.MenuItemController;
 import controller.OrderController;
 import controller.OrderItemController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -123,13 +123,15 @@ public class CustomerPanel extends Stage
 	}
 	
 	private void setupTableSelectionkeranjangTB() {
-		keranjangTB.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	    keranjangTB.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
-	            idInput_menu.setText(newSelection.getMenuItemId() + "");
-	            nameInput_menu.setText(newSelection.getMenuItem().getMenuItemName());
-	            itemDesc_menu.setText(newSelection.getMenuItem().getMenuItemDescription());
-	            itemPrice_menu.setText(String.valueOf(newSelection.getMenuItem().getMenuItemPrice()));
-	            quantity_menu.setText(String.valueOf(newSelection.getQuantity()));
+	            Platform.runLater(() -> {
+	                idInput_menu.setText(String.valueOf(newSelection.getMenuItemId()));
+	                nameInput_menu.setText(newSelection.getMenuItem().getMenuItemName());
+	                itemDesc_menu.setText(newSelection.getMenuItem().getMenuItemDescription());
+	                itemPrice_menu.setText(String.valueOf(newSelection.getMenuItem().getMenuItemPrice()));
+	                quantity_menu.setText(String.valueOf(newSelection.getQuantity()));
+	            });
 	        }
 	    });
 	}
@@ -193,6 +195,10 @@ public class CustomerPanel extends Stage
 	    return MenuTable.getSelectionModel().getSelectedItem();
 	}
 	
+	private OrderItem getSelectedKeranjangMenuItem() {
+	    return keranjangTB.getSelectionModel().getSelectedItem();
+	}
+	
 	private void refreshTable() {
 		// TODO Auto-generated method stub
 		keranjangTB.getItems().setAll(keranjang);
@@ -220,6 +226,7 @@ public class CustomerPanel extends Stage
         
         Button addButton = new Button("Add");
         Button finalizeButton = new Button("Finalize");
+        Button editButton = new Button("Edit");
 
         form.add(new Label("Name:"), 0, 0);
         form.add(nameInput_menu, 1, 0);
@@ -230,7 +237,8 @@ public class CustomerPanel extends Stage
         form.add(new Label("Quantity:"), 0, 3);
         form.add(quantity_menu, 1, 3);
         form.add(addButton, 0, 4);
-        form.add(finalizeButton, 1, 4);
+        form.add(finalizeButton, 2, 4);
+        form.add(editButton, 1, 4);
         nameInput_menu.setDisable(true);
         itemDesc_menu.setDisable(true);
         itemPrice_menu.setDisable(true);
@@ -266,6 +274,34 @@ public class CustomerPanel extends Stage
 	            }else if(Integer.parseInt(quantity_menu.getText())==0) {
 	            	OpenDialog("Error", "Please input quantity");
 	            }
+			}
+		});
+        
+        editButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+			@Override
+			public void handle(ActionEvent event) 
+			{
+				OrderItem selectedMenuItem = getSelectedKeranjangMenuItem();
+				selectedMenuItem.setMenuItem();
+				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0){
+					selectedMenuItem.setQuantity(Integer.parseInt(quantity_menu.getText()));
+					refreshTable();
+					
+					OpenDialog("Success", "Change "+selectedMenuItem.getMenuItem().getMenuItemName()+" quantity");
+	            }else if (selectedMenuItem == null) {
+	            	OpenDialog("Error", "Please select menu item on keranjang");
+	            }else if (Integer.parseInt(quantity_menu.getText()) == 0) {
+	                Iterator<OrderItem> iterator = keranjang.iterator();
+	                while (iterator.hasNext()) {
+	                    OrderItem o = iterator.next();
+	                    if (o.getMenuItemId() == selectedMenuItem.getMenuItemId()) {
+	                        iterator.remove();
+	                        OpenDialog("Success", "Delete " + selectedMenuItem.getMenuItem().getMenuItemName());
+	                    }
+	                }
+	            }
+				refreshTable();
 			}
 		});
         
