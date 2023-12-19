@@ -122,7 +122,7 @@ public class OrderItem
 		{
 			PreparedStatement prep = connection.prepareStatement(query);
 			prep.setInt(1, orderId);
-			prep.setInt(1, menuItemId);
+			prep.setInt(2, menuItemId);
 			ResultSet resultSet = prep.executeQuery();
 			
 			if(resultSet.next()) 
