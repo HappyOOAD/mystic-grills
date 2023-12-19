@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import controller.OrderItemController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,6 +39,7 @@ import view.Customer.CustomerPanel;
 public class UpdateOrderPanel extends Stage{
 	private BorderPane root;
     private VBox contentArea = new VBox();
+    private OrderItemController orderItemController = new OrderItemController();
     
     Stage addItemStage;
 	
@@ -132,18 +134,16 @@ public class UpdateOrderPanel extends Stage{
 				// TODO Auto-generated method stub
 				MenuItems selectedMenuItem = getSelectedMenuItem();
 				if (selectedMenuItem != null && quantity_menu.equals("0")==false) {
-					// di sini masih gabisa masuk
-					OrderItem order = new OrderItem(orderId, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
-					order.createOrderitem(orderId, selectedMenuItem, Integer.parseInt(quantity_menu.getText()));
+					orderItemController.createOrderItem(orderId, selectedMenuItem, Integer.parseInt(quantity_menu.getText()));
 	            }
-				addItemStage.close();
+				new UpdateOrderPanel(orderId).show();
 			}
 		});
         
         return form;
     }
 	
-	private MenuItems getSelectedMenuItem() {
+	private MenuItems getSelectedMenuItem()  {
 	    return MenuTable.getSelectionModel().getSelectedItem();
 	}
 	
@@ -279,14 +279,14 @@ public class UpdateOrderPanel extends Stage{
 				OrderItem selectedOrderItem = getSelectedOrderItem();
 				if (selectedOrderItem != null) {
 					// edit quantity
-					if (quantity_menu.equals("0"))
+					if (Integer.parseInt(quantity_menu.getText())==0)
 					{
 		            	// hapus menu
 		            	selectedOrderItem.deleteOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItemId());
+		            }else {
+		            	//edit quantity
+						selectedOrderItem.updateOrderItem(selectedOrderItem.getOrderId(), selectedOrderItem.getMenuItem(), Integer.parseInt(quantity_menu.getText()));
 		            }
-					//edit quantity
-					// masih belom masuk
-					selectedOrderItem.setQuantity(Integer.parseInt(quantity_menu.getText()));
 				}
 				refreshTable(orderId);
 			}
