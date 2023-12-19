@@ -53,7 +53,7 @@ public class CustomerPanel extends Stage
 		setTitle("Mystic Grills - Customer Panel");
 		this.customer = customer;
         root = new BorderPane();
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1580, 900);
         this.setScene(scene);
 
         menuBar = new MenuBar();
