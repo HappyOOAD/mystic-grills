@@ -240,8 +240,8 @@ public class CashierPanel extends Stage
     // Method to reload Order Table data
 	public void loadOrdersTableData()
 	{
-	    ArrayList<Order> preparedOrders = orderController.getAllOrdersByOrderStatus("Served");
-	    ordersTable.getItems().setAll(preparedOrders);
+	    ArrayList<Order> servedOrders = orderController.getAllOrdersByOrderStatus("Served");
+	    ordersTable.getItems().setAll(servedOrders);
 	}
 	
     // Method to generate Order Items Table
