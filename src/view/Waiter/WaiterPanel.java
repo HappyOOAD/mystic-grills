@@ -55,9 +55,9 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
 	{
 		// GENERALS
 		super(StageStyle.DECORATED);
-		setTitle("Mystic Grills - Chef Panel");
+		setTitle("Mystic Grills - Waiter Panel");
         root = new BorderPane();
-        Scene scene = new Scene(root, 1580, 900);
+        Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
         
         // MENUBARS
@@ -77,7 +77,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         VBox topSection = new VBox(15);;
         topSection.setAlignment(Pos.CENTER);
         topSection.getChildren().addAll(contentArea);
-        root.setTop(topSection);
+        root.setCenter(topSection);
 
         HBox bottomSection = new HBox(40);
         bottomSection.setAlignment(Pos.CENTER);
@@ -171,7 +171,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
         TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
     	    
-        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User ID");
+        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User Name");
         orderUserIdColumn.setCellValueFactory(cellData ->
         {
             Order order = cellData.getValue();

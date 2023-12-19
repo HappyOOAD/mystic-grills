@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import model.Order;
 import view.Login;
 import view.Register;
+import view.Cashier.CashierPanel;
+import view.Chef.ChefPanel;
 
 public class Main extends Application
 {

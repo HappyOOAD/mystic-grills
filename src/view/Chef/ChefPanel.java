@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -57,19 +58,9 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 		super(StageStyle.DECORATED);
 		setTitle("Mystic Grills - Chef Panel");
         root = new BorderPane();
-        Scene scene = new Scene(root, 1580, 720);
+        Scene scene = new Scene(root, 1280, 720);
         setScene(scene);
         
-        // MENUBARS
-        menuBar = new MenuBar();
-        Menu orderMenu = new Menu("Order");
-        menuBar.getMenus().addAll(orderMenu);
-        root.setTop(menuBar);
-        orderMenu.setOnAction(e ->
-        {
-        	openOrderPage();
-        });
-
         contentArea = new VBox(20);
         contentArea.setPadding(new Insets(20));
         contentArea.setAlignment(Pos.CENTER);
@@ -77,7 +68,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         VBox topSection = new VBox(15);;
         topSection.setAlignment(Pos.CENTER);
         topSection.getChildren().addAll(contentArea);
-        root.setTop(topSection);
+        root.setCenter(topSection);
 
         HBox bottomSection = new HBox(40);
         bottomSection.setAlignment(Pos.CENTER);
@@ -87,6 +78,23 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         bottomSection.getChildren().addAll(form, orderItemSection);
         root.setBottom(bottomSection);
 	}
+	
+	private MenuBar createMenuBar() {
+        MenuBar menuBar = new MenuBar();
+
+        // Add menus and menu items as needed
+        Menu fileMenu = new Menu("File");
+        MenuItem exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setOnAction(e -> System.exit(0)); // You can customize this action
+        fileMenu.getItems().add(exitMenuItem);
+
+        // Add more menus and menu items as needed
+
+        menuBar.getMenus().addAll(fileMenu);
+
+        return menuBar;
+    }
+
 	
 	private GridPane openOrderPage()
 	{
@@ -171,7 +179,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         TableColumn<Order, Integer> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
     	    
-        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User ID");
+        TableColumn<Order, String> orderUserIdColumn = new TableColumn<>("Order User Name");
         orderUserIdColumn.setCellValueFactory(cellData ->
         {
             Order order = cellData.getValue();
