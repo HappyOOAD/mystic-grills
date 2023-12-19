@@ -55,7 +55,7 @@ public class WaiterPanel extends Stage implements IAddOrderItemParentPanel
 	{
 		// GENERALS
 		super(StageStyle.DECORATED);
-		setTitle("Mystic Grills - Chef Panel");
+		setTitle("Mystic Grills - Waiter Panel");
         root = new BorderPane();
         Scene scene = new Scene(root, 1580, 900);
         setScene(scene);
