@@ -101,15 +101,18 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	// FORM
 	private GridPane openOrderPage()
 	{
+		//Creating TextField
     	TextField orderIdField = new TextField();
     	TextField orderUserNameField = new TextField();
     	TextField orderDateField = new TextField();
     	TextField orderTotalField = new TextField();
-		
+    	
+    	//Creating Order TableView
     	contentArea.getChildren().clear();
     	ordersTable = createOrderTableView();
 		contentArea.getChildren().add(ordersTable);
 	
+		//Add Listener in Order TableView
 		ordersTable.getSelectionModel().selectedItemProperty()
 		.addListener((obs, oldSelection, newSelection) ->
 		{
@@ -153,6 +156,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         
         deleteButton.setOnAction(e ->
         {
+        	//Delete Order by Chosen OrderID
         	String res = orderController.deleteOrder(selectedOrder.getOrderId());
         	
         	if (res.contains("SUCCESS")) showDialog("Success", "Delete success");
@@ -162,8 +166,10 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         
         prepareButton.setOnAction(e ->
         {
+        	//Getting all orderItems by orderID
 			ArrayList<OrderItem> orderItems = orderItemController.getAllOrderItemsByOrderId(selectedOrder.getOrderId());
          
+			//Updating order status into prepared
 			String res = orderController.updateOrder(selectedOrder.getOrderId(), orderItems, "Prepared");
             
             if (res.contains("SUCCESS")) showDialog("Success", "Prepare success");
@@ -174,7 +180,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return form;
 	}
 	
-	// ORDER TABLE VIEW
+	//Creating A Table View for Order
     private TableView<Order> createOrderTableView()
     {
     	TableView<Order> tableView = new TableView<>();
@@ -202,7 +208,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return tableView;
     }
     
-    // Load Order Data
+    //Refresh the Order TableView to get the Updated TableView
     @Override
 	public void loadOrdersData()
 	{
@@ -214,12 +220,14 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	private Button addMenuButton, updateQuantityButton;
 	private TextField quantityField;
 	
-	private HBox openOrderItemPage() // Open Order Items Page
+	// Open Order Items Page
+	private HBox openOrderItemPage()
 	{
 		HBox orderItemsSection = new HBox(15);
 
 		ObjectProperty<MenuItems> selected = new SimpleObjectProperty<>(null);
-
+		
+		//Creating Order Details TableView
 		orderItemTable = createOrderDetailsTableView();
     	
 		quantityField = new TextField();
@@ -260,7 +268,10 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         });
         updateQuantityButton.setOnAction(e ->
         {
+        	//Get the value quantity
         	int quantity = Integer.parseInt(quantityField.getText());
+        	
+        	//Updating quantity
 			String res = orderItemController.updateOrderItem(selectedOrder.getOrderId(), selected.get(), quantity); // --- updateOrderItem() ---
             if (res.contains("SUCCESS"))
             {
@@ -276,6 +287,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         return orderItemsSection;
 	}
 	
+	//Refresh the Order Items by orderID TableView to get the Updated TableView
 	@Override
 	public void loadOrderItemsData() 
 	{
@@ -283,6 +295,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	    orderItemTable.getItems().setAll(orderItems);
 	}
 	
+	//Creating A Table View for Order Details
 	private TableView<OrderItem> createOrderDetailsTableView()
 	{
 		TableView<OrderItem> tableView = new TableView<>();
