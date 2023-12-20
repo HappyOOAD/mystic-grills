@@ -44,7 +44,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
 	private BorderPane root;
     private TableView<Order> ordersTable;
     private TableView<OrderItem> orderItemsTable;
-    private Button prepareOrderButton, deleteOrderButton, addMenuButton, updateQuantityButton;
+    private Button prepareOrderButton, deleteOrderButton, addMenuButton, updateQuantityButton, deleteOrderItemButton;
     private TextField quantityField;
     
 	public ChefPanel()
@@ -127,6 +127,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         	addMenuButton.setDisable(true);
         	updateQuantityButton.setDisable(true);
         	quantityField.setDisable(true);
+        	deleteOrderItemButton.setDisable(true);
         });
 
         deleteOrderButton.setOnAction(e ->
@@ -144,6 +145,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         	addMenuButton.setDisable(true);
         	updateQuantityButton.setDisable(true);
         	quantityField.setDisable(true);
+        	deleteOrderItemButton.setDisable(true);
         });
         
         return actionGrid;
@@ -191,6 +193,9 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
             	prepareOrderButton.setDisable(false);
             	deleteOrderButton.setDisable(false);
             	addMenuButton.setDisable(false);
+            	quantityField.setDisable(true);
+            	updateQuantityButton.setDisable(true);
+            	deleteOrderItemButton.setDisable(true);
             }
         });
         
@@ -221,6 +226,8 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
     	addMenuButton.setDisable(true);
     	updateQuantityButton = new Button("Update Quantity");
     	updateQuantityButton.setDisable(true);
+    	deleteOrderItemButton = new Button("Delete Order Item");
+    	deleteOrderItemButton.setDisable(true);
     	
 		GridPane actionGrid = new GridPane();
         actionGrid.setVgap(10);
@@ -230,12 +237,20 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
         actionGrid.add(new Label("Quantity"), 0, 1);
         actionGrid.add(quantityField, 1, 1);
         actionGrid.add(updateQuantityButton, 0, 2);
+        actionGrid.add(deleteOrderItemButton, 0, 3);
         
         addMenuButton.setOnAction(e -> // --- createOrderItem() ---
         {
         	// Add Menu Item Here
         	new AddOrderItemPanel(this, selectedOrder.getOrderId()).show();
         	reloadPageData();
+        	prepareOrderButton.setDisable(true);
+        	deleteOrderButton.setDisable(true);
+        	addMenuButton.setDisable(true);
+        	updateQuantityButton.setDisable(true);
+        	quantityField.setDisable(true);
+        	deleteOrderItemButton.setDisable(true);
+        	
         });
         
         updateQuantityButton.setOnAction(e ->
@@ -250,6 +265,33 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
                 showDialog("Failed", res);
             }
             reloadPageData();
+        	prepareOrderButton.setDisable(true);
+        	deleteOrderButton.setDisable(true);
+        	addMenuButton.setDisable(true);
+        	updateQuantityButton.setDisable(true);
+        	quantityField.setDisable(true);
+        	deleteOrderItemButton.setDisable(true);
+        });
+        
+        deleteOrderItemButton.setOnAction(e ->
+        {
+        	//Get the value quantity
+        	int quantity = Integer.parseInt(quantityField.getText());
+			String res = orderItemController.deleteOrderItem(selectedOrder.getOrderId(), selectedMenuItem.getMenuItem(), quantity); // --- updateOrderItem() ---
+            if (res.contains("SUCCESS"))
+            {
+                showDialog("Success","Delete Order Item success");
+            } else {
+                showDialog("Failed", res);
+            }
+            reloadPageData();
+            selectedMenuItem = null;
+        	prepareOrderButton.setDisable(true);
+        	deleteOrderButton.setDisable(true);
+        	addMenuButton.setDisable(true);
+        	updateQuantityButton.setDisable(true);
+        	quantityField.setDisable(true);
+        	deleteOrderItemButton.setDisable(true);
         });
         
         return actionGrid;
@@ -308,6 +350,7 @@ public class ChefPanel extends Stage implements IAddOrderItemParentPanel
             	quantityField.setText(String.valueOf(newSelection.getQuantity()));
             	quantityField.setDisable(false);
             	updateQuantityButton.setDisable(false);
+            	deleteOrderItemButton.setDisable(false);
             }
         });
     	

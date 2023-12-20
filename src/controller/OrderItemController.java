@@ -68,11 +68,12 @@ public class OrderItemController
 		return "SUCCESS: Successfully Update an Order Item";
 	}
 	
-	public void deleteOrderItem(int orderId, MenuItems menuItem, int quantity)
+	public String deleteOrderItem(int orderId, MenuItems menuItem, int quantity)
 	{
 		//Delete OrderItem
 		
-		OrderItem.deleteOrderItem(orderId, quantity);
+		OrderItem.deleteOrderItem(orderId, menuItem.getMenuItemId());
+		return "SUCCESS: deleted an orderItem.";
 	}
 	
 	public ArrayList<OrderItem> getAllOrderItemsByOrderId(int orderId)
