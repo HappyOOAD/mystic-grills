@@ -1,56 +1,5 @@
 # Mystic Grills
 
-## Status
-### DONE
-## SQL Schema
-```sql
-CREATE DATABASE mysticgrills;
-
-CREATE TABLE users (
-    userId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    userRole VARCHAR(20) NOT NULL,
-    userName VARCHAR(30) NOT NULL,
-    userEmail VARCHAR(30) NOT NULL,
-    userPassword VARCHAR(30) NOT NULL
-);
-
-CREATE TABLE menuitems (
-    menuItemId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    menuItemName VARCHAR(30) NOT NULL,
-    menuItemDescription VARCHAR(30) NOT NULL,
-    menuItemPrice DOUBLE NOT NULL
-);
-
-CREATE TABLE orders (
-    orderId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    userId INT NOT NULL,
-    orderStatus VARCHAR(30) NOT NULL,
-    orderDate DATE NOT NULL,
-    
-    CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
-);
-
-CREATE TABLE orderitems (
-    orderId INT NOT NULL,
-    menuItemId INT NOT NULL,
-    quantity INT NOT NULL,
-
-    PRIMARY KEY (orderId, menuItemId),
-    CONSTRAINT fk_menu_item_ids FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId) ON DELETE CASCADE,
-    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE
-);
-
-CREATE TABLE receipts (
-    receiptId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    orderId INT NOT NULL,
-    receiptPaymentAmount DOUBLE NOT NULL,
-    receiptPaymentDate DATE NOT NULL,
-    receiptPaymentType VARCHAR(30) NOT NULL,
-    
-    CONSTRAINT fk_order_ids FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE
-);
-```
-
 ## SQL Dummies
 ```sql
 INSERT INTO users (userRole, userName, userEmail, userPassword)
