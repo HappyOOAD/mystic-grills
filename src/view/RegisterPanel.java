@@ -15,13 +15,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Register extends Stage
+public class RegisterPanel extends Stage
 {	
 	UserController controller = new UserController();
 	VBox container= new VBox(20);
 	GridPane grid = new GridPane();
 	
-	public Register() 
+	public RegisterPanel() 
 	{
         setTitle("Mystic Grills - Register");
         grid.setAlignment(Pos.CENTER);
@@ -83,7 +83,7 @@ public class Register extends Stage
             	String res = controller.createUser("Customer", username, email, password);  
             	if(res.contains("SUCCESS"))
     			{
-            		new Login().show();
+            		new LoginPanel().show();
             		this.close();
     			}
             	else 
@@ -100,7 +100,7 @@ public class Register extends Stage
 		
         loginRedirect.setOnMouseClicked(e ->
         {
-            new Login().show();
+            new LoginPanel().show();
             this.close();
         });
 

@@ -456,7 +456,6 @@ public class CustomerPanel extends Stage
             int orderId = orderController.createOrder(customer, keranjang, date);
 
             for (OrderItem orderItem : keranjang) {
-                System.out.println(orderItem.getMenuItem().getMenuItemName());
                 orderItemController.createOrderItem(orderId, orderItem.getMenuItem(), orderItem.getQuantity());
             }
 
