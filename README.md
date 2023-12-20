@@ -1,5 +1,7 @@
 # Mystic Grills
 
+## Status
+### DONE
 ## SQL Schema
 ```sql
 CREATE DATABASE mysticgrills;
