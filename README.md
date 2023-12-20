@@ -66,7 +66,7 @@ VALUES
 INSERT INTO receipts (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
 VALUES
     (1, 43.97, '2023-12-01', 'Credit Card'),
-    (2, 56.97, '2023-12-02', 'PayPal'),
+    (2, 56.97, '2023-12-02', 'Cash'),
     (3, 74.97, '2023-12-03', 'Cash'),
     (4, 45.98, '2023-12-04', 'Debit Card'),
     (5, 29.99, '2023-12-05', 'Cash'),
