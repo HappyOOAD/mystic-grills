@@ -1,26 +1,38 @@
 package view;
 
 import controller.UserController;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Login extends Stage
 {
 	UserController controller = new UserController();
+	VBox container = new VBox(20);
+	GridPane grid = new GridPane();
 	
 	public Login() 
 	{
-		setTitle("Mystic Grills - Login");
-        GridPane grid = new GridPane();
-        grid.setAlignment(javafx.geometry.Pos.CENTER);
+		setTitle("Mystic Grills");
+        grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
         grid.setHgap(10);
+        container.setAlignment(Pos.CENTER);
+        
+        
+        // Title Text
+        Text title = new Text("Login");
+        title.setFont(Font.font(null, FontWeight.BOLD, 18));
 
         // Email
         Label emailLabel = new Label("Email:");
@@ -36,16 +48,14 @@ public class Login extends Stage
 
         // Login Button
         Button loginButton = new Button("Login");
-        grid.add(loginButton, 0, 2);
 		
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 0, 3, 2, 1);
+        actionTarget.setFill(Color.RED);
 
         //Register Button
-        Button RegisterButton = new Button("Go To Register Screen");
-        grid.add(RegisterButton, 0, 6, 2, 1);
-        
+        Text registerRedirect = new Text("Doesn't have account? Register here");
+        registerRedirect.setFill(Color.BLUE);
 
         loginButton.setOnAction(e ->
         {
@@ -58,13 +68,14 @@ public class Login extends Stage
             else actionTarget.setText(res);
         });
 
-        RegisterButton.setOnAction(e ->
+        registerRedirect.setOnMouseClicked(e ->
         {
             new Register().show();
             this.close();
         });
-
-        Scene scene = new Scene(grid, 576, 324);
+        
+        container.getChildren().addAll(title, grid, loginButton, actionTarget, registerRedirect);
+        Scene scene = new Scene(container, 576, 324);
         setScene(scene);
     }
 }

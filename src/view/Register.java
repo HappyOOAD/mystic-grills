@@ -1,46 +1,57 @@
 package view;
 
 import controller.UserController;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Register extends Stage
 {	
 	UserController controller = new UserController();
+	VBox container= new VBox(20);
+	GridPane grid = new GridPane();
 	
 	public Register() 
 	{
         setTitle("Mystic Grills - Register");
-        GridPane grid = new GridPane();
-        grid.setAlignment(javafx.geometry.Pos.CENTER);
+        grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
         grid.setHgap(10);
+        container.setAlignment(Pos.CENTER);
 
-        // Username
+        // Title Text
+        Text title = new Text("Register");
+        title.setFont(Font.font(null, FontWeight.BOLD, 18));
+        
+        // Username Field
         Label usernameLabel = new Label("Username:");
         grid.add(usernameLabel, 0, 0);
         TextField usernameField = new TextField();
         grid.add(usernameField, 1, 0);
 
-        // Email
+        // Email Field
         Label emailLabel = new Label("Email:");
         grid.add(emailLabel, 0, 1);
         TextField emailField = new TextField();
         grid.add(emailField, 1, 1);
 
-        // Password
+        // Password Field
         Label passwordLabel = new Label("Password:");
         grid.add(passwordLabel, 0, 2);
         PasswordField passwordField = new PasswordField();
         grid.add(passwordField, 1, 2);
 
-        // Confirm Password
+        // Confirmation Password Field
         Label confirmPasswordLabel = new Label("Confirm Password:");
         grid.add(confirmPasswordLabel, 0, 3);
         PasswordField confirmPasswordField = new PasswordField();
@@ -48,15 +59,14 @@ public class Register extends Stage
 
         // Register Button
         Button registerButton = new Button("Register");
-        grid.add(registerButton, 0, 4);
-		
+        
         // Action Text
         Text actionTarget = new Text();
-        grid.add(actionTarget, 0, 5, 2, 1);
+        actionTarget.setFill(Color.RED);
         
         //Login Button
-        Button loginButton = new Button("Go To Login Screen");
-        grid.add(loginButton, 0, 6, 2, 1);
+        Text loginRedirect = new Text("Already have an account? Login here");
+        loginRedirect.setFill(Color.BLUE);
         
         registerButton.setOnAction(e ->
         {
@@ -88,13 +98,14 @@ public class Register extends Stage
             
         });
 		
-        loginButton.setOnAction(e ->
+        loginRedirect.setOnMouseClicked(e ->
         {
             new Login().show();
             this.close();
         });
 
-        Scene scene = new Scene(grid, 576, 324);
+        container.getChildren().addAll(title, grid, registerButton, actionTarget, loginRedirect);
+        Scene scene = new Scene( container, 576, 324);
         setScene(scene);
     }
 }
