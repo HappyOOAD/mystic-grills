@@ -3,6 +3,7 @@ package view.Customer;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 
 import controller.MenuItemController;
 import controller.OrderController;
@@ -17,6 +18,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -46,6 +49,8 @@ public class CustomerPanel extends Stage
     private OrderItemController orderItemController = new OrderItemController();
     private MenuItemController menuItemController = new MenuItemController();
     private User customer;
+    
+    private boolean isMenuTableActive = true;
 
 	public CustomerPanel(User customer)
 	{
@@ -93,36 +98,38 @@ public class CustomerPanel extends Stage
 	TableView<OrderItem> keranjangTB;
 
 	private void addItem() {
-		contentArea.getChildren().clear();
-    	
-		//Creating MenuItem TableView
-    	MenuTable = createMenuItemTable();
-		contentArea.getChildren().add(MenuTable);
-		
-		//Listener
-		setupTableSelectionListener1();
-		
-        GridPane form = createOrderform(MenuTable);
-        VBox.setMargin(form, new Insets(20));
-        
-        //Creating OrderItem TableView
-        keranjangTB = createkeranjangtable();
-        
-        HBox formsContainer = new HBox(20);
-        formsContainer.getChildren().addAll(form, keranjangTB);
-        
-        //Listener
-        setupTableSelectionkeranjangTB();
+	    contentArea.getChildren().clear();
 
-        contentArea.getChildren().add(formsContainer);
-		
+	    // Creating MenuItem TableView
+	    MenuTable = createMenuItemTable();
+	    contentArea.getChildren().add(MenuTable);
+	    
+	    isMenuTableActive = true;
+
+	    // Listener
+	    setupTableSelectionListener1();
+
+	    GridPane form = createOrderform(MenuTable);
+	    VBox.setMargin(form, new Insets(20));
+
+	    // Creating OrderItem TableView
+	    keranjangTB = createkeranjangtable();
+
+	    HBox formsContainer = new HBox(20);
+	    formsContainer.getChildren().addAll(form, keranjangTB);
+
+	    // Listener
+	    setupTableSelectionkeranjangTB();
+
+	    contentArea.getChildren().add(formsContainer);
 	}
 	
 	//Listener
 	private void setupTableSelectionkeranjangTB() {
 	    keranjangTB.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-	        if (newSelection != null) {
+	    	if (newSelection != null) {
 	            Platform.runLater(() -> {
+	            	isMenuTableActive = false;
 	                idInput_menu.setText(String.valueOf(newSelection.getMenuItemId()));
 	                nameInput_menu.setText(newSelection.getMenuItem().getMenuItemName());
 	                itemDesc_menu.setText(newSelection.getMenuItem().getMenuItemDescription());
@@ -132,6 +139,7 @@ public class CustomerPanel extends Stage
 	        }
 	    });
 	}
+
 	
 	//Creating A Table View for OrderItems
 	private TableView<OrderItem> createkeranjangtable() {
@@ -182,14 +190,18 @@ public class CustomerPanel extends Stage
 	private void setupTableSelectionListener1() {
 	    MenuTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null) {
-	            idInput_menu.setText(newSelection.getMenuItemId() + "");
-	            nameInput_menu.setText(newSelection.getMenuItemName());
-	            itemDesc_menu.setText(newSelection.getMenuItemDescription());
-	            itemPrice_menu.setText(String.valueOf(newSelection.getMenuItemPrice()));
-	            quantity_menu.setText("0");
+	            Platform.runLater(() -> {
+	            	isMenuTableActive = true;
+	                idInput_menu.setText(newSelection.getMenuItemId() + "");
+	                nameInput_menu.setText(newSelection.getMenuItemName());
+	                itemDesc_menu.setText(newSelection.getMenuItemDescription());
+	                itemPrice_menu.setText(String.valueOf(newSelection.getMenuItemPrice()));
+	                quantity_menu.setText("");
+	            });
 	        }
 	    });
 	}
+
 	
 	//Getting selected MenuItem
 	private MenuItems getSelectedMenuItem() {
@@ -246,73 +258,98 @@ public class CustomerPanel extends Stage
         itemDesc_menu.setDisable(true);
         itemPrice_menu.setDisable(true);
         
-        addButton.setOnAction(new EventHandler<ActionEvent>()
-        {
-        	//Adding Menu Item
-			@Override
-			public void handle(ActionEvent event) 
-			{
-				//Get Selected MenuItem
-				MenuItems selectedMenuItem = getSelectedMenuItem();
-				
-				//Validation
-				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0)
-				{
-					OrderItem order = new OrderItem(0, selectedMenuItem.getMenuItemId(), Integer.parseInt(quantity_menu.getText()));
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Get Selected MenuItem or Selected Keranjang Item
+                MenuItems selectedMenuItem = getSelectedMenuItem();
+                OrderItem selectedKeranjangItem = getSelectedKeranjangMenuItem();
 
-					order.setMenuItem();
-					System.out.println(order.getMenuItem().getMenuItemName());
-					
-					int flag=0;
-					for(OrderItem o : keranjang) {
-						if(o.getMenuItemId()==selectedMenuItem.getMenuItemId() ){
-							o.setQuantity(o.getQuantity()+Integer.parseInt(quantity_menu.getText()));
-							flag=1;
-						}
-					}
-					if(flag==0) {
-						keranjang.add(order);						
-					}
-					refreshTable();
-					
-					OpenDialog("Success", "Added "+Integer.parseInt(quantity_menu.getText())+" "+order.getMenuItem().getMenuItemName());
-	            }else if (selectedMenuItem == null) {
-	            	OpenDialog("Error", "Please select menu item");
-	            }else if(Integer.parseInt(quantity_menu.getText())==0) {
-	            	OpenDialog("Error", "Please input quantity");
-	            }
-			}
-		});
+                // Validation
+                if (selectedMenuItem != null) {
+                    int quantity = 0;
+
+                    try {
+                        quantity = Integer.parseInt(quantity_menu.getText());
+                    } catch (NumberFormatException e) {
+                        // Handle the case where quantity_menu.getText() is not a valid integer
+                        OpenDialog("Error", "Please input a valid quantity.");
+                        return;  // Exit the method to avoid further processing
+                    }
+
+                    if (quantity > 0) {
+                        OrderItem order = null;
+                        if (selectedKeranjangItem != null && isMenuTableActive==false) {
+                            // Update quantity in the existing OrderItem from keranjang
+                            order = selectedKeranjangItem;
+                            order.setQuantity(order.getQuantity() + quantity);
+                        } else if(isMenuTableActive==true) {
+                            // Create a new OrderItem for the selected MenuItem
+                        	// cek kalau menuitem yang dipilih sudah ada di keranjang, tambahin quantity
+                        	for(OrderItem o : keranjang) {
+                        		if(o.getMenuItem()==selectedMenuItem) {
+                        			o.setQuantity(o.getQuantity() + quantity);
+                        			return;
+                        		}
+                        	}
+                            order = new OrderItem(0, selectedMenuItem.getMenuItemId(), quantity);
+                            order.setMenuItem();
+                            keranjang.add(order);
+                        }
+                        refreshTable();
+                        OpenDialog("Success", "Added " + quantity + " " + order.getMenuItem().getMenuItemName());
+                    } else {
+                        OpenDialog("Error", "Please input a quantity greater than zero.");
+                    }
+                } else {
+                    OpenDialog("Error", "Please select a menu item.");
+                }
+            }
+        });
         
-        editButton.setOnAction(new EventHandler<ActionEvent>()
-        {
-        	//Edit Menu Item
-			@Override
-			public void handle(ActionEvent event) 
-			{
-				//Getting selected OrderItem & Selected Menu Item
-				OrderItem selectedMenuItem = getSelectedKeranjangMenuItem();
-				selectedMenuItem.setMenuItem();
-				if (selectedMenuItem != null && Integer.parseInt(quantity_menu.getText())>0){
-					selectedMenuItem.setQuantity(Integer.parseInt(quantity_menu.getText()));
-					refreshTable();
-					
-					OpenDialog("Success", "Change "+selectedMenuItem.getMenuItem().getMenuItemName()+" quantity");
-	            }else if (selectedMenuItem == null) {
-	            	OpenDialog("Error", "Please select menu item on keranjang");
-	            }else if (Integer.parseInt(quantity_menu.getText()) == 0) {
-	                Iterator<OrderItem> iterator = keranjang.iterator();
-	                while (iterator.hasNext()) {
-	                    OrderItem o = iterator.next();
-	                    if (o.getMenuItemId() == selectedMenuItem.getMenuItemId()) {
-	                        iterator.remove();
-	                        OpenDialog("Success", "Delete " + selectedMenuItem.getMenuItem().getMenuItemName());
-	                    }
-	                }
-	            }
-				refreshTable();
-			}
-		});
+        editButton.setOnAction(new EventHandler<ActionEvent>() {
+            // Edit Menu Item
+            @Override
+            public void handle(ActionEvent event) {
+                // Getting selected OrderItem & Selected Menu Item
+                OrderItem selectedMenuIteminKeranjang = getSelectedKeranjangMenuItem();
+                MenuItems selectedMenuItem = getSelectedMenuItem();
+                
+                if(isMenuTableActive==true) {
+                	OpenDialog("Error", "Please select item on keranjang to edit");
+                	return;
+                }
+
+                if (selectedMenuIteminKeranjang == null) {
+                    OpenDialog("Error", "Please select a menu item in the cart to edit");
+                    return; // Exit the method to avoid further processing
+                }
+
+                if (quantity_menu.getText() == null || quantity_menu.getText().trim().isEmpty()) {
+                    OpenDialog("Error", "Please enter a quantity to edit");
+                    return; // Exit the method to avoid further processing
+                }
+
+                selectedMenuIteminKeranjang.setMenuItem();
+
+                if (selectedMenuIteminKeranjang != null && Integer.parseInt(quantity_menu.getText()) > 0 && isMenuTableActive==false) {
+                    selectedMenuIteminKeranjang.setQuantity(Integer.parseInt(quantity_menu.getText()));
+                    refreshTable();
+
+                    OpenDialog("Success", "Changed " + selectedMenuIteminKeranjang.getMenuItem().getMenuItemName() + " quantity");
+                } else if (Integer.parseInt(quantity_menu.getText()) == 0) {
+                    Iterator<OrderItem> iterator = keranjang.iterator();
+                    while (iterator.hasNext()) {
+                        OrderItem o = iterator.next();
+                        if (o.getMenuItemId() == selectedMenuIteminKeranjang.getMenuItemId()) {
+                            iterator.remove();
+                            OpenDialog("Success", "Deleted " + selectedMenuIteminKeranjang.getMenuItem().getMenuItemName());
+                        }
+                    }
+                }
+                refreshTable();
+            }
+        });
         
         finalizeButton.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -320,22 +357,11 @@ public class CustomerPanel extends Stage
 			@Override
 			public void handle(ActionEvent event)
 			{
-				if(keranjang != null){
-					Date date = new Date(System.currentTimeMillis());
-					
-					//Creating new Order
-					int orderId = orderController.createOrder(customer, keranjang, date);
-					
-					for (OrderItem orderItem : keranjang)
-					{
-						System.out.println(orderItem.getMenuItem().getMenuItemName());
-						orderItemController.createOrderItem(orderId, orderItem.getMenuItem(), orderItem.getQuantity());
-						OpenDialog("Success", "Order has been finalized");
-					}
-				}else if(keranjang==null){
-					OpenDialog("Error", "Please input the order!");
+				if(!keranjang.isEmpty()){
+					openDialogToFinalizeOrder("Finalize Order", "Are you sure to confirm the order?");
+				}else{
+					OpenDialog("Error", "Please input the order on keranjang!");
 				}
-				keranjang.clear();
 			}
 		});
         
@@ -347,17 +373,17 @@ public class CustomerPanel extends Stage
 	//Creating History panel
 	private void history(User user) {
 		contentArea.getChildren().clear();
-    	
-		//Creating Order TableView
-    	OrderTable = createOrderItemTable();
-		contentArea.getChildren().add(OrderTable);
-		
-		//Listener
-		setupTableSelectionListener(user);
+
+	    // Creating Order TableView
+	    OrderTable = createOrderItemTable();
+	    contentArea.getChildren().add(OrderTable);
+
+	    // Listener
+	    setupTableSelectionListenerForEditOrder(user);
 	}
 
 	//Listener
-	private void setupTableSelectionListener(User user)
+	private void setupTableSelectionListenerForEditOrder(User user)
 	{
 		OrderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 	        if (newSelection != null)
@@ -404,6 +430,38 @@ public class CustomerPanel extends Stage
         alert.setContentText(message);
         alert.showAndWait();
     }
-	
+    
+ // ALERT DIALOG to finalize order
+    private void openDialogToFinalizeOrder(String title, String message) {
+        // Create a new alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
+        // Create custom buttons
+        ButtonType acceptButton = new ButtonType("Accept");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+        // Set custom buttons to the alert
+        alert.getButtonTypes().setAll(acceptButton, cancelButton);
+
+        // Show the alert and wait for user input
+        Optional<ButtonType> result = alert.showAndWait();
+
+        // Check which button was clicked
+        if (result.isPresent() && result.get() == acceptButton) {
+            // User clicked Accept
+            Date date = new Date(System.currentTimeMillis());
+            int orderId = orderController.createOrder(customer, keranjang, date);
+
+            for (OrderItem orderItem : keranjang) {
+                System.out.println(orderItem.getMenuItem().getMenuItemName());
+                orderItemController.createOrderItem(orderId, orderItem.getMenuItem(), orderItem.getQuantity());
+            }
+
+            OpenDialog("Success", "Order has been finalized");
+            keranjang.clear();
+        }
+    }
 }
