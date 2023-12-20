@@ -65,13 +65,13 @@ VALUES
 
 INSERT INTO receipts (orderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
 VALUES
-    (1, 43.97, '2023-12-01', 'Credit Card'),
+    (1, 43.97, '2023-12-01', 'Credit'),
     (2, 56.97, '2023-12-02', 'Cash'),
     (3, 74.97, '2023-12-03', 'Cash'),
-    (4, 45.98, '2023-12-04', 'Debit Card'),
+    (4, 45.98, '2023-12-04', 'Debit'),
     (5, 29.99, '2023-12-05', 'Cash'),
-    (6, 78.96, '2023-12-06', 'Credit Card'),
-    (7, 33.98, '2023-12-07', 'Credit Card'),
+    (6, 78.96, '2023-12-06', 'Credit'),
+    (7, 33.98, '2023-12-07', 'Credit'),
     (8, 45.97, '2023-12-08', 'Cash'),
-    (9, 26.99, '2023-12-09', 'Debit Card');
+    (9, 26.99, '2023-12-09', 'Debit');
 ```
